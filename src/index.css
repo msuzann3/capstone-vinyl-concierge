@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Mono:wght@400;500&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,opsz,wght@1,6..72,400..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Familjen Grotesk", sans-serif;
+  --font-display: "Archivo Black", sans-serif;
+  --font-editorial: "Newsreader", serif;
+  --font-hand: "Caveat", cursive;
+  --font-mono: "DM Mono", monospace;
+
+  --color-curate-red: #DB1D1B;
+  --color-vinyl-black: #1D1D1B;
+  --color-bone-cream: #F4EFE3;
+  --color-sleeve-white: #ECE5D2;
+  --color-kraft: #C9A878;
+  --color-sleeve-mustard: #D9A441;
+  --color-deep-rust: #8B2418;
+}
+
+/* Base custom interactive styles */
+body {
+  background-color: var(--color-bone-cream);
+  color: var(--color-vinyl-black);
+  font-family: var(--font-sans);
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+  font-style: italic;
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom spinning vinyl animation */
+@keyframes spin-vinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-vinyl {
+  animation: spin-vinyl 12s linear infinite;
+}
+
+/* Glassmorphism scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(29, 29, 27, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(29, 29, 27, 0.4);
+}
