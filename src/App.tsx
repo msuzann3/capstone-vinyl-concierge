@@ -12,14 +12,18 @@ import {
   Music, 
   Layers, 
   ChevronRight,
-  Info
+  Info,
+  Gauge,
+  LibraryBig,
+  Ticket,
+  MapPinned
 } from "lucide-react";
 import QuestionnaireForm from "./components/QuestionnaireForm";
 import VinylDisc from "./components/VinylDisc";
 import OwnerInsightsView from "./components/OwnerInsightsView";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
-import { UserPreferences, Recommendation } from "./types";
+import { CollectionInsights, UserPreferences, Recommendation } from "./types";
 
 // Illustrative starting list for initial load when no recommendation is fetched yet
 const DEFAULT_STORE_DISPLAY: Recommendation[] = [
@@ -58,6 +62,7 @@ const DEFAULT_STORE_DISPLAY: Recommendation[] = [
 export default function App() {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>(DEFAULT_STORE_DISPLAY);
+  const [collectionInsights, setCollectionInsights] = useState<CollectionInsights | null>(null);
   const [ownerInsights, setOwnerInsights] = useState<any>({
     trendsSummary: "Synthetic owner dashboard is modeling 101 recent recommendation sessions across indie folk, jazz, alternative, classic rock, audiophile, and singer-songwriter customers.",
     inventoryOpportunities: "Use the dashboard alerts to prioritize jazz depth, indie folk staff picks, and alternative catalog expansion before the next buy list.",
@@ -102,6 +107,7 @@ export default function App() {
       if (data.recommendations && data.recommendations.length > 0) {
         setRecommendations(data.recommendations);
         setOwnerInsights(data.ownerInsights);
+        setCollectionInsights(data.collectionInsights);
         setSelectedAlbumIdx(0);
         setActiveTrackIdx(0);
         setIsPlaying(true); // Auto-spin first record
@@ -119,6 +125,7 @@ export default function App() {
   const handleReset = () => {
     setPreferences(null);
     setRecommendations(DEFAULT_STORE_DISPLAY);
+    setCollectionInsights(null);
     setSelectedAlbumIdx(0);
     setActiveTrackIdx(0);
     setIsPlaying(false);
@@ -409,6 +416,101 @@ export default function App() {
 
                     </div>
                   </div>
+
+                  {collectionInsights && (
+                    <div className="bg-sleeve-white border border-stone-300 rounded-lg shadow-xl overflow-hidden">
+                      <div className="bg-vinyl-black px-5 py-3 border-b-4 border-sleeve-mustard flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <span className="text-[10px] font-mono tracking-widest uppercase text-sleeve-mustard block">
+                            New customer feature
+                          </span>
+                          <h3 className="font-display text-lg text-white uppercase tracking-tight flex items-center gap-2">
+                            <LibraryBig className="w-5 h-5 text-curate-red" />
+                            Collection Insights
+                          </h3>
+                        </div>
+                        <div className="bg-stone-950 border border-stone-800 rounded-md px-3 py-2 flex items-center gap-2">
+                          <Gauge className="w-4 h-4 text-sleeve-mustard" />
+                          <div>
+                            <span className="block text-[9px] text-stone-500 font-mono uppercase tracking-widest">
+                              Coverage score
+                            </span>
+                            <span className="block font-display text-xl text-bone-cream leading-none">
+                              {collectionInsights.coverageScore}/100
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 space-y-6">
+                        <div className="bg-bone-cream border border-stone-200 rounded-md p-4 flex items-start gap-3">
+                          <Ticket className="w-5 h-5 text-curate-red mt-0.5 shrink-0" />
+                          <p className="text-sm text-stone-700 font-editorial italic leading-relaxed">
+                            {collectionInsights.scoreNote}
+                          </p>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between gap-3 mb-3">
+                            <span className="text-[10px] font-mono tracking-widest uppercase text-stone-500">
+                              Worth pulling from the next bin
+                            </span>
+                            <span className="text-[10px] font-mono uppercase text-curate-red font-bold">
+                              {collectionInsights.opportunities.length} shelf notes
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {collectionInsights.opportunities.map((opportunity) => (
+                              <div
+                                key={`${opportunity.artist}-${opportunity.title}`}
+                                className="bg-white border border-stone-200 rounded-md p-4 shadow-sm hover:border-sleeve-mustard transition-colors"
+                              >
+                                <div className="flex items-start justify-between gap-3">
+                                  <div>
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-curate-red font-bold">
+                                      {opportunity.genre}
+                                    </span>
+                                    <h4 className="font-display text-sm text-stone-900 uppercase leading-tight mt-1">
+                                      {opportunity.title}
+                                    </h4>
+                                    <p className="font-editorial text-stone-600 italic text-sm">
+                                      {opportunity.artist}
+                                    </p>
+                                  </div>
+                                  <span className="text-[9px] font-mono uppercase bg-bone-cream border border-stone-200 text-stone-600 rounded px-2 py-1 whitespace-nowrap">
+                                    {opportunity.shelfTag}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-stone-700 leading-relaxed mt-3">
+                                  {opportunity.reason}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="border-t border-stone-300 pt-5">
+                          <div className="flex items-center gap-2 mb-3">
+                            <MapPinned className="w-4 h-4 text-curate-red" />
+                            <span className="text-[10px] font-mono tracking-widest uppercase text-stone-500">
+                              Suggested exploration areas
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {collectionInsights.explorationAreas.map((area) => (
+                              <span
+                                key={area}
+                                className="bg-vinyl-black text-bone-cream border border-sleeve-mustard/50 rounded-full px-3 py-1.5 text-[11px] font-mono uppercase tracking-wide"
+                              >
+                                {area}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                 </motion.div>
               )}

@@ -13,6 +13,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Developer handoff: `HANDOFF.md`.
 - Local app: React, Vite, Tailwind, Motion, and an Express server.
 - Recommendation engine: local in-repo catalog logic in `src/recommender.ts`; no Gemini or Google API key required.
+- Collection Insights: customer-facing local heuristics in `src/recommender.ts` estimate collection coverage and suggest missing albums/artists plus exploration areas after recommendations are displayed.
 - Owner Insights dashboard: local synthetic analytics in `src/syntheticOwnerInsights.ts`, modeling 101 recommendation sessions for assignment business-intelligence screenshots.
 - Brand references: source PDFs and implementation notes in `docs/brand/`.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
@@ -110,7 +111,7 @@ The published artifact is `dist/`.
 ## Next Steps
 
 - Replace the default synthetic inventory with real Curate Records & Books inventory data when available.
-- Add the remaining Assignment 2 focused features after Michelle approves the first Owner Insights enhancement.
+- Continue polishing Assignment 2 screenshots around the customer recommendation flow, Collection Insights, and the Owner Insights dashboard.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
 - Replace inline SVG logo approximations with production logo image assets if the original files become available outside the PDF.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.

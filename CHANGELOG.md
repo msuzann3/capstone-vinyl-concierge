@@ -4,6 +4,11 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-02
 
+- Added the second Assignment 2 focused feature: customer-facing Collection Insights after the recommendation results.
+- Extended `src/recommender.ts` with local-only collection opportunity heuristics, coverage scoring, and suggested exploration areas; no external APIs, authentication, databases, or Discogs integration.
+- Added typed Collection Insights data structures in `src/types.ts`.
+- Updated `src/App.tsx` to render a polished Collection Insights section with a Collection Coverage Score, 3-5 album/artist opportunities, shelf-note language, and exploration badges while leaving the Owner Insights Dashboard unchanged.
+- Verified the feature build with `npm run lint` and `npm run build:pages`; browser automation could read the local app but click actions timed out in the in-app browser connector, so final verification relied on build/type checks and source inspection.
 - Clarified that the stable cross-Mac iCloud project path is `Documents/_AI-Workspace/Codex/Capstone`; `/Users/dolly/...` is only this machine's resolved local path.
 - Added the first Assignment 2 focused feature: an enhanced Owner Insights Dashboard populated by 101 local synthetic customer recommendation sessions.
 - Added `src/syntheticOwnerInsights.ts` to generate customer personas, requested genres/artists, listening contexts, purchase intent, and inventory opportunity metrics without Discogs, databases, authentication, or APIs.

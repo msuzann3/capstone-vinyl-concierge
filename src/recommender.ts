@@ -1,4 +1,4 @@
-import { RecommendationResponse, UserPreferences } from "./types";
+import { CollectionInsights, RecommendationResponse, UserPreferences } from "./types";
 
 type Classification = "Familiar Classic" | "Discovery Gem";
 
@@ -116,6 +116,149 @@ const CATALOG: CatalogRecord[] = [
   }
 ];
 
+const COLLECTION_OPPORTUNITIES = [
+  {
+    title: "Blue Train",
+    artist: "John Coltrane",
+    genre: "Jazz",
+    area: "Jazz Classics",
+    shelfTag: "blue-note-staple",
+    keywords: ["jazz", "miles", "coltrane", "late", "night", "deep", "study", "rain"],
+    reason: "If Kind of Blue is already on your shelf, this is the next sturdy spine. It adds a harder bop edge without losing that after-hours room tone."
+  },
+  {
+    title: "Head Hunters",
+    artist: "Herbie Hancock",
+    genre: "Jazz Funk",
+    area: "Jazz-Funk Crossovers",
+    shelfTag: "rhythm-section-upgrade",
+    keywords: ["jazz", "funk", "soul", "high", "energy", "weekend", "groove", "miles"],
+    reason: "A smart gap-filler for jazz listeners who want the section to move a little. It opens the door from modal classics into electric, bass-forward records."
+  },
+  {
+    title: "Close to the Edge",
+    artist: "Yes",
+    genre: "Progressive Rock",
+    area: "Progressive Rock Essentials",
+    shelfTag: "side-long-listening",
+    keywords: ["radiohead", "alternative", "rock", "deep", "listening", "headphones", "focused", "intricate"],
+    reason: "For a Radiohead or art-rock listener, this gives the shelf a long-form ancestor: patient builds, careful musicianship, and a full Side A commitment."
+  },
+  {
+    title: "For Emma, Forever Ago",
+    artist: "Bon Iver",
+    genre: "Indie Folk",
+    area: "Singer-Songwriter Foundations",
+    shelfTag: "winter-cabin-core",
+    keywords: ["indie", "folk", "phoebe", "bridgers", "melancholic", "intimate", "acoustic", "haunted"],
+    reason: "This belongs near lyric-forward indie records because it keeps the room small and emotionally plainspoken. A good copy fills the quiet without crowding it."
+  },
+  {
+    title: "Blue",
+    artist: "Joni Mitchell",
+    genre: "Singer-Songwriter",
+    area: "Singer-Songwriter Foundations",
+    shelfTag: "first-pressing-soul",
+    keywords: ["folk", "singer", "songwriter", "nick", "drake", "melancholic", "morning", "coffee", "papers"],
+    reason: "A foundational pull for anyone building a shelf around direct writing and a voice close to the microphone. It makes the rest of the folk bin easier to read."
+  },
+  {
+    title: "Ladies and Gentlemen We Are Floating in Space",
+    artist: "Spiritualized",
+    genre: "Dream Pop",
+    area: "Dream Pop Deep Shelf",
+    shelfTag: "wide-speaker-record",
+    keywords: ["dream", "pop", "cocteau", "ambient", "late", "night", "headphones", "space"],
+    reason: "This is a useful bridge from shimmer into gospel-sized space-rock. It widens the collection without leaving the dreamy shelf completely behind."
+  },
+  {
+    title: "Another Green World",
+    artist: "Brian Eno",
+    genre: "Ambient Art Rock",
+    area: "Ambient Foundations",
+    shelfTag: "quiet-room-tool",
+    keywords: ["ambient", "drone", "eno", "focused", "study", "background", "textural", "room"],
+    reason: "If you use records to change the room, this is an essential next stop. It sits between song and texture, which makes it more playable than pure ambient for many shelves."
+  },
+  {
+    title: "Carrie, Come On",
+    artist: "Duster",
+    genre: "Modern Indie",
+    area: "Modern Indie Discovery",
+    shelfTag: "slow-burn-staff-pick",
+    keywords: ["indie", "alternative", "melancholic", "low", "lighting", "warm", "not overly polished"],
+    reason: "A strong staff-pick move for listeners who like imperfect edges, soft volume, and records that feel lived-in. It adds a modern slowcore lane to the rack."
+  },
+  {
+    title: "Loveless",
+    artist: "My Bloody Valentine",
+    genre: "Shoegaze",
+    area: "Shoegaze Essentials",
+    shelfTag: "speaker-wall",
+    keywords: ["dream", "pop", "alternative", "cocteau", "high", "reverb", "texture", "headphones"],
+    reason: "For dream-pop listeners, this is the thicker, louder wall on the next shelf over. It is a meaningful gap if the collection has shimmer but no shoegaze weight yet."
+  }
+];
+
+function buildCollectionInsights(preferences: UserPreferences, recommendations: CatalogRecord[]): CollectionInsights {
+  const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
+  const query = [
+    preferences.artists,
+    requestedGenres.join(" "),
+    preferences.mood,
+    preferences.listeningHabit,
+    preferences.customPrompt
+  ].join(" ").toLowerCase();
+  const recommendedTitles = new Set(recommendations.map((record) => record.title.toLowerCase()));
+  const recommendedGenres = new Set(recommendations.map((record) => record.genre.toLowerCase()));
+  const requestedGenreHits = requestedGenres.filter((genre) => {
+    const normalizedGenre = genre.toLowerCase();
+    return recommendedGenres.has(normalizedGenre) || Array.from(recommendedGenres).some((recGenre) => recGenre.includes(normalizedGenre));
+  }).length;
+
+  const rankedOpportunities = COLLECTION_OPPORTUNITIES.map((opportunity, index) => {
+    const keywordScore = opportunity.keywords.filter((keyword) => query.includes(keyword)).length * 3;
+    const genreScore = requestedGenres.some((genre) => opportunity.genre.toLowerCase().includes(genre.toLowerCase())) ? 5 : 0;
+    const artistScore = preferences.artists.toLowerCase().includes(opportunity.artist.toLowerCase()) ? -3 : 0;
+    const duplicatePenalty = recommendedTitles.has(opportunity.title.toLowerCase()) ? -10 : 0;
+
+    return {
+      opportunity,
+      score: keywordScore + genreScore + artistScore + duplicatePenalty + (COLLECTION_OPPORTUNITIES.length - index) / 100
+    };
+  }).sort((a, b) => b.score - a.score);
+
+  const opportunities = rankedOpportunities.slice(0, 5).map(({ opportunity }) => ({
+    title: opportunity.title,
+    artist: opportunity.artist,
+    genre: opportunity.genre,
+    shelfTag: opportunity.shelfTag,
+    reason: opportunity.reason
+  }));
+
+  const explorationAreas = Array.from(new Set(rankedOpportunities.map(({ opportunity }) => opportunity.area))).slice(0, 3);
+  const breadthScore = Math.min(24, new Set(requestedGenres).size * 6);
+  const matchScore = Math.min(28, requestedGenreHits * 7);
+  const habitScore = preferences.listeningHabit ? 12 : 0;
+  const artistScore = preferences.artists.split(",").filter((artist) => artist.trim().length > 0).length >= 2 ? 14 : 8;
+  const noteScore = preferences.customPrompt && preferences.customPrompt.length > 30 ? 12 : 4;
+  const discoveryScore = recommendations.some((record) => record.classification === "Discovery Gem") ? 10 : 4;
+  const coverageScore = Math.max(42, Math.min(92, breadthScore + matchScore + habitScore + artistScore + noteScore + discoveryScore));
+
+  const scoreNote = coverageScore >= 78
+    ? "A well-started shelf with good taste signals. The next gains come from adding foundation records around the edges."
+    : coverageScore >= 62
+      ? "A promising shelf with a few clear blanks. Add one classic anchor and one side-door discovery before the next Saturday browse."
+      : "A young shelf with plenty of room to grow. Start with one familiar cornerstone, then build outward by mood and listening context.";
+
+  return {
+    coverageScore,
+    scoreNote,
+    opportunities,
+    explorationAreas
+  };
+}
+
 export function buildRecommendations(preferences: UserPreferences): RecommendationResponse {
   const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
   const query = [
@@ -144,8 +287,10 @@ export function buildRecommendations(preferences: UserPreferences): Recommendati
   const discoveries = ranked.filter(({ record }) => record.classification === "Discovery Gem").slice(0, 3);
   const shelfPhrase = requestedGenres.slice(0, 2).join(" and ") || "the late-night listening stack";
 
+  const selectedRecords = [...familiar, ...discoveries].slice(0, 5).map(({ record }) => record);
+
   return {
-    recommendations: [...familiar, ...discoveries].slice(0, 5).map(({ record }) => ({
+    recommendations: selectedRecords.map((record) => ({
       title: record.title,
       artist: record.artist,
       genre: record.genre,
@@ -160,6 +305,7 @@ export function buildRecommendations(preferences: UserPreferences): Recommendati
       inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Phoebe Bridgers, Nick Drake, and Cocteau Twins in view, then deepen the adjacent bins with Portishead, Brian Eno, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
       underrepresentedAreas: "The likely gaps are ambient-adjacent folk, quiet trip-hop, spiritual jazz beyond the obvious classics, and small-label dream pop reissues.",
       merchandisingStrategy: "Chalkcard title: 'Records for Low Light and Good Headphones.' Place one familiar classic beside two discovery records so the table feels welcoming rather than obscure."
-    }
+    },
+    collectionInsights: buildCollectionInsights(preferences, selectedRecords)
   };
 }

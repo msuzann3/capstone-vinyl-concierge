@@ -16,9 +16,25 @@ export interface OwnerInsights {
   merchandisingStrategy: string;
 }
 
+export interface CollectionOpportunity {
+  title: string;
+  artist: string;
+  genre: string;
+  reason: string;
+  shelfTag: string;
+}
+
+export interface CollectionInsights {
+  coverageScore: number;
+  scoreNote: string;
+  opportunities: CollectionOpportunity[];
+  explorationAreas: string[];
+}
+
 export interface RecommendationResponse {
   recommendations: Recommendation[];
   ownerInsights: OwnerInsights;
+  collectionInsights: CollectionInsights;
 }
 
 export interface UserPreferences {
