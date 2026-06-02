@@ -4,6 +4,7 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-02
 
+- Clarified that the stable cross-Mac iCloud project path is `Documents/_AI-Workspace/Codex/Capstone`; `/Users/dolly/...` is only this machine's resolved local path.
 - Added the first Assignment 2 focused feature: an enhanced Owner Insights Dashboard populated by 101 local synthetic customer recommendation sessions.
 - Added `src/syntheticOwnerInsights.ts` to generate customer personas, requested genres/artists, listening contexts, purchase intent, and inventory opportunity metrics without Discogs, databases, authentication, or APIs.
 - Updated the Owner Insights dashboard with top requested genres, top requested artists, inventory opportunity alerts, persona mix, customer trend summary cards, and local-only analytics console language.
