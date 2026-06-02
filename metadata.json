@@ -1,6 +1,6 @@
 {
   "name": "The Vinyl Concierge: Your AI Curator",
-  "description": "An AI-powered vinyl recommendation assistant for Curate Records & Books.",
+  "description": "A Codex-built vinyl recommendation assistant for Curate Records & Books.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }

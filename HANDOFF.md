@@ -2,6 +2,8 @@
 
 This document has been configured as a complete translation blueprint and architectural brief for **ChatGPT Codex** or any developer inheriting **The Vinyl Concierge** application.
 
+> Current direction, June 2, 2026: this project is maintained with ChatGPT Codex and GitHub. The imported Google model middleware has been removed from the active app path; recommendations now run from local project code so the GitHub Pages prototype works without external API keys.
+
 ---
 
 ## 1. Product Requirements Document (PRD)
@@ -14,7 +16,7 @@ Simultaneously, the platform incorporates a **Staff Ledger** (Owner Insights Das
 ### 1.2. Product Objectives
 * **Tactile Digital Experience:** Bridge the gap between physical record browsing and digital recommendation using physical canvas metaphors, rotating vinyl spin states, and high-contrast sleeve typography.
 * **Atmospheric Discovery:** Capture environmental listening habits (e.g., "headphones after midnight with a glass of wine") over superficial track lists.
-* **Enterprise-Grade AI Middleware:** Provide a robust, server-hosted Gemini AI agent engine acting as the expert "shop clerk" with clear guidelines to avoid marketing buzzwords or corporate jargon.
+* **Codex-Guided Recommendation Logic:** Keep the shop-clerk recommendation behavior in editable project code that can be reviewed, versioned, and deployed through GitHub.
 * **B2B Planning Controls:** Give curators and store owners clear insights into trending local genres and stocking deficits using localized inventory parsing.
 
 ### 1.3. Visual Identity & Brand System (Curate Records & Books Guidelines)
@@ -37,16 +39,17 @@ Simultaneously, the platform incorporates a **Staff Ledger** (Owner Insights Das
 
 ## 2. Codebase Architecture
 
-The application is structured as a full-stack Node.js app utilizing a high-performance React front-end (Vite) and an Express.js middleware server acting as a Gemini client gateway.
+The application is structured as a React front-end (Vite) with local recommendation logic and an Express development server for local runs.
 
 ```
-├── .env.example              # Template for server-side environment parameters
-├── server.ts                 # Node.js Express server + Gemini AI router
+├── .env.example              # Placeholder for future server-side environment parameters
+├── server.ts                 # Node.js Express local development server
 ├── package.json              # Dependency tree, build scripts, and commands
 ├── PRD.md                    # Core product specs
 ├── HANDOFF.md                # This document
 └── src/
     ├── App.tsx               # Primary interface orchestrator
+    ├── recommender.ts        # Local recommendation catalog and ranking logic
     ├── types.ts              # Global TypeScript interfaces and enums
     ├── index.css             # Tailwind style imports & theme directives
     ├── main.tsx              # React mounting root
@@ -81,9 +84,9 @@ A custom questionnaire designed to query specific, mood-based atmospheric parame
   * **Listening Habits:** Headphones after midnight with a glass of wine and low lighting.
   * **Additional Thoughts:** Intimate, warm, slightly haunted, beautiful.
 
-### 3.4. Express AI Clerk Interface (`server.ts`)
-Manages production routing pipelines. Express handles static routing in production and injects the client middleware during dev. It translates customer inputs to structured JSON schema queries returned straight from Gemini via `@google/genai`:
-* **Clerk Voice Guidelines:** Strict system instructions forcing the AI model to write like an experienced indie record shop owner, ignoring hyper-market words ("iconic", "disruptive", "curated space") in favor of tactile reissue details, pressing weight, and cultural history.
+### 3.4. Local Recommendation Engine (`src/recommender.ts`)
+Manages the current prototype recommendation behavior without an external model dependency. It ranks a local catalog against customer artists, genres, mood, and listening context, then returns customer-facing shelf notes plus owner insights:
+* **Clerk Voice Guidelines:** Write like an experienced indie record shop owner, avoiding hyper-market words ("iconic", "disruptive", "curated space") in favor of tactile details, shelf context, and plain recommendation language.
 
 ---
 
@@ -92,10 +95,7 @@ Manages production routing pipelines. Express handles static routing in producti
 Ensure credentials match your target configuration variables.
 
 ### 4.1. Setup `.env`
-Specify the Google GenAI API key in `.env`:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-```
+No environment variables are required for the current GitHub Pages prototype.
 
 ### 4.2. Developer Mode
 Runs the local dev server instantly using `tsx` on Port `3000`.

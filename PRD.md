@@ -17,7 +17,7 @@ Simultaneously, the platform incorporates a **Staff Ledger** (Owner Insights Das
 ## 2. Product Objectives
 - **Tactile Digital Experience:** Bridge the gap between physical record browsing and digital recommendation using physical canvas metaphors, rotating vinyl spin states, and high-contrast sleeve typography.
 - **Atmospheric Discovery:** Capture environmental listening habits (e.g., "headphones after midnight with a glass of wine") over superficial track lists.
-- **Enterprise-Grade AI Middleware:** Provide a robust, server-hosted Gemini AI agent engine acting as the expert "shop clerk" with clear guidelines to avoid marketing buzzwords or corporate jargon.
+- **Codex-Guided Recommendation Logic:** Maintain recommendation behavior in project code that can be reviewed, edited, versioned, and deployed through GitHub without a Gemini dependency.
 - **B2B Planning Controls:** Give curators and store owners clear insights into trending local genres and stocking deficits using localized inventory parsing.
 
 ---
@@ -63,7 +63,7 @@ The user interface follows the official **Curate Records & Books** brand style g
 ### 4.3. Curator & Owner Analytics (Staff Ledger)
 - **Security Checkpoint:** Accessible via a staff passcode layout.
 - **Inventory Opportunity Reports:** Auto-analyzes underrepresented listening areas (e.g. spiritual jazz, British local folk) compared to local user queries.
-- **Curator Pipeline Visualizer:** A multi-step flow map detailing the backend pipeline routing (Clerk Parameters -> Gemini Schema Parsing -> Catalog Matching -> Merchandising Cue rendering).
+- **Curator Pipeline Visualizer:** A multi-step flow map detailing future project routing (Clerk Parameters -> Catalog Matching -> Staff Shelf Notes -> Merchandising Cue rendering).
 
 ---
 
@@ -71,14 +71,14 @@ The user interface follows the official **Curate Records & Books** brand style g
 
 ### 5.1. Tech Stack
 - **Frontend SPA:** React 18+ powered by Vite.
-- **Backend API Server:** Node.js + Express with server-side API proxy routing (maintaining client-side API key isolation).
+- **Local Development Server:** Node.js + Express serving the Vite app in local development.
 - **Styling:** Tailwind CSS configured via direct nesting.
 - **Animations:** Custom layout transitions and structural canvas rotations.
 - **Linter & Type Safety:** Strict TypeScript checking (`tsc --noEmit`).
 
 ### 5.2. Environmental & Security Constraints
 - **Port Handling:** Bound strictly to port `3000` via Host `0.0.0.0` for ingress proxy compliance.
-- **API Security:** All Gemini API credentials reside server-side (`process.env.GEMINI_API_KEY`). No tokens or sensitive credentials exposed to browser developers tools.
+- **API Security:** The current GitHub Pages prototype does not require external API keys. Future hosted services should keep credentials server-side only.
 
 ---
 

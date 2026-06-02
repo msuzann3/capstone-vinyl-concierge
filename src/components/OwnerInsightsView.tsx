@@ -174,7 +174,7 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
                   Proposed Modular AI & Music Catalog System Map
                 </h4>
                 <p className="text-xs text-stone-400 font-editorial italic leading-relaxed mb-6">
-                  Illustrating the schema where this Gemini LLM orchestrates with physical POS barcode inventories (such as Lightspeed or Square) and public datasets (such as Discogs) to cross-reference stock-levels.
+                  Illustrating the future schema where ChatGPT Codex-supported project logic can connect physical POS inventories, staff shelf notes, and public music catalog data without relying on Gemini.
                 </p>
 
                 {/* Interactive map visualization */}

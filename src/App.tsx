@@ -18,7 +18,8 @@ import QuestionnaireForm from "./components/QuestionnaireForm";
 import VinylDisc from "./components/VinylDisc";
 import OwnerInsightsView from "./components/OwnerInsightsView";
 import { Brandmark } from "./components/BrandLogo";
-import { UserPreferences, Recommendation, RecommendationResponse } from "./types";
+import { buildRecommendations } from "./recommender";
+import { UserPreferences, Recommendation } from "./types";
 
 // Illustrative starting list for initial load when no recommendation is fetched yet
 const DEFAULT_STORE_DISPLAY: Recommendation[] = [
@@ -73,10 +74,10 @@ export default function App() {
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
     "Talking to the morning clerks in the stockroom...",
-    "Cross-referencing Discogs release ID histories...",
+    "Checking the staff shelf notes...",
     "Spinning test groove sections on the display deck...",
     "Flipping through dust-jacket covers for secret clues...",
-    "Formatting the warm independent shopkeeper's recommendation..."
+    "Writing the warm independent shopkeeper's recommendation..."
   ];
 
   // Rotate loading phrases during assistant analysis
@@ -96,18 +97,8 @@ export default function App() {
     setPreferences(prefs);
 
     try {
-      const res = await fetch("/api/recommendations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prefs)
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Failed to contact The Vinyl Concierge API server.");
-      }
-
-      const data: RecommendationResponse = await res.json();
+      await new Promise((resolve) => setTimeout(resolve, 650));
+      const data = buildRecommendations(prefs);
       if (data.recommendations && data.recommendations.length > 0) {
         setRecommendations(data.recommendations);
         setOwnerInsights(data.ownerInsights);
@@ -119,7 +110,7 @@ export default function App() {
       }
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An unexpected error occurred while communicating with Gemini.");
+      setError(err.message || "An unexpected error occurred while building the shelf recommendations.");
     } finally {
       setLoading(false);
     }
@@ -241,8 +232,8 @@ export default function App() {
                   </p>
                   <div className="p-3 bg-white rounded border border-red-100 text-xs text-stone-600 font-mono space-y-1">
                     <div>Please ensure:</div>
-                    <div>1. Your server is started with a valid <strong className="text-curate-red">GEMINI_API_KEY</strong> secret.</div>
-                    <div>2. The Dev container server connection is healthy.</div>
+                    <div>1. The recommendation catalog has at least one matching record.</div>
+                    <div>2. The local app bundle finished loading successfully.</div>
                   </div>
                   <button
                     onClick={handleReset}

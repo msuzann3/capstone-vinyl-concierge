@@ -4,16 +4,17 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 
 ## Current Status
 
-- Source handoff: Google AI Studio export in this repository.
+- Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
 - Local app: React, Vite, Tailwind, Motion, and an Express server.
-- AI service: Gemini through the server-side `@google/genai` client.
+- Recommendation engine: local in-repo catalog logic in `src/recommender.ts`; no Gemini or Google API key required.
+- Brand references: source PDFs and implementation notes in `docs/brand/`.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
 - Pages source: static front end published from the `main` branch via GitHub Actions.
 
-GitHub Pages can host the interactive front-end shell and default recommendation display. The Gemini recommendation endpoint requires the Express server with `GEMINI_API_KEY`, so live AI recommendations need local server mode or a separate hosted backend.
+GitHub Pages hosts the working prototype. Recommendations are generated in the browser from project code, so the Pages version does not need a backend or API key.
 
 ## Start-of-Session Checklist
 
@@ -21,9 +22,10 @@ Michelle works across multiple Macs through iCloud Drive. At the beginning of ev
 
 1. Read this `README.md`.
 2. Read `CHANGELOG.md`.
-3. Check `git status`.
-4. Confirm whether work should target local server mode, GitHub Pages, or a future hosted backend.
-5. Preserve Michelle's supplied wording unless she asks for rewriting.
+3. Read `docs/brand/BRAND_NOTES.md` before visual or voice changes.
+4. Check `git status`.
+5. Confirm whether work should target the GitHub Pages prototype or a future hosted backend.
+6. Preserve Michelle's supplied wording unless she asks for rewriting.
 
 At the end of meaningful work:
 
@@ -36,24 +38,11 @@ At the end of meaningful work:
 Prerequisites:
 
 - Node.js 20 or newer.
-- A Gemini API key for AI recommendations.
 
 Install dependencies:
 
 ```bash
 npm install
-```
-
-Create a local environment file:
-
-```bash
-cp .env.example .env
-```
-
-Then add:
-
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 Run locally:
@@ -87,12 +76,14 @@ npm run start
 ├── PRD.md
 ├── README.md
 ├── CHANGELOG.md
+├── docs/brand/
 ├── server.ts
 ├── src/
 │   ├── App.tsx
 │   ├── components/
 │   ├── index.css
 │   ├── main.tsx
+│   ├── recommender.ts
 │   └── types.ts
 └── vite.config.ts
 ```
@@ -112,6 +103,6 @@ The published artifact is `dist/`.
 
 ## Next Steps
 
-- Confirm whether the GitHub Pages version is intended as a static demo or whether AI recommendations should be wired to a hosted backend.
 - Replace the default synthetic inventory with real Curate Records & Books inventory data when available.
+- Replace inline SVG logo approximations with production logo image assets if the original files become available outside the PDF.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.
