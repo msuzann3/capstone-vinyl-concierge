@@ -4,6 +4,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 
 ## Current Status
 
+- Repository root: `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
@@ -13,6 +14,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
 - Pages source: static front end published from the `main` branch via GitHub Actions.
+- Original imported zip/archive wrapper: kept locally in `Handoff from Google/` and ignored by git.
 
 GitHub Pages hosts the working prototype. Recommendations are generated in the browser from project code, so the Pages version does not need a backend or API key.
 

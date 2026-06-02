@@ -15,3 +15,5 @@ All notable project changes should be recorded here so Michelle can move between
 - Updated the browser app so GitHub Pages can generate recommendations without a backend or API key.
 - Added Curate brand source PDFs under `docs/brand/`.
 - Added `docs/brand/BRAND_NOTES.md` with the palette, type system, logo rules, and voice guardrails from the brand PDFs.
+- Moved the active git repository root up to `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone` for cleaner iCloud and GitHub continuity.
+- Kept the original Google handoff archive wrapper locally in `Handoff from Google/` and ignored it from git.
