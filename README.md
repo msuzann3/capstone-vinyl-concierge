@@ -9,7 +9,9 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Developer handoff: `HANDOFF.md`.
 - Local app: React, Vite, Tailwind, Motion, and an Express server.
 - AI service: Gemini through the server-side `@google/genai` client.
-- GitHub Pages: publishes the static front end from the `main` branch via GitHub Actions.
+- GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
+- GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
+- Pages source: static front end published from the `main` branch via GitHub Actions.
 
 GitHub Pages can host the interactive front-end shell and default recommendation display. The Gemini recommendation endpoint requires the Express server with `GEMINI_API_KEY`, so live AI recommendations need local server mode or a separate hosted backend.
 
