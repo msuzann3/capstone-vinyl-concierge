@@ -4,6 +4,10 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-02
 
+- Added the first Assignment 2 focused feature: an enhanced Owner Insights Dashboard populated by 101 local synthetic customer recommendation sessions.
+- Added `src/syntheticOwnerInsights.ts` to generate customer personas, requested genres/artists, listening contexts, purchase intent, and inventory opportunity metrics without Discogs, databases, authentication, or APIs.
+- Updated the Owner Insights dashboard with top requested genres, top requested artists, inventory opportunity alerts, persona mix, customer trend summary cards, and local-only analytics console language.
+- Verified the app with `npm run lint` and `npm run build:pages`.
 - Created the GitHub-ready project README from the Google AI Studio handoff.
 - Added this changelog as the ongoing cross-laptop project record.
 - Prepared GitHub Pages deployment support for the static Vite front end.

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { OwnerInsights } from "../types";
-import { Lock, Unlock, Database, RefreshCw, BarChart4, TrendingUp, Compass, ShoppingBag, EyeOff, Radio } from "lucide-react";
+import { Lock, Unlock, Database, RefreshCw, BarChart4, TrendingUp, Compass, ShoppingBag, EyeOff, Radio, Users, Clock, AlertTriangle, Star, Music2 } from "lucide-react";
+import { ownerDashboardMetrics } from "../syntheticOwnerInsights";
 
 interface OwnerInsightsViewProps {
   insights: OwnerInsights;
@@ -12,21 +13,30 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncLogs, setSyncLogs] = useState<string[]>([
     "Curate POS Database connected (Local Mock Mode)",
-    "Discogs OAuth Token: valid",
-    "Shelf inventory current status: 1,421 physical vinyl sleeves scanned",
+    "Synthetic recommendation sessions loaded: 101",
+    "Shelf inventory current status: 1,421 representative vinyl sleeves scanned",
   ]);
+  const maxGenreCount = Math.max(...ownerDashboardMetrics.topGenres.map((genre) => genre.count));
+  const maxArtistCount = Math.max(...ownerDashboardMetrics.topArtists.map((artist) => artist.count));
+  const maxPersonaCount = Math.max(...ownerDashboardMetrics.personaMix.map((persona) => persona.count));
 
   const triggerMockSync = () => {
     setIsSyncing(true);
-    setSyncLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] Triggering active inventory sync...`]);
+    setSyncLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] Recalculating synthetic session trends...`]);
     setTimeout(() => {
       setIsSyncing(false);
       setSyncLogs((prev) => [
         ...prev,
-        `[${new Date().toLocaleTimeString()}] Discogs master release matched and matched with shop catalog!`,
-        `[${new Date().toLocaleTimeString()}] 4 gaps auto-inserted to backlog draft shelf ordering.`
+        `[${new Date().toLocaleTimeString()}] Top demand clusters refreshed from local sample sessions.`,
+        `[${new Date().toLocaleTimeString()}] 4 ordering opportunities added to owner review.`
       ]);
     }, 1500);
+  };
+
+  const alertStyles = {
+    high: "border-curate-red/70 bg-curate-red/10 text-red-200",
+    medium: "border-sleeve-mustard/70 bg-sleeve-mustard/10 text-amber-100",
+    watch: "border-teal-500/60 bg-teal-500/10 text-teal-100"
   };
 
   return (
@@ -110,59 +120,171 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
           </div>
 
           {activeTab === "insights" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Column: preference trend + gaps */}
-              <div className="space-y-6">
-                
-                {/* Preference Trends Summary */}
-                <div className="bg-stone-950 p-5 rounded border border-stone-800">
-                  <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-2">
-                    <TrendingUp className="w-3.5 h-3.5 text-orange-400" />
-                    Customer Taste Trend Summary
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-stone-950 p-4 rounded border border-stone-800">
+                  <span className="flex items-center gap-2 text-[10px] font-mono uppercase text-stone-500 tracking-wider">
+                    <Users className="w-3.5 h-3.5 text-sleeve-mustard" />
+                    Sessions Sampled
                   </span>
-                  <p className="text-xs text-stone-300 leading-relaxed font-sans">
-                    {insights.trendsSummary}
-                  </p>
-                </div>
-
-                {/* Underrepresented genres/areas */}
-                <div className="bg-stone-950 p-5 rounded border border-stone-800">
-                  <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-2">
-                    <Compass className="w-3.5 h-3.5 text-sleeve-mustard" />
-                    Underrepresented Shelf Gaps
+                  <strong className="block font-display text-3xl text-white mt-2">
+                    {ownerDashboardMetrics.sessions.length}
+                  </strong>
+                  <span className="text-[11px] text-stone-400">
+                    synthetic customer recommendation sessions
                   </span>
-                  <p className="text-xs text-stone-300 leading-relaxed font-sans">
-                    {insights.underrepresentedAreas}
-                  </p>
                 </div>
-
+                <div className="bg-stone-950 p-4 rounded border border-stone-800">
+                  <span className="flex items-center gap-2 text-[10px] font-mono uppercase text-stone-500 tracking-wider">
+                    <Clock className="w-3.5 h-3.5 text-teal-300" />
+                    Late-Night Signals
+                  </span>
+                  <strong className="block font-display text-3xl text-white mt-2">
+                    {ownerDashboardMetrics.lateNightSessions}
+                  </strong>
+                  <span className="text-[11px] text-stone-400">
+                    sessions after 8pm listening intent
+                  </span>
+                </div>
+                <div className="bg-stone-950 p-4 rounded border border-stone-800">
+                  <span className="flex items-center gap-2 text-[10px] font-mono uppercase text-stone-500 tracking-wider">
+                    <ShoppingBag className="w-3.5 h-3.5 text-rose-300" />
+                    Same-Day Intent
+                  </span>
+                  <strong className="block font-display text-3xl text-white mt-2">
+                    {ownerDashboardMetrics.sameDayPurchaseSessions}
+                  </strong>
+                  <span className="text-[11px] text-stone-400">
+                    customers ready for a shelf pull today
+                  </span>
+                </div>
               </div>
 
-              {/* Right Column: Inventory Opportunities + Merchandising display */}
-              <div className="space-y-6">
-                
-                {/* Catalog Opportunities / Reissue Orders */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-stone-950 p-5 rounded border border-stone-800">
-                  <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-2">
-                    <Database className="w-3.5 h-3.5 text-teal-400" />
-                    Active Distributor Ordering List
-                  </span>
-                  <p className="text-xs text-stone-300 leading-relaxed font-sans">
-                    {insights.inventoryOpportunities}
-                  </p>
+                  <div className="flex items-center justify-between mb-5 gap-3">
+                    <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400">
+                      <BarChart4 className="w-3.5 h-3.5 text-sleeve-mustard" />
+                      Top Requested Genres
+                    </span>
+                    <span className="text-[10px] font-mono uppercase text-stone-500">
+                      All personas
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    {ownerDashboardMetrics.topGenres.map((genre, index) => (
+                      <div key={genre.label} className="space-y-1.5">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="w-5 h-5 rounded-full bg-stone-900 border border-stone-700 text-[10px] font-mono flex items-center justify-center text-sleeve-mustard">
+                              {index + 1}
+                            </span>
+                            <span className="text-sm font-bold text-stone-100 truncate">{genre.label}</span>
+                          </div>
+                          <span className="text-xs font-mono text-stone-400">{genre.count}</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-stone-900 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-sleeve-mustard"
+                            style={{ width: `${Math.max(16, (genre.count / maxGenreCount) * 100)}%` }}
+                          />
+                        </div>
+                        <p className="text-[11px] text-stone-500 leading-snug">{genre.detail}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Merchandising & Bin placement cards */}
                 <div className="bg-stone-950 p-5 rounded border border-stone-800">
-                  <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-2">
-                    <ShoppingBag className="w-3.5 h-3.5 text-rose-400" />
-                    Wall Display & Chalkcard Titles
+                  <div className="flex items-center justify-between mb-5 gap-3">
+                    <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400">
+                      <Star className="w-3.5 h-3.5 text-rose-300" />
+                      Top Requested Artists
+                    </span>
+                    <span className="text-[10px] font-mono uppercase text-stone-500">
+                      Repeat mentions
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    {ownerDashboardMetrics.topArtists.map((artist) => (
+                      <div key={artist.label} className="bg-stone-900/70 border border-stone-800 rounded p-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-sm font-bold text-stone-100">{artist.label}</span>
+                          <span className="text-[10px] font-mono bg-stone-950 border border-stone-700 text-stone-300 px-2 py-0.5 rounded">
+                            {artist.count} asks
+                          </span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-stone-950 overflow-hidden mt-2">
+                          <div
+                            className="h-full rounded-full bg-curate-red"
+                            style={{ width: `${Math.max(18, (artist.count / maxArtistCount) * 100)}%` }}
+                          />
+                        </div>
+                        <p className="text-[11px] text-stone-500 leading-snug mt-2">{artist.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <div className="lg:col-span-3 bg-stone-950 p-5 rounded border border-stone-800">
+                  <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-4">
+                    <AlertTriangle className="w-3.5 h-3.5 text-sleeve-mustard" />
+                    Inventory Opportunity Alerts
                   </span>
-                  <p className="text-xs text-stone-300 leading-relaxed font-sans">
-                    {insights.merchandisingStrategy}
-                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {ownerDashboardMetrics.inventoryAlerts.map((alert) => (
+                      <div key={alert.title} className={`rounded border p-3 ${alertStyles[alert.severity]}`}>
+                        <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">
+                          {alert.severity === "high" ? "Order Soon" : alert.severity === "medium" ? "Next Buy List" : "Watch"}
+                        </span>
+                        <h4 className="text-sm font-bold text-white mt-1 leading-snug">{alert.title}</h4>
+                        <p className="text-[11px] text-stone-300 leading-snug mt-1">{alert.detail}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
+                <div className="lg:col-span-2 bg-stone-950 p-5 rounded border border-stone-800">
+                  <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-4">
+                    <Music2 className="w-3.5 h-3.5 text-teal-300" />
+                    Persona Mix
+                  </span>
+                  <div className="space-y-3">
+                    {ownerDashboardMetrics.personaMix.map((persona) => (
+                      <div key={persona.label}>
+                        <div className="flex justify-between gap-3 text-[11px] text-stone-300 mb-1">
+                          <span>{persona.label}</span>
+                          <span className="font-mono text-stone-500">{persona.count}</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-stone-900 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-teal-400"
+                            style={{ width: `${Math.max(14, (persona.count / maxPersonaCount) * 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-stone-950 p-5 rounded border border-stone-800">
+                <span className="flex items-center gap-2 text-xs font-mono uppercase text-stone-400 mb-4">
+                  <TrendingUp className="w-3.5 h-3.5 text-orange-300" />
+                  Customer Trend Summary
+                </span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {ownerDashboardMetrics.trendSummary.map((trend) => (
+                    <div key={trend} className="bg-stone-900 border border-stone-800 rounded p-3 text-xs text-stone-300 leading-relaxed">
+                      {trend}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-stone-500 leading-relaxed mt-4 border-t border-stone-900 pt-3">
+                  Current customer request note: {insights.trendsSummary}
+                </p>
               </div>
             </div>
           ) : (
@@ -174,7 +296,7 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
                   Proposed Modular AI & Music Catalog System Map
                 </h4>
                 <p className="text-xs text-stone-400 font-editorial italic leading-relaxed mb-6">
-                  Illustrating the future schema where ChatGPT Codex-supported project logic can connect physical POS inventories, staff shelf notes, and public music catalog data without relying on Gemini.
+                  Illustrating a future local-first workflow where recommendation sessions, representative inventory, and staff shelf notes can inform owner planning without adding external music APIs.
                 </p>
 
                 {/* Interactive map visualization */}
@@ -197,8 +319,8 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
                   {/* Step 3 */}
                   <div className="bg-stone-900 duration-200 p-4 border border-stone-800 rounded flex flex-col items-center text-center">
                     <div className="w-8 h-8 rounded-full bg-curate-red text-white flex items-center justify-center text-xs font-bold mb-2">3</div>
-                    <span className="text-xs font-bold text-stone-100 uppercase font-mono">Discogs API Pipeline</span>
-                    <span className="text-[10px] text-stone-500 mt-1">Pulls cover designs, pressing notes, and user ratings</span>
+                    <span className="text-xs font-bold text-stone-100 uppercase font-mono">Synthetic Demand Ledger</span>
+                    <span className="text-[10px] text-stone-500 mt-1">Summarizes local sample sessions and staff request notes</span>
                   </div>
 
                   {/* Step 4 */}
@@ -214,7 +336,7 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
                 <div className="mt-6 bg-stone-900 rounded p-4 border border-stone-800">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-[10px] font-mono text-stone-400 tracking-wider">
-                      MOCK API STREAM & INTEGRATION CONSOLE
+                      LOCAL SYNTHETIC ANALYTICS CONSOLE
                     </span>
                     <button
                       onClick={triggerMockSync}

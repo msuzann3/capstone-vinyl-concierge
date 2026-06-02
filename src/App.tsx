@@ -59,10 +59,10 @@ export default function App() {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>(DEFAULT_STORE_DISPLAY);
   const [ownerInsights, setOwnerInsights] = useState<any>({
-    trendsSummary: "Currently showing store floor default favorites. Run The Vinyl Concierge to compile direct user insights.",
-    inventoryOpportunities: "Order more quality repressings of early 1960s spiritual jazz, and expand deep-focus ambient drawers.",
-    underrepresentedAreas: "Underrepresented selections on our shelves include late 70s Japanese City Pop and private-press British acoustic folk.",
-    merchandisingStrategy: "Shelf title cue: 'Midnight Coffee & Needle Drops'. Display Nick Drake sleeves prominent on cork easel boards."
+    trendsSummary: "Synthetic owner dashboard is modeling 101 recent recommendation sessions across indie folk, jazz, alternative, classic rock, audiophile, and singer-songwriter customers.",
+    inventoryOpportunities: "Use the dashboard alerts to prioritize jazz depth, indie folk staff picks, and alternative catalog expansion before the next buy list.",
+    underrepresentedAreas: "The strongest sample gaps are jazz fusion, lyric-forward indie folk, and alternative records that bridge familiar artists with deeper bins.",
+    merchandisingStrategy: "Shelf title cue: 'Late-Night Requests From the Listening Desk.' Place one familiar classic beside two discovery records."
   });
   const [selectedAlbumIdx, setSelectedAlbumIdx] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
