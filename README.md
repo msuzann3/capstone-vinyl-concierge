@@ -1,3 +1,5 @@
+iCloud local path: `iCloud/Documents/_AI-Workspace/Codex/Capstone`
+
 # The Vinyl Concierge
 
 The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard for Curate Records & Books. The app turns a customer's artists, genres, mood, and listening environment into a hand-picked vinyl stack with warm shop-clerk notes, then provides private owner insights for stock planning and merchandising.
@@ -22,8 +24,8 @@ GitHub Pages hosts the working prototype. Recommendations are generated in the b
 
 Michelle works across multiple Macs through iCloud Drive. At the beginning of every session:
 
-1. Read this `README.md`.
-2. Read `CHANGELOG.md`.
+1. Check the GitHub copy of `README.md`.
+2. Check the GitHub copy of `CHANGELOG.md`.
 3. Read `docs/brand/BRAND_NOTES.md` before visual or voice changes.
 4. Check `git status`.
 5. Confirm whether work should target the GitHub Pages prototype or a future hosted backend.
@@ -31,9 +33,9 @@ Michelle works across multiple Macs through iCloud Drive. At the beginning of ev
 
 At the end of meaningful work:
 
-1. Update this `README.md` if the project state, setup, deployment, or next steps changed.
+1. Update `README.md` if the project state, setup, deployment, or next steps changed.
 2. Add a dated entry to `CHANGELOG.md`.
-3. Commit and push changes when Michelle asks for GitHub continuity or publishing.
+3. Commit and push the updates to GitHub so whichever Mac Michelle opens next has the latest project context.
 
 ## Local Setup
 

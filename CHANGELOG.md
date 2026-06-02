@@ -17,3 +17,5 @@ All notable project changes should be recorded here so Michelle can move between
 - Added `docs/brand/BRAND_NOTES.md` with the palette, type system, logo rules, and voice guardrails from the brand PDFs.
 - Moved the active git repository root up to `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone` for cleaner iCloud and GitHub continuity.
 - Kept the original Google handoff archive wrapper locally in `Handoff from Google/` and ignored it from git.
+- Added the iCloud project path as the first line of `README.md`.
+- Clarified project instructions to check the GitHub `README.md` and `CHANGELOG.md` at the beginning of every session and update/push both after meaningful changes.
