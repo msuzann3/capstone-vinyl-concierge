@@ -4,6 +4,13 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-02
 
+- Expanded the local recommendation catalog in `src/recommender.ts` from 10 to 33 albums as a recommendation-data enhancement, not a new Assignment 2 feature.
+- Added genre, mood, and listening-context tags to each recommendation catalog record and included those tags in the existing ranking haystack for better matching variety.
+- Added albums across indie/alternative, jazz, classic rock, modern pop, singer-songwriter, soul/R&B, baroque pop, Gulf & Western, ambient, trip-hop, dream pop, and psychedelic folk while leaving Owner Insights Dashboard and Collection Insights UI unchanged.
+- Verified the catalog expansion with `npm run lint`, `npm run build:pages`, and sample recommendation profiles for indie/alternative, jazz/fusion, and soul/classic-rock customers.
+- Investigated the reported OpenAI error `The model 'gpt-image-2' does not exist`; searched active source, config, env examples, package files, built assets, and ignored files.
+- Confirmed there is no `gpt-image-2` reference, OpenAI client, AI SDK configuration, image endpoint, image-generation dependency, Gemini dependency, Google AI Studio import path, or API key requirement in the active codebase.
+- Added a README status note clarifying that the prototype has no active image-generation path and still runs recommendations locally.
 - Added the second Assignment 2 focused feature: customer-facing Collection Insights after the recommendation results.
 - Extended `src/recommender.ts` with local-only collection opportunity heuristics, coverage scoring, and suggested exploration areas; no external APIs, authentication, databases, or Discogs integration.
 - Added typed Collection Insights data structures in `src/types.ts`.
