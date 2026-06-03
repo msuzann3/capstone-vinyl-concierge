@@ -63,6 +63,14 @@ const PERSONAS = [
     contexts: ["weekend speaker test", "gift for a longtime collector", "familiar Saturday pull"]
   },
   {
+    name: "Country and Americana browsers",
+    weight: 12,
+    primaryGenre: "Country",
+    secondaryGenres: ["Americana", "Country Rock", "Singer-songwriter"],
+    artists: ["Dolly Parton", "Gillian Welch", "Wilco", "The Flying Burrito Brothers", "Willie Nelson"],
+    contexts: ["front-porch weekend browse", "road-trip stack building", "story-first gift shopping"]
+  },
+  {
     name: "Alternative listeners",
     weight: 18,
     primaryGenre: "Alternative",
@@ -94,6 +102,7 @@ const INVENTORY_BY_GENRE: Record<string, number> = {
   Alternative: 11,
   "Singer-songwriter": 12,
   "Classic Rock": 58,
+  Country: 17,
   Audiophile: 27,
   "Jazz Fusion": 9,
   "Dream Pop": 16,
@@ -159,10 +168,12 @@ function buildMetrics(): OwnerDashboardMetrics {
     {
       "Indie Folk": "Crossover demand from folk, lyric-led, and alternative shoppers",
       Jazz: "Collectors are asking for modal, spiritual, and fusion-adjacent titles",
+      "Classic Rock": "Familiar weekend pulls and pressing-quality reference records stay strong",
+      Country: "Dolly-led country requests are widening into Americana and country-rock bridge records",
       Alternative: "Strong pull from Radiohead, dream pop, and post-punk requests",
       "Singer-songwriter": "Closely tied to indie folk and bookshop gift browsing"
     },
-    5
+    7
   );
 
   const topArtists = toRankedMetrics(
@@ -171,6 +182,8 @@ function buildMetrics(): OwnerDashboardMetrics {
       Radiohead: "Frequent anchor artist for alternative and audiophile sessions",
       "Phoebe Bridgers": "Bridges indie folk, singer-songwriter, and younger gift requests",
       "Miles Davis": "Top jazz entry point and pressing-quality comparison title",
+      "Dolly Parton": "Country anchor artist with strong crossover gift and storytelling appeal",
+      "Fleetwood Mac": "Classic Rock anchor that connects familiar hits with deeper country-rock shelves",
       "Nick Drake": "Shared signal between folk, audiophile, and lyric-led shoppers",
       "Sufjan Stevens": "Reliable indie folk expansion path"
     },
@@ -202,6 +215,7 @@ function buildMetrics(): OwnerDashboardMetrics {
     inventoryAlerts,
     trendSummary: [
       "Late-night listening is increasing across jazz, alternative, and indie folk sessions.",
+      "Country requests are clustering around Dolly Parton, Americana storytelling, and country-rock bridge records.",
       "Interest in jazz fusion is growing beyond standard Miles Davis and John Coltrane entry points.",
       "Strong crossover appears between indie folk and singer-songwriter listeners.",
       "Audiophile shoppers often use jazz and classic rock as pressing-quality reference categories."

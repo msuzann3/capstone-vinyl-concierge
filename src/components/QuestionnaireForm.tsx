@@ -9,8 +9,8 @@ interface QuestionnaireFormProps {
 }
 
 const PRESET_GENRES = [
-  "Jazz", "Dream Pop", "Alternative", "Indie Folk", "Trip-Hop", 
-  "Indie Rock", "Ambient / Drone", "Soul / Funk", "Post-Rock", "Electronic"
+  "Jazz", "Dream Pop", "Alternative", "Indie Folk", "Classic Rock",
+  "Indie Rock", "Ambient / Drone", "Soul / Funk", "Post-Rock", "Country"
 ];
 
 const PRESET_MOODS = [

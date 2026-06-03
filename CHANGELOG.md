@@ -2,6 +2,26 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-03
+
+- Added a Country and Americana browser persona to `src/syntheticOwnerInsights.ts`, increasing the Owner Insights synthetic sample from 101 to 113 sessions.
+- Added Country inventory depth, Country trend language, Dolly Parton artist-detail language, and a visible Country ranking path in the Owner Insights dashboard while retaining the existing Classic Rock owner profile.
+- Made the Owner Insights sync log display the generated synthetic session count dynamically so the dashboard copy stays aligned with the source data.
+- Removed duplicate Curate Community title text from the store information card and removed the repeated bottom Record Club line, leaving only Shop Hours in the lower strip.
+- Added Dolly Parton's `Jolene` to the synthetic recommendation catalog as a Country anchor.
+- Added The Flying Burrito Brothers' `The Gilded Palace of Sin` as a Country Rock discovery bridge that can serve both Country and Classic Rock recommendation requests.
+- Replaced the visible genre selector option `Electronic` with `Country` so the form offers broader customer coverage.
+- Added `country` matching tags to existing Americana, alt-country, and country-rock catalog records so Country requests return a full aligned recommendation stack.
+- Verified targeted sample profiles: Country now returns Dolly Parton, Wilco, Gillian Welch, The Flying Burrito Brothers, and Jimmy Buffett; Classic Rock now returns The Beatles, Fleetwood Mac, The Flying Burrito Brothers, Jimmy Buffett, and Steely Dan.
+- Verified the catalog update with `npm run lint` and `npm run build:pages`.
+- Completed the initial UI and content polish pass only; no Collection Insights functionality, APIs, databases, authentication, Discogs integration, or audio playback were added or changed.
+- Replaced the visible genre selector option `Trip-Hop` with `Classic Rock`; the existing recommendation catalog already contains Classic Rock entries, so `src/recommender.ts` was left unchanged.
+- Corrected the header brand text from `Curate Records_& Books` to `Curate Records & Books`.
+- Improved the upper-left header logo visibility by using the existing production Curate brandmark PNG from `docs/brand/Logos/01_brandmark_color.png` on an opaque Bone Cream logo plate.
+- Replaced the Concierge Manifesto bulletin card with a Curate Community store information card featuring Record Club timing, the Women Who Changed Rock theme, 23 new arrivals, Indie Folk as the most requested genre, and shop hours.
+- Removed playback-style recommendation UI cues from the recommendation cards and selected-record detail area; recommendation cards now use one non-clickable `Staff Pick` indicator, and track cues render as passive Side A shelf notes instead of clickable controls.
+- Verified with `npm run lint`, `npm run build:pages`, and local browser review; the current local preview is available at `http://127.0.0.1:3000/` while that dev server is running.
+
 ## 2026-06-02
 
 - Expanded the local recommendation catalog in `src/recommender.ts` from 10 to 33 albums as a recommendation-data enhancement, not a new Assignment 2 feature.

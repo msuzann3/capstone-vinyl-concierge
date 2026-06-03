@@ -115,7 +115,7 @@ const CATALOG: CatalogRecord[] = [
     releaseYear: "2002",
     classification: "Familiar Classic",
     vibe: "weathered Americana, art-rock static, crooked melodies",
-    genreTags: ["alternative", "alt-country", "indie rock", "americana"],
+    genreTags: ["alternative", "alt-country", "country", "indie rock", "americana"],
     moodTags: ["bittersweet", "restless", "dusty", "curious"],
     contextTags: ["road trip", "weekend morning", "vinyl deep dive", "front room"],
     tracksToListenTo: ["Jesus, Etc.", "I Am Trying to Break Your Heart", "Heavy Metal Drummer"],
@@ -180,11 +180,24 @@ const CATALOG: CatalogRecord[] = [
     releaseYear: "2001",
     classification: "Discovery Gem",
     vibe: "old-soul Americana, close harmonies, patient acoustic space",
-    genreTags: ["singer-songwriter", "americana", "folk", "country folk"],
+    genreTags: ["singer-songwriter", "country", "americana", "folk", "country folk"],
     moodTags: ["plainspoken", "haunting", "patient", "earthy"],
     contextTags: ["front porch", "morning coffee", "road trip", "quiet evening"],
     tracksToListenTo: ["Revelator", "My First Lover", "Everything Is Free"],
     shelfNote: "A beautiful slow-burn recommendation for customers who do not need the record to hurry. The harmonies sit close, the guitars are dry and true, and the whole thing feels cut from old wood."
+  },
+  {
+    title: "Jolene",
+    artist: "Dolly Parton",
+    genre: "Country",
+    releaseYear: "1974",
+    classification: "Familiar Classic",
+    vibe: "crystalline country songwriting, mountain ache, direct storytelling",
+    genreTags: ["country", "classic country", "country pop", "singer-songwriter"],
+    moodTags: ["heartfelt", "plainspoken", "melancholic", "warm"],
+    contextTags: ["morning coffee", "road trip", "lyrics-first listening", "front porch"],
+    tracksToListenTo: ["Jolene", "I Will Always Love You", "Early Morning Breeze"],
+    shelfNote: "Dolly is the country pull that works for almost anyone who cares about the song first. The voice is bright enough to light the room, but the writing keeps both feet on the floor."
   },
   {
     title: "Dummy",
@@ -356,13 +369,26 @@ const CATALOG: CatalogRecord[] = [
     shelfNote: "Abbey Road is the Beatles pull when the customer wants the famous name and the record still has to earn the space. The songs are immediate, the studio craft is gleaming, and Side Two makes a very good case for listening all the way through."
   },
   {
+    title: "The Gilded Palace of Sin",
+    artist: "The Flying Burrito Brothers",
+    genre: "Country Rock",
+    releaseYear: "1969",
+    classification: "Discovery Gem",
+    vibe: "cosmic country rock, pedal steel ache, dusty harmonies",
+    genreTags: ["country", "country rock", "classic rock", "americana"],
+    moodTags: ["dusty", "bittersweet", "loose", "warm"],
+    contextTags: ["road trip", "front porch", "weekend afternoon", "crate digging"],
+    tracksToListenTo: ["Christine's Tune", "Sin City", "Hot Burrito #1"],
+    shelfNote: "This is the side-door country pick for rock listeners and the side-door rock pick for country listeners. The pedal steel bends the light, the harmonies stay dusty, and the whole record feels pulled from a well-loved jacket."
+  },
+  {
     title: "Equal Strain on All Parts",
     artist: "Jimmy Buffett",
     genre: "Gulf & Western",
     releaseYear: "2023",
     classification: "Discovery Gem",
     vibe: "salt-air country rock, easygoing stories, late-career warmth",
-    genreTags: ["classic rock", "country rock", "americana", "trop rock"],
+    genreTags: ["classic rock", "country", "country rock", "americana", "trop rock"],
     moodTags: ["relaxed", "breezy", "warm", "reflective"],
     contextTags: ["road trip", "weekend afternoon", "porch listening", "vacation mood"],
     tracksToListenTo: ["Bubbles Up", "My Gummie Just Kicked In", "Like My Dog"],
@@ -669,8 +695,8 @@ export function buildRecommendations(preferences: UserPreferences): Recommendati
     })),
     ownerInsights: {
       trendsSummary: `This customer is clustering around ${requestedGenres.slice(0, 3).join(", ") || "mood-led discovery"} with a ${preferences.mood || "slow-browse"} listening frame. Treat that as a signal for records that feel personal, tactile, and playable in quiet domestic settings.`,
-      inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Phoebe Bridgers, Nick Drake, and Cocteau Twins in view, then deepen the adjacent bins with Portishead, Brian Eno, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
-      underrepresentedAreas: "The likely gaps are ambient-adjacent folk, quiet trip-hop, spiritual jazz beyond the obvious classics, and small-label dream pop reissues.",
+      inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Phoebe Bridgers, Nick Drake, Dolly Parton, Fleetwood Mac, and Cocteau Twins in view, then deepen the adjacent bins with classic country, country rock, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
+      underrepresentedAreas: "The likely gaps are country foundations, classic-rock side-door discoveries, spiritual jazz beyond the obvious classics, and small-label dream pop reissues.",
       merchandisingStrategy: "Chalkcard title: 'Records for Low Light and Good Headphones.' Place one familiar classic beside two discovery records so the table feels welcoming rather than obscure."
     },
     collectionInsights: buildCollectionInsights(preferences, selectedRecords)

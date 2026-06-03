@@ -13,7 +13,7 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncLogs, setSyncLogs] = useState<string[]>([
     "Curate POS Database connected (Local Mock Mode)",
-    "Synthetic recommendation sessions loaded: 101",
+    `Synthetic recommendation sessions loaded: ${ownerDashboardMetrics.sessions.length}`,
     "Shelf inventory current status: 1,421 representative vinyl sleeves scanned",
   ]);
   const maxGenreCount = Math.max(...ownerDashboardMetrics.topGenres.map((genre) => genre.count));

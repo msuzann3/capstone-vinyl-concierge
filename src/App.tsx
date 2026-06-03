@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
-  Disc, 
-  Sparkles, 
   BookOpen, 
-  ArrowLeft, 
   RotateCcw, 
-  HelpCircle, 
-  Volume2, 
   Compass, 
-  Music, 
   Layers, 
-  ChevronRight,
   Info,
   Gauge,
   LibraryBig,
@@ -24,6 +17,8 @@ import OwnerInsightsView from "./components/OwnerInsightsView";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
+
+const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
 
 // Illustrative starting list for initial load when no recommendation is fetched yet
 const DEFAULT_STORE_DISPLAY: Recommendation[] = [
@@ -64,17 +59,15 @@ export default function App() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>(DEFAULT_STORE_DISPLAY);
   const [collectionInsights, setCollectionInsights] = useState<CollectionInsights | null>(null);
   const [ownerInsights, setOwnerInsights] = useState<any>({
-    trendsSummary: "Synthetic owner dashboard is modeling 101 recent recommendation sessions across indie folk, jazz, alternative, classic rock, audiophile, and singer-songwriter customers.",
-    inventoryOpportunities: "Use the dashboard alerts to prioritize jazz depth, indie folk staff picks, and alternative catalog expansion before the next buy list.",
-    underrepresentedAreas: "The strongest sample gaps are jazz fusion, lyric-forward indie folk, and alternative records that bridge familiar artists with deeper bins.",
-    merchandisingStrategy: "Shelf title cue: 'Late-Night Requests From the Listening Desk.' Place one familiar classic beside two discovery records."
+    trendsSummary: "Synthetic owner dashboard is modeling recent recommendation sessions across indie folk, jazz, alternative, classic rock, country, audiophile, and singer-songwriter customers.",
+    inventoryOpportunities: "Use the dashboard alerts to prioritize jazz depth, indie folk staff picks, country storytelling records, and classic rock bridge titles before the next buy list.",
+    underrepresentedAreas: "The strongest sample gaps are jazz fusion, lyric-forward indie folk, country foundations, and alternative records that bridge familiar artists with deeper bins.",
+    merchandisingStrategy: "Shelf title cue: 'Late-Night Requests From the Listening Desk.' Place one familiar classic beside two discovery records so the table feels welcoming rather than obscure."
   });
   const [selectedAlbumIdx, setSelectedAlbumIdx] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingPhraseIndex, setLoadingPhraseIndex] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [activeTrackIdx, setActiveTrackIdx] = useState<number>(0);
 
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
@@ -109,8 +102,6 @@ export default function App() {
         setOwnerInsights(data.ownerInsights);
         setCollectionInsights(data.collectionInsights);
         setSelectedAlbumIdx(0);
-        setActiveTrackIdx(0);
-        setIsPlaying(true); // Auto-spin first record
       } else {
         throw new Error("Empty recommendations response structure received.");
       }
@@ -127,14 +118,7 @@ export default function App() {
     setRecommendations(DEFAULT_STORE_DISPLAY);
     setCollectionInsights(null);
     setSelectedAlbumIdx(0);
-    setActiveTrackIdx(0);
-    setIsPlaying(false);
     setError(null);
-  };
-
-  const handleTrackClick = (idx: number) => {
-    setActiveTrackIdx(idx);
-    setIsPlaying(true);
   };
 
   const activeAlbum = recommendations[selectedAlbumIdx] || DEFAULT_STORE_DISPLAY[0];
@@ -146,9 +130,13 @@ export default function App() {
       <header className="bg-vinyl-black text-bone-cream border-b-4 border-sleeve-mustard shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4">
-            {/* Real Curate Circular Brandmark Logo */}
-            <div className="w-12 h-12 shadow-md hover:scale-110 transition-all cursor-pointer duration-300">
-              <Brandmark size="100%" />
+            {/* Production Curate brandmark with an opaque plate for contrast */}
+            <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-bone-cream border-2 border-sleeve-mustard shadow-lg p-1.5 flex items-center justify-center">
+              <img
+                src={curateHeaderLogo}
+                alt="Curate Records & Books"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -158,7 +146,7 @@ export default function App() {
                 </span>
               </div>
               <p className="text-xs text-stone-400 font-mono tracking-wider mt-0.5">
-                Curate Records_& Books · Northern New Mexico
+                Curate Records & Books · Northern New Mexico
               </p>
             </div>
           </div>
@@ -315,8 +303,6 @@ export default function App() {
                           isSelected={selectedAlbumIdx === i}
                           onClick={() => {
                             setSelectedAlbumIdx(i);
-                            setActiveTrackIdx(0);
-                            setIsPlaying(true);
                           }}
                         />
                       ))}
@@ -329,17 +315,14 @@ export default function App() {
                     {/* Spin bar tape info */}
                     <div className="bg-vinyl-black border-b border-stone-800 py-2.5 px-5 flex justify-between items-center">
                       <div className="flex items-center gap-3">
-                        <span className="w-2 h-2 rounded-full bg-sleeve-mustard animate-pulse"></span>
+                        <span className="w-2 h-2 rounded-full bg-sleeve-mustard"></span>
                         <span className="text-[10px] font-mono tracking-widest uppercase text-stone-400">
-                          Now spinning on showcase deck
+                          Selected shelf pull from the display bins
                         </span>
                       </div>
-                      {isPlaying && (
-                        <div className="flex items-center gap-1 text-[11px] text-sleeve-mustard font-mono">
-                          <Volume2 className="w-3.5 h-3.5 animate-bounce" />
-                          <span>Pristine Stereo Cut...</span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1 text-[11px] text-sleeve-mustard font-mono uppercase">
+                        Staff Pick
+                      </div>
                     </div>
 
                     <div className="p-6 md:p-8 space-y-6">
@@ -385,32 +368,26 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Tracks Selector */}
+                      {/* Track cues */}
                       <div className="border-t border-stone-100 pt-5 space-y-3">
                         <span className="text-[10px] font-mono tracking-wider uppercase text-stone-500 block">
-                          STANDOUT TRACK CUES (CLERK RECOMMENDATIONS)
+                          SIDE A TRACK CUES
                         </span>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                          {activeAlbum.tracksToListenTo.map((track, i) => {
-                            const isCurrentTrack = isPlaying && activeTrackIdx === i;
-                            return (
-                              <button
-                                key={track}
-                                onClick={() => handleTrackClick(i)}
-                                className={`text-left p-2.5 rounded border text-xs transition-all flex items-center justify-between gap-2 cursor-pointer ${
-                                  isCurrentTrack
-                                    ? "bg-curate-red text-white font-bold border-curate-red shadow-md"
-                                    : "bg-bone-cream border-stone-200 text-stone-700 hover:bg-stone-50"
-                                }`}
-                              >
-                                <span className="truncate max-w-[85%]">
-                                  {i + 1}. {track}
-                                </span>
-                                <Music className={`w-3.5 h-3.5 ${isCurrentTrack ? "animate-pulse text-sleeve-mustard" : "text-stone-400"}`} />
-                              </button>
-                            );
-                          })}
+                          {activeAlbum.tracksToListenTo.map((track, i) => (
+                            <div
+                              key={track}
+                              className="text-left p-2.5 rounded border text-xs bg-bone-cream border-stone-200 text-stone-700 flex items-center gap-2"
+                            >
+                              <span className="text-[10px] font-mono text-curate-red font-bold">
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+                              <span className="truncate">
+                                {track}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
@@ -547,7 +524,8 @@ export default function App() {
                     { title: "Punisher", artist: "Phoebe Bridgers", genre: "Indie Folk" },
                     { title: "Pink Moon", artist: "Nick Drake", genre: "Folk" },
                     { title: "A Love Supreme", artist: "John Coltrane", genre: "Jazz" },
-                    { title: "Dummy", artist: "Portishead", genre: "Trip-Hop" },
+                    { title: "Jolene", artist: "Dolly Parton", genre: "Country" },
+                    { title: "Rumours", artist: "Fleetwood Mac", genre: "Classic Rock" },
                     { title: "The Queen Is Dead", artist: "The Smiths", genre: "Indie Rock" },
                     { title: "Illinois", artist: "Sufjan Stevens", genre: "Indie Folk" }
                   ].map((inv, idx) => (
@@ -578,24 +556,49 @@ export default function App() {
               
               <div className="flex gap-2 items-center text-xs font-mono uppercase text-stone-500 mb-1">
                 <Compass className="w-4 h-4 text-curate-red" />
-                <span>Concierge Manifesto</span>
+                <span>Curate Community</span>
               </div>
-              <h4 className="font-display font-bold text-base text-stone-800 uppercase tracking-tight py-1">
-                PLAIN, WARM, OPINIONATED.
-              </h4>
-              <p className="font-editorial text-stone-700 text-sm italic leading-relaxed mt-1">
-                "We try to speak like a thoughtful friend. Plain, clear, and slightly opinionated. Confident enough to recommend, modest enough to be wrong sometimes. Em-dashes earn their keep — short sentences carry the rest."
-              </p>
+              <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-bone-cream/70 border border-amber-200 rounded p-3">
+                  <span className="block text-[10px] font-mono uppercase tracking-widest text-stone-500">
+                    Next Record Club
+                  </span>
+                  <span className="block font-bold text-stone-800 leading-tight mt-1">
+                    First Monday of Every Month
+                  </span>
+                </div>
+                <div className="bg-bone-cream/70 border border-amber-200 rounded p-3">
+                  <span className="block text-[10px] font-mono uppercase tracking-widest text-stone-500">
+                    Featured Theme
+                  </span>
+                  <span className="block font-bold text-stone-800 leading-tight mt-1">
+                    Women Who Changed Rock
+                  </span>
+                </div>
+                <div className="bg-bone-cream/70 border border-amber-200 rounded p-3">
+                  <span className="block text-[10px] font-mono uppercase tracking-widest text-stone-500">
+                    New Arrivals This Week
+                  </span>
+                  <span className="block font-display text-2xl text-curate-red leading-none mt-1">
+                    23
+                  </span>
+                </div>
+                <div className="bg-bone-cream/70 border border-amber-200 rounded p-3">
+                  <span className="block text-[10px] font-mono uppercase tracking-widest text-stone-500">
+                    Most Requested Genre
+                  </span>
+                  <span className="block font-bold text-stone-800 leading-tight mt-1">
+                    Indie Folk
+                  </span>
+                </div>
+              </div>
               
               <div className="mt-4 pt-4 border-t border-stone-200 grid grid-cols-2 gap-2 text-[11px] text-stone-600 font-mono">
                 <div>
                   <span className="block font-bold text-stone-800">Shop Hours:</span>
                   <span>Tue - Sun, 11am - 7pm</span>
                 </div>
-                <div>
-                  <span className="block font-bold text-stone-800">Record Club:</span>
-                  <span>Meets 1st Mon of Month</span>
-                </div>
+                <div aria-hidden="true"></div>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Recommendation } from "../types";
-import { Disc, Play, Star, Music, Award } from "lucide-react";
+import { Star, Award, BadgeCheck } from "lucide-react";
 
 interface VinylDiscProps {
   key?: any;
@@ -126,25 +126,22 @@ export default function VinylDisc({ album, isSelected, onClick, index }: VinylDi
 
       </div>
 
-      {/* Under-album mini controller info */}
+      {/* Under-album shelf note */}
       <div className="mt-2 flex items-center justify-between px-1">
         <div>
           <h4 className="font-bold text-xs truncate max-w-[200px] text-stone-900">{album.title}</h4>
           <p className="text-[11px] text-stone-600 font-editorial italic">{album.artist}</p>
         </div>
-        <button
-          className={`p-1.5 rounded-full transition-all border ${
-            isSelected 
-              ? "bg-sleeve-mustard text-curate-red border-sleeve-mustard/50 shadow-inner" 
-              : "bg-white text-stone-700 border-stone-300 hover:bg-stone-100"
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-sm border px-2 py-1 text-[9px] font-mono uppercase tracking-wider ${
+            isSelected
+              ? "bg-sleeve-mustard text-vinyl-black border-sleeve-mustard font-bold"
+              : "bg-bone-cream text-stone-600 border-stone-300"
           }`}
         >
-          {isSelected ? (
-            <Disc className="w-3.5 h-3.5 animate-spin-vinyl text-curate-red" />
-          ) : (
-            <Play className="w-3.5 h-3.5 fill-stone-700 text-stone-700" />
-          )}
-        </button>
+          <BadgeCheck className="w-3 h-3 text-curate-red" />
+          Staff Pick
+        </span>
       </div>
     </motion.div>
   );
