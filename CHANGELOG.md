@@ -8,6 +8,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Added Country inventory depth, Country trend language, Dolly Parton artist-detail language, and a visible Country ranking path in the Owner Insights dashboard while retaining the existing Classic Rock owner profile.
 - Made the Owner Insights sync log display the generated synthetic session count dynamically so the dashboard copy stays aligned with the source data.
 - Removed duplicate Curate Community title text from the store information card and removed the repeated bottom Record Club line, leaving only Shop Hours in the lower strip.
+- Simplified the footer to a single copyright line: `© 2026 Curate Records & Books, USA`.
 - Added Dolly Parton's `Jolene` to the synthetic recommendation catalog as a Country anchor.
 - Added The Flying Burrito Brothers' `The Gilded Palace of Sin` as a Country Rock discovery bridge that can serve both Country and Classic Rock recommendation requests.
 - Replaced the visible genre selector option `Electronic` with `Country` so the form offers broader customer coverage.

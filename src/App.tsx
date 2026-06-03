@@ -612,19 +612,11 @@ export default function App() {
       </main>
 
       {/* Curate Style Footer */}
-      <footer className="bg-vinyl-black text-stone-300 py-10 mt-16 border-t-4 border-sleeve-mustard">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <div className="flex justify-center items-center gap-2">
-            <span className="font-display text-white text-base tracking-widest uppercase">
-              CURATE RECORDS & BOOKS
-            </span>
-          </div>
-          <p className="text-xs text-stone-400 font-editorial italic max-w-xl mx-auto font-serif">
-            Adhering strictly to the official design standards of Curate Records & Books. Bone Cream, Curate Red, and Vinyl Black highlighted with sleeve mustard and deep rust. Crafted with professional precision to embody vintage indie shop layouts and classic literature warmth.
+      <footer className="bg-vinyl-black text-stone-400 py-6 mt-16 border-t-4 border-sleeve-mustard">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[11px] font-mono">
+            &copy; 2026 Curate Records & Books, USA
           </p>
-          <div className="text-[10px] text-stone-500 font-mono">
-            &copy; {new Date().getFullYear()} Curate Records & Books. All rights reserved. Registered NM Independent Retail Coalition No. 12908.
-          </div>
         </div>
       </footer>
 
