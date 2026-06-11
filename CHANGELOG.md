@@ -6,6 +6,11 @@ All notable project changes should be recorded here so Michelle can move between
 
 - Updated the README path notes so the MacBook Pro working copy is `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`, the MacBook Air copy is `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`, and both represent the same iCloud-synced project.
 - Added `docs/class-context/drive-context.md` with the Google Drive folder reference, Week 3 course status, and summaries of the Module 1-3 submitted `.docx` files plus the combined capstone assignment PDF.
+- Imported the Week 3 Google AI Studio owner-intelligence handoff as an additive business-facing side of the prototype, preserving the original zip locally under ignored `Handoff from Google/week3-owner-intelligence/`.
+- Added a Customer / Owner switch in the app header so the existing customer recommendation experience and new business-facing Owner Intelligence Dashboard can coexist.
+- Added `src/components/OwnerIntelligenceDashboard.tsx`, `src/ownerIntelligenceData.ts`, and `src/ownerIntelligenceTypes.ts` for the local synthetic owner workflow: identify inventory issues, validate demand signals, review AI recommendations, and track outcomes.
+- Limited Tailwind v4 source detection to active source files in `src/index.css` so ignored Google handoff zip archives do not stall local or Pages builds.
+- Rebuilt local `esbuild` wrapper files with `npm rebuild esbuild` after the Mac restart left the package wrapper missing; verified `npm run lint`, `npm run build`, and `npm run build:pages`.
 
 ## 2026-06-03
 

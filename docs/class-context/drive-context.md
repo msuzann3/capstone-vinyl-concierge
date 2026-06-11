@@ -55,6 +55,8 @@ Stress testing focused on owner intelligence assumptions:
 
 The proposed mitigation direction is stronger demand validation, including weighting purchase history more heavily than requests and flagging sudden spikes for human review. The deeper unresolved issue is that AI recommendations remain dependent on imperfect signals and human judgment.
 
+The Google AI Studio Week 3 owner-intelligence handoff is additive. It represents business-facing pages that work alongside the existing customer-facing recommendation flow. The original export zip is kept locally in `Handoff from Google/week3-owner-intelligence/`, and the active app now contains a lean adapted Owner Intelligence Dashboard rather than replacing the existing customer side.
+
 ## Working Guidance
 
 - Keep the prototype aligned with the Week 3 state unless Michelle explicitly asks to jump ahead.

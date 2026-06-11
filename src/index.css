@@ -1,17 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@600;700&family=DM+Mono:wght@400;500&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,opsz,wght@1,6..72,400..700&display=swap');
-@import "tailwindcss";
+@import "tailwindcss" source("./");
 
 @theme {
-  --font-sans: "Familjen Grotesk", sans-serif;
-  --font-display: "Archivo Black", sans-serif;
-  --font-editorial: "Newsreader", serif;
-  --font-hand: "Caveat", cursive;
-  --font-mono: "DM Mono", monospace;
+  --font-sans: "Familjen Grotesk", "Avenir Next", "Helvetica Neue", sans-serif;
+  --font-display: "Archivo Black", "Arial Black", "Helvetica Neue", sans-serif;
+  --font-editorial: "Newsreader", Georgia, serif;
+  --font-hand: "Caveat", "Bradley Hand", cursive;
+  --font-mono: "DM Mono", "SFMono-Regular", Consolas, monospace;
 
   --color-curate-red: #DB1D1B;
   --color-vinyl-black: #1D1D1B;
   --color-bone-cream: #F4EFE3;
   --color-sleeve-white: #ECE5D2;
+  --color-paper-white: #FAF7EE;
+  --color-kraft-paper: #C9A878;
   --color-kraft: #C9A878;
   --color-sleeve-mustard: #D9A441;
   --color-deep-rust: #8B2418;
@@ -35,6 +36,21 @@ body {
 
 .font-display {
   font-family: var(--font-display);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.28s ease-out both;
 }
 
 /* Custom spinning vinyl animation */

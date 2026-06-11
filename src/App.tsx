@@ -14,6 +14,7 @@ import {
 import QuestionnaireForm from "./components/QuestionnaireForm";
 import VinylDisc from "./components/VinylDisc";
 import OwnerInsightsView from "./components/OwnerInsightsView";
+import OwnerIntelligenceDashboard from "./components/OwnerIntelligenceDashboard";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
@@ -55,6 +56,7 @@ const DEFAULT_STORE_DISPLAY: Recommendation[] = [
 ];
 
 export default function App() {
+  const [activeExperience, setActiveExperience] = useState<"customer" | "owner">("customer");
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>(DEFAULT_STORE_DISPLAY);
   const [collectionInsights, setCollectionInsights] = useState<CollectionInsights | null>(null);
@@ -157,6 +159,24 @@ export default function App() {
               and the book falls open."
             </span>
             <div className="h-6 w-px bg-stone-800 hidden md:block"></div>
+            <div className="flex rounded-full border border-sleeve-mustard/30 bg-stone-950 p-1">
+              {[
+                { id: "customer", label: "Customer" },
+                { id: "owner", label: "Owner" },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setActiveExperience(option.id as "customer" | "owner")}
+                  className={`rounded-full px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider transition-all ${
+                    activeExperience === option.id
+                      ? "bg-sleeve-mustard text-vinyl-black"
+                      : "text-stone-400 hover:text-bone-cream"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
             {/* Curate Active Badge */}
             <div className="flex items-center gap-2 bg-stone-900 px-3 py-1.5 rounded-full border border-curate-red/40 shadow-inner">
               <span className="w-2.5 h-2.5 rounded-full bg-curate-red animate-pulse"></span>
@@ -170,6 +190,10 @@ export default function App() {
 
       {/* Main Container Area */}
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
+        {activeExperience === "owner" ? (
+          <OwnerIntelligenceDashboard />
+        ) : (
+          <>
         
         {/* Welcome Intro Hero Panel */}
         <div className="mb-8 border-l-4 border-curate-red pl-5 py-2">
@@ -608,6 +632,9 @@ export default function App() {
 
         {/* OWNER INSIGHTS SEGMENTED CONTAINER VIEW */}
         <OwnerInsightsView insights={ownerInsights} />
+
+          </>
+        )}
 
       </main>
 
