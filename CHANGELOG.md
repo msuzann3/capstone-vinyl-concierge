@@ -2,6 +2,10 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-11
+
+- Updated the README path notes so the MacBook Pro working copy is `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`, the MacBook Air copy is `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`, and both represent the same iCloud-synced project.
+
 ## 2026-06-03
 
 - Added a Country and Americana browser persona to `src/syntheticOwnerInsights.ts`, increasing the Owner Insights synthetic sample from 101 to 113 sessions.

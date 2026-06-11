@@ -1,4 +1,4 @@
-iCloud project path: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive. On this Mac that resolves through `/Users/dolly/Documents/`, but `dolly` is machine-specific.
+iCloud project path: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive. On the MacBook Pro, use `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`; on the MacBook Air, the same synced project appears under `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
 
 # The Vinyl Concierge
 
@@ -6,7 +6,9 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 
 ## Current Status
 
-- Repository root on this Mac: `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
+- Current working Mac for June/July 2026: MacBook Pro.
+- Repository root on the MacBook Pro: `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`.
+- Repository root on the MacBook Air: `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
 - Cross-Mac path to use conceptually: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive.
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
