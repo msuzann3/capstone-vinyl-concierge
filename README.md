@@ -13,6 +13,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
+- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf` and Michelle's weekly submitted `.docx` files. Current course point: Week 3 / Module 3.
 - Local app: React, Vite, Tailwind, Motion, and an Express server.
 - Recommendation engine: local in-repo catalog logic in `src/recommender.ts`; the Assignment 2 catalog now contains 35 albums with genre, mood, and listening-context tags for broader recommendation variety. No Gemini or Google API key required.
 - Image generation: no active OpenAI image model configuration, image endpoint, or `gpt-image-2` reference exists in this repo; the prototype does not generate images.
@@ -34,9 +35,10 @@ Michelle works across multiple Macs through iCloud Drive. At the beginning of ev
 1. Check the GitHub copy of `README.md`.
 2. Check the GitHub copy of `CHANGELOG.md`.
 3. Read `docs/brand/BRAND_NOTES.md` before visual or voice changes.
-4. Check `git status`.
-5. Confirm whether work should target the GitHub Pages prototype or a future hosted backend.
-6. Preserve Michelle's supplied wording unless she asks for rewriting.
+4. Read `docs/class-context/drive-context.md` before assignment-driven feature, writing, or handoff work.
+5. Check `git status`.
+6. Confirm whether work should target the GitHub Pages prototype or a future hosted backend.
+7. Preserve Michelle's supplied wording unless she asks for rewriting.
 
 At the end of meaningful work:
 
@@ -87,6 +89,7 @@ npm run start
 ├── PRD.md
 ├── README.md
 ├── CHANGELOG.md
+├── docs/class-context/
 ├── docs/brand/
 ├── server.ts
 ├── src/

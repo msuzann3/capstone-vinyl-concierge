@@ -5,6 +5,7 @@ All notable project changes should be recorded here so Michelle can move between
 ## 2026-06-11
 
 - Updated the README path notes so the MacBook Pro working copy is `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`, the MacBook Air copy is `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`, and both represent the same iCloud-synced project.
+- Added `docs/class-context/drive-context.md` with the Google Drive folder reference, Week 3 course status, and summaries of the Module 1-3 submitted `.docx` files plus the combined capstone assignment PDF.
 
 ## 2026-06-03
 
