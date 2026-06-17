@@ -456,7 +456,7 @@ export default function App() {
                       {/* Essay body column - staff review explanation */}
                       <div className="space-y-4">
                         <span className="text-[10px] font-mono tracking-wider uppercase text-stone-500 block">
-                          OUR STAFF'S REVIEW
+                          {activeAlbum.reviewType === "fit" ? "WHY THIS FITS" : "OUR STAFF'S REVIEW"}
                         </span>
                         
                         <div className="text-stone-800 text-sm md:text-base leading-relaxed space-y-4 whitespace-pre-line font-sans">

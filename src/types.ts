@@ -8,6 +8,7 @@ export interface Recommendation {
   whyThisMatches: string;
   aestheticVibe: string;
   tracksToListenTo: string[];
+  reviewType?: "staff" | "fit";
   matchScore?: number;
 }
 

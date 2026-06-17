@@ -17,6 +17,7 @@ interface CatalogRecord {
   contextTags: string[];
   tracksToListenTo: string[];
   shelfNote: string;
+  reviewType?: "staff" | "fit";
 }
 
 const CATALOG: CatalogRecord[] = [
@@ -717,7 +718,7 @@ function buildTrackCues(primaryGenre: string): string[] {
 function buildLiveShelfNote(album: FirestoreAlbum, primaryGenre: string, tags: string[]): string {
   const vibe = buildAestheticVibe(primaryGenre, tags).split(", ")[0]?.toLowerCase() || primaryGenre.toLowerCase();
 
-  return `${album.title} has the kind of presence that makes a turntable feel intentional. ${album.artist} keeps the center of the record steady while the edges open into ${vibe}, so it works as both a familiar anchor and a deeper-bin conversation starter.`;
+  return `We do not have a full staff review written for ${album.title} yet, but it fits the shelf profile better than a blind pull. It sits closest to the ${primaryGenre} bin, with enough ${vibe} overlap to connect with the preferences in this request.`;
 }
 
 function formatListeningSetting(mood: string): string {
@@ -725,13 +726,13 @@ function formatListeningSetting(mood: string): string {
   return mood.charAt(0).toLowerCase() + mood.slice(1);
 }
 
-function buildReviewContext(preferences: UserPreferences, shelfPhrase: string): string {
+function buildFitContext(preferences: UserPreferences, shelfPhrase: string): string {
   const setting = formatListeningSetting(preferences.mood);
   const genreContext = shelfPhrase === "the late-night listening stack"
     ? "the mood you described"
     : `${shelfPhrase} shelves`;
 
-  return `For this listener, I would put it near the ${genreContext} and play it during ${setting}. It has enough immediate shape to make sense on the first side, but enough texture to reward the person who wants to sit with it a little longer.`;
+  return `For this listener, I would place it near the ${genreContext} and try it during ${setting}.`;
 }
 
 function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): CatalogRecord | null {
@@ -760,6 +761,7 @@ function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): Cata
     contextTags: [...contextTags, ...(curatedRecord?.contextTags ?? [])],
     tracksToListenTo: curatedRecord?.tracksToListenTo || buildTrackCues(primaryGenre),
     shelfNote: curatedRecord?.shelfNote || buildLiveShelfNote(album, primaryGenre, searchTags),
+    reviewType: curatedRecord ? "staff" : "fit",
   };
 }
 
@@ -912,8 +914,11 @@ function buildRecommendationsFromCatalog(
       matchScore: score,
       aestheticVibe: record.vibe.split(",").slice(0, 2).join(","),
       tracksToListenTo: record.tracksToListenTo,
+      reviewType: record.reviewType || "staff",
       whyThisMatches: recommendationsEnabled
-        ? `${record.shelfNote}\n\n${buildReviewContext(preferences, shelfPhrase)}`
+        ? record.reviewType === "fit"
+          ? `${record.shelfNote}\n\n${buildFitContext(preferences, shelfPhrase)}`
+          : record.shelfNote
         : `${record.shelfNote}\n\nThe recommendation kill switch is off, so this is a staff-pick shelf pull rather than a personalized ranking.`
     })),
     ownerInsights: {
