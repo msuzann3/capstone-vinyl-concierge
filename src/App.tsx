@@ -18,10 +18,11 @@ import QuestionnaireForm from "./components/QuestionnaireForm";
 import VinylDisc from "./components/VinylDisc";
 import OwnerInsightsView from "./components/OwnerInsightsView";
 import OwnerIntelligenceDashboard from "./components/OwnerIntelligenceDashboard";
+import AuthScreen from "./components/AuthScreen";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
-import { logOut, signInWithGoogle, watchAuth } from "./auth";
+import { logOut, signInWithEmail, signInWithGoogle, signUpWithEmail, watchAuth } from "./auth";
 import { saveSessionAndSignals } from "./sessions";
 
 const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
@@ -78,6 +79,7 @@ export default function App() {
   const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
+  const [showAuthScreen, setShowAuthScreen] = useState(false);
 
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
@@ -107,15 +109,31 @@ export default function App() {
   }), []);
 
   const handleAuthClick = async () => {
+    setAuthNotice(null);
+
+    if (currentUser) {
+      setAuthBusy(true);
+      try {
+        await logOut();
+      } catch (err: any) {
+        console.error(err);
+        setAuthNotice(err.message || "The sign-out request could not finish. Please try again.");
+      } finally {
+        setAuthBusy(false);
+      }
+      return;
+    }
+
+    setShowAuthScreen(true);
+  };
+
+  const finishAuthRequest = async (request: () => Promise<unknown>) => {
     setAuthBusy(true);
     setAuthNotice(null);
 
     try {
-      if (currentUser) {
-        await logOut();
-      } else {
-        await signInWithGoogle();
-      }
+      await request();
+      setShowAuthScreen(false);
     } catch (err: any) {
       console.error(err);
       setAuthNotice(err.message || "The sign-in window could not finish. Please try again.");
@@ -183,6 +201,26 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-bone-cream flex flex-col selection:bg-sleeve-mustard selection:text-curate-red">
+      <AnimatePresence>
+        {showAuthScreen && !currentUser && (
+          <motion.div
+            key="auth-screen"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <AuthScreen
+              busy={authBusy}
+              notice={authNotice}
+              onClose={() => setShowAuthScreen(false)}
+              onGoogle={() => finishAuthRequest(signInWithGoogle)}
+              onEmailSignIn={(email, password) => finishAuthRequest(() => signInWithEmail(email, password))}
+              onEmailSignUp={(email, password) => finishAuthRequest(() => signUpWithEmail(email, password))}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       
       {/* Visual Top Header of Curate Brand Colors */}
       <header className="bg-vinyl-black text-bone-cream border-b-4 border-sleeve-mustard shadow-md">
