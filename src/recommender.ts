@@ -722,10 +722,11 @@ function buildCollectionInsights(preferences: UserPreferences, recommendations: 
   };
 }
 
-export async function buildRecommendations(preferences: UserPreferences): Promise<RecommendationResponse> {
-  const recommendationsEnabled = await getRecommendationsEnabled();
-  const liveCatalog = recommendationsEnabled ? await getFirestoreCatalog() : [];
-  const activeCatalog = liveCatalog.length > 0 ? liveCatalog : CATALOG;
+function buildRecommendationsFromCatalog(
+  preferences: UserPreferences,
+  activeCatalog: CatalogRecord[],
+  recommendationsEnabled: boolean,
+): RecommendationResponse {
   const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
   const query = [
     preferences.artists,
@@ -791,4 +792,16 @@ export async function buildRecommendations(preferences: UserPreferences): Promis
     },
     collectionInsights: buildCollectionInsights(preferences, selectedRecords.map(({ record }) => record))
   };
+}
+
+export async function buildRecommendations(preferences: UserPreferences): Promise<RecommendationResponse> {
+  try {
+    const recommendationsEnabled = await getRecommendationsEnabled();
+    const liveCatalog = recommendationsEnabled ? await getFirestoreCatalog() : [];
+    const activeCatalog = liveCatalog.length > 0 ? liveCatalog : CATALOG;
+    return buildRecommendationsFromCatalog(preferences, activeCatalog, recommendationsEnabled);
+  } catch (error) {
+    console.warn("Using local recommendation fallback; recommendation build failed.", error);
+    return buildRecommendationsFromCatalog(preferences, CATALOG, true);
+  }
 }
