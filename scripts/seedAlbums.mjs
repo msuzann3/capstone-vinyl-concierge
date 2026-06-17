@@ -46,7 +46,7 @@ const SEED = [
   "Bon Iver For Emma Forever Ago",
   "Steely Dan Aja",
   "Big Thief Dragon New Warm Mountain I Believe In You",
-  "Boygenius The Record",
+  "Boygenius The Record 2023 LP",
   "Mitski The Land Is Inhospitable And So Are We",
   "The National High Violet",
   "Wilco Yankee Hotel Foxtrot",
@@ -91,7 +91,7 @@ const SEED = [
   "Prince Purple Rain",
   "Michael Jackson Off The Wall",
   "Erykah Badu Baduizm",
-  "D'Angelo Voodoo",
+  "D'Angelo Voodoo 2000 LP",
   "Sade Diamond Life",
   "A Tribe Called Quest The Low End Theory",
   "Nas Illmatic",
@@ -104,7 +104,7 @@ const SEED = [
   "Taylor Swift Folklore",
   "Harry Styles Harrys House",
   "Kate Bush Hounds Of Love",
-  "Bjoerk Homogenic",
+  "Bjork Homogenic",
   "Daft Punk Discovery",
   "Aphex Twin Selected Ambient Works 85-92",
   "Kraftwerk Trans Europe Express",
@@ -112,12 +112,12 @@ const SEED = [
   "Massive Attack Mezzanine",
   "Burial Untrue",
   "LCD Soundsystem Sound Of Silver",
-  "Fela Kuti Zombie",
+  "Fela Kuti Zombie 1976",
   "Buena Vista Social Club Buena Vista Social Club",
   "Joao Gilberto Chega De Saudade",
   "Caetano Veloso Transa",
   "Milton Nascimento Clube Da Esquina",
-  "Bob Marley And The Wailers Exodus",
+  "Bob Marley The Wailers Exodus 1977",
   "Toots And The Maytals Funky Kingston",
   "Lee Scratch Perry Super Ape",
   "Willie Nelson Red Headed Stranger",
@@ -132,6 +132,13 @@ const SEED = [
   "Philip Glass Glassworks",
   "Steve Reich Music For 18 Musicians",
   "Arvo Part Tabula Rasa",
+];
+
+const CLEANUP_DOC_IDS = [
+  "15096894", // Amerigo Gazaway / D'Angelo remix result for Voodoo.
+  "15507190", // Boygenius self-titled EP result for The Record.
+  "509235", // Bob Marley Legend result for Exodus.
+  "9588173", // Fela complete works result for Zombie.
 ];
 
 const HEADERS = {
@@ -167,6 +174,11 @@ function toAlbum(r) {
     source: "discogs",
     discogsFetchedAt: FieldValue.serverTimestamp(),
   };
+}
+
+for (const id of CLEANUP_DOC_IDS) {
+  await db.collection("albums").doc(id).delete();
+  console.log("cleaned:", id);
 }
 
 for (const q of SEED) {
