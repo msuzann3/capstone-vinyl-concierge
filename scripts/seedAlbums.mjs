@@ -148,12 +148,27 @@ const HEADERS = {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const REQUIRED_TITLE_MATCHES = new Map([
+  ["Bob Marley The Wailers Exodus 1977", "exodus"],
+  ["Fela Kuti Zombie 1976", "zombie"],
+]);
+
 async function searchOne(q) {
-  const url = `https://api.discogs.com/database/search?type=release&per_page=1&q=${encodeURIComponent(q)}`;
+  const url = `https://api.discogs.com/database/search?type=release&per_page=10&q=${encodeURIComponent(q)}`;
   const res = await fetch(url, { headers: HEADERS });
   if (!res.ok) throw new Error(`Discogs ${res.status} for "${q}"`);
   const json = await res.json();
-  return json.results?.[0] ?? null;
+  const results = json.results ?? [];
+  const requiredTitle = REQUIRED_TITLE_MATCHES.get(q);
+
+  if (requiredTitle) {
+    const titleMatch = results.find((result) =>
+      (result.title || "").toLowerCase().includes(requiredTitle),
+    );
+    if (titleMatch) return titleMatch;
+  }
+
+  return results[0] ?? null;
 }
 
 function toAlbum(r) {
