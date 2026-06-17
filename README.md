@@ -24,6 +24,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Brand references: source PDFs, implementation notes, and production logo PNGs in `docs/brand/`.
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
 - Module 4 Firebase backend pack: source handoff is in local folder `Firebase Build Pack/`; active integrated files now include `src/firebase.ts`, `src/auth.ts`, `src/sessions.ts`, `src/ownerSignals.ts`, `firestore.rules`, `scripts/seedAlbums.mjs`, and `schema_diagram.html`.
+- Module 4 backend state: the `Seed Firestore Catalog` GitHub Action successfully seeded 12 Discogs-backed albums into Firestore on 2026-06-17, and `config/system` has been set with recommendations and Discogs enabled.
 - Latest catalog/UI polish: the header now uses the production Curate brandmark asset; the genre selector uses Classic Rock and Country instead of Trip-Hop and Electronic; the recommendation catalog now includes Dolly Parton and a country-rock bridge record; Owner Insights now includes Country and Americana browser profiles; the right-side bulletin board now shows Curate Community store information; recommendation cards use non-playback Staff Pick indicators.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
@@ -101,6 +102,7 @@ npm run dev:server
 ├── CHANGELOG.md
 ├── docs/class-context/
 ├── docs/brand/
+├── firebase.json
 ├── firestore.rules
 ├── schema_diagram.html
 ├── scripts/seedAlbums.mjs
@@ -143,10 +145,10 @@ The published artifact is `dist/`.
 - For strong Assignment 2 screenshots, use test profiles that emphasize indie/alternative songwriting, jazz/fusion listening, and soul/classic-rock dinner-party listening.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
 - Continue merging the customer-facing recommendation flow and business-facing owner workflow into one coherent feedback loop. Week 3 intentionally stays synthetic and does not claim live POS, purchase-history, customer-account, Discogs, or inventory integration yet.
-- Publish `firestore.rules` in the Firebase console before relying on live reads/writes.
+- Publish `firestore.rules` in the Firebase console before relying on customer session writes; the service account can seed Firestore data but does not have permission to deploy rules through the Firebase CLI.
 - Use the manual GitHub Action `Seed Firestore Catalog` to populate the Firestore `albums` collection from GitHub secrets instead of Michelle's local machine.
 - Optional local fallback: create local-only `.env` with `DISCOGS_TOKEN=...` and local-only `serviceAccount.json`, then run `npm run seed:albums`; neither local file should be committed.
-- In Firestore, create `config/system` with `{ recommendationsEnabled: true, discogsEnabled: true }` for the Module 4 kill switch/config proof point.
+- `config/system` is already set to `{ recommendationsEnabled: true, discogsEnabled: true }` for the Module 4 kill switch/config proof point.
 - Sign in once as Michelle, then manually change Michelle's `users/{uid}.role` from `customer` to `owner` in Firebase so the owner dashboard can read aggregate demand.
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
