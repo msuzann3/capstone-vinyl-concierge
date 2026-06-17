@@ -682,6 +682,17 @@ function inferClassification(index: number): Classification {
   return index < 2 ? "Familiar Classic" : "Discovery Gem";
 }
 
+function findCuratedCatalogRecord(album: FirestoreAlbum): CatalogRecord | undefined {
+  const title = album.title?.toLowerCase();
+  const artist = album.artist?.toLowerCase();
+  if (!title || !artist) return undefined;
+
+  return CATALOG.find((record) =>
+    record.title.toLowerCase() === title &&
+    artist.includes(record.artist.toLowerCase())
+  );
+}
+
 function chooseDisplayGenre(genres: string[], styles: string[], fallback?: string): string {
   const candidates = [fallback, ...styles, ...genres].filter((item): item is string => Boolean(item));
   return candidates.find((item) => !BROAD_DISPLAY_GENRES.has(item.toLowerCase())) || candidates[0] || "Staff Pick";
@@ -704,9 +715,9 @@ function buildTrackCues(primaryGenre: string): string[] {
 }
 
 function buildLiveShelfNote(album: FirestoreAlbum, primaryGenre: string, tags: string[]): string {
-  const tagCopy = buildAestheticVibe(primaryGenre, tags).toLowerCase();
+  const vibe = buildAestheticVibe(primaryGenre, tags).split(", ")[0]?.toLowerCase() || primaryGenre.toLowerCase();
 
-  return `${album.title} is a smart pull when the request points toward ${primaryGenre.toLowerCase()} and nearby shelf territory. The catalog tags lean ${tagCopy}, so it gives the customer a recognizable doorway into the stack without making the recommendation feel too obvious.`;
+  return `${album.title} has the kind of presence that makes a turntable feel intentional. ${album.artist} keeps the center of the record steady while the edges open into ${vibe}, so it works as both a familiar anchor and a deeper-bin conversation starter.`;
 }
 
 function formatListeningSetting(mood: string): string {
@@ -714,17 +725,27 @@ function formatListeningSetting(mood: string): string {
   return mood.charAt(0).toLowerCase() + mood.slice(1);
 }
 
+function buildReviewContext(preferences: UserPreferences, shelfPhrase: string): string {
+  const setting = formatListeningSetting(preferences.mood);
+  const genreContext = shelfPhrase === "the late-night listening stack"
+    ? "the mood you described"
+    : `${shelfPhrase} shelves`;
+
+  return `For this listener, I would put it near the ${genreContext} and play it during ${setting}. It has enough immediate shape to make sense on the first side, but enough texture to reward the person who wants to sit with it a little longer.`;
+}
+
 function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): CatalogRecord | null {
   if (!album.title || !album.artist) return null;
 
+  const curatedRecord = findCuratedCatalogRecord(album);
   const genres = normalizeList(album.genres);
   const styles = normalizeList(album.styles);
   const moodTags = normalizeList(album.moodTags);
   const contextTags = normalizeList(album.contextTags);
-  const primaryGenre = chooseDisplayGenre(genres, styles, album.genre);
+  const primaryGenre = curatedRecord?.genre || chooseDisplayGenre(genres, styles, album.genre);
   const releaseYear = String(album.releaseYear ?? album.year ?? "TBD");
-  const searchTags = [...genres, ...styles, primaryGenre].filter(Boolean);
-  const aestheticVibe = buildAestheticVibe(primaryGenre, searchTags);
+  const searchTags = [...genres, ...styles, ...(curatedRecord?.genreTags ?? []), primaryGenre].filter(Boolean);
+  const aestheticVibe = curatedRecord?.vibe || buildAestheticVibe(primaryGenre, searchTags);
 
   return {
     albumId: id,
@@ -732,13 +753,13 @@ function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): Cata
     artist: album.artist,
     genre: primaryGenre,
     releaseYear,
-    classification: inferClassification(index),
+    classification: curatedRecord?.classification || inferClassification(index),
     vibe: aestheticVibe,
     genreTags: searchTags,
-    moodTags,
-    contextTags,
-    tracksToListenTo: buildTrackCues(primaryGenre),
-    shelfNote: buildLiveShelfNote(album, primaryGenre, searchTags),
+    moodTags: [...moodTags, ...(curatedRecord?.moodTags ?? [])],
+    contextTags: [...contextTags, ...(curatedRecord?.contextTags ?? [])],
+    tracksToListenTo: curatedRecord?.tracksToListenTo || buildTrackCues(primaryGenre),
+    shelfNote: curatedRecord?.shelfNote || buildLiveShelfNote(album, primaryGenre, searchTags),
   };
 }
 
@@ -892,7 +913,7 @@ function buildRecommendationsFromCatalog(
       aestheticVibe: record.vibe.split(",").slice(0, 2).join(","),
       tracksToListenTo: record.tracksToListenTo,
       whyThisMatches: recommendationsEnabled
-        ? `${record.shelfNote}\n\nFor this request, I would file it beside ${shelfPhrase} and cue it up for ${formatListeningSetting(preferences.mood)}. It gives the customer something recognizable to hold onto while still opening a side door into a deeper shelf.`
+        ? `${record.shelfNote}\n\n${buildReviewContext(preferences, shelfPhrase)}`
         : `${record.shelfNote}\n\nThe recommendation kill switch is off, so this is a staff-pick shelf pull rather than a personalized ranking.`
     })),
     ownerInsights: {

@@ -453,10 +453,10 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Essay body column - The Clerk essay explanation */}
+                      {/* Essay body column - staff review explanation */}
                       <div className="space-y-4">
                         <span className="text-[10px] font-mono tracking-wider uppercase text-stone-500 block">
-                          CLERK NOTES & DIALOGUE
+                          OUR STAFF'S REVIEW
                         </span>
                         
                         <div className="text-stone-800 text-sm md:text-base leading-relaxed space-y-4 whitespace-pre-line font-sans">
@@ -466,7 +466,7 @@ export default function App() {
                         <div className="p-3 bg-bone-cream/60 rounded border border-dashed border-stone-300 text-xs text-stone-600 font-mono mt-4 flex items-center gap-2">
                           <Info className="w-4 h-4 text-curate-red" />
                           <span>
-                            Aesthetic match criteria: <strong className="text-stone-800 italic">"{activeAlbum.aestheticVibe}"</strong>
+                            Shelf fit: <strong className="text-stone-800 italic">"{activeAlbum.aestheticVibe}"</strong>
                           </span>
                         </div>
                       </div>
