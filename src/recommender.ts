@@ -602,6 +602,52 @@ type FirestoreAlbum = {
 };
 
 const STAFF_PICK_LIMIT = 5;
+const RECOMMENDATION_LIMIT = 5;
+
+const ARTIST_AFFINITIES: Record<string, string[]> = {
+  "jimmy buffett": ["country", "country rock", "gulf", "western", "americana", "trop", "coastal", "beach", "breezy", "rock & roll"],
+  "kenny chesney": ["country", "country pop", "country rock", "americana", "coastal", "beach", "breezy", "road trip", "summer"],
+  "zac brown": ["country", "country rock", "americana", "southern rock", "folk rock", "acoustic", "harmony", "breezy"],
+};
+
+function normalizeTerm(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function parseArtistList(value: string): string[] {
+  return value
+    .split(",")
+    .map(normalizeTerm)
+    .filter(Boolean);
+}
+
+function expandGenreTerms(genre: string): string[] {
+  const normalized = normalizeTerm(genre);
+  if (!normalized) return [];
+
+  const expanded = new Set([normalized]);
+  if (normalized === "country") {
+    expanded.add("folk, world, & country");
+    expanded.add("country rock");
+    expanded.add("country pop");
+    expanded.add("americana");
+    expanded.add("folk rock");
+  }
+  if (normalized === "indie folk") {
+    expanded.add("indie rock");
+    expanded.add("folk rock");
+    expanded.add("acoustic");
+    expanded.add("singer-songwriter");
+  }
+  if (normalized === "classic rock") {
+    expanded.add("rock & roll");
+    expanded.add("pop rock");
+    expanded.add("folk rock");
+    expanded.add("soft rock");
+  }
+
+  return Array.from(expanded);
+}
 
 function normalizeList(value: unknown): string[] {
   return Array.isArray(value)
@@ -728,6 +774,7 @@ function buildRecommendationsFromCatalog(
   recommendationsEnabled: boolean,
 ): RecommendationResponse {
   const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
+  const requestedArtists = parseArtistList(preferences.artists);
   const query = [
     preferences.artists,
     requestedGenres.join(" "),
@@ -747,25 +794,31 @@ function buildRecommendationsFromCatalog(
       record.shelfNote,
       record.title
     ].join(" ").toLowerCase();
-    const genreScore = requestedGenres.some((genre) => haystack.includes(genre.trim().toLowerCase())) ? 4 : 0;
-    const artistScore = preferences.artists
-      .split(",")
-      .some((artist) => artist.trim() && haystack.includes(artist.trim().toLowerCase())) ? 5 : 0;
+    const genreScore = requestedGenres.reduce((score, genre) => {
+      const terms = expandGenreTerms(genre);
+      const directHit = terms.some((term) => haystack.includes(term));
+      const adjacentHits = terms.filter((term) => term !== normalizeTerm(genre) && haystack.includes(term)).length;
+      return score + (directHit ? 5 : 0) + Math.min(adjacentHits * 2, 4);
+    }, 0);
+    const directArtistScore = requestedArtists.some((artist) => haystack.includes(artist)) ? 10 : 0;
+    const affinityScore = requestedArtists.reduce((score, artist) => {
+      const affinityTerms = ARTIST_AFFINITIES[artist] ?? [];
+      const hits = affinityTerms.filter((term) => haystack.includes(term)).length;
+      return score + Math.min(hits * 2, 8);
+    }, 0);
     const moodScore = query
       .split(/\s+/)
       .filter((word) => word.length > 4 && haystack.includes(word))
       .length;
 
-    return { record, score: genreScore + artistScore + moodScore + (activeCatalog.length - index) / 100 };
+    return { record, score: genreScore + directArtistScore + affinityScore + moodScore + (activeCatalog.length - index) / 100 };
   }).sort((a, b) => b.score - a.score);
 
   const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({ record, score: STAFF_PICK_LIMIT - index }));
   const rankedSelection = recommendationsEnabled ? ranked : staffPicks;
-  const familiar = rankedSelection.filter(({ record }) => record.classification === "Familiar Classic").slice(0, 2);
-  const discoveries = rankedSelection.filter(({ record }) => record.classification === "Discovery Gem").slice(0, 3);
   const shelfPhrase = requestedGenres.slice(0, 2).join(" and ") || "the late-night listening stack";
 
-  const selectedRecords = [...familiar, ...discoveries].slice(0, 5);
+  const selectedRecords = rankedSelection.slice(0, RECOMMENDATION_LIMIT);
 
   return {
     recommendations: selectedRecords.map(({ record, score }) => ({
