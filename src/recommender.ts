@@ -868,6 +868,8 @@ function buildRecommendationsFromCatalog(
   );
 
   const ranked = activeCatalog.map((record, index) => {
+    const recordArtist = record.artist.toLowerCase();
+    const recordTitle = record.title.toLowerCase();
     const haystack = [
       record.artist,
       record.genre,
@@ -884,7 +886,10 @@ function buildRecommendationsFromCatalog(
       const adjacentHits = terms.filter((term) => term !== normalizeTerm(genre) && haystack.includes(term)).length;
       return score + (directHit ? 5 : 0) + Math.min(adjacentHits * 2, 4);
     }, 0);
-    const directArtistScore = requestedArtists.some((artist) => haystack.includes(artist)) ? 12 : 0;
+    const directArtistScore = requestedArtists.some((artist) => recordArtist.includes(artist)) ? 12 : 0;
+    const falseArtistTitlePenalty = requestedArtists.some((artist) =>
+      recordTitle.includes(artist) && !recordArtist.includes(artist)
+    ) ? -10 : 0;
     const artistAnchorScore = Array.from(artistAnchorTerms)
       .filter((term) => haystack.includes(term))
       .slice(0, 4)
@@ -894,7 +899,7 @@ function buildRecommendationsFromCatalog(
       .filter((word) => word.length > 4 && haystack.includes(word))
       .length;
 
-    return { record, score: genreScore + directArtistScore + artistAnchorScore + moodScore + (activeCatalog.length - index) / 100 };
+    return { record, score: genreScore + directArtistScore + artistAnchorScore + moodScore + falseArtistTitlePenalty + (activeCatalog.length - index) / 100 };
   }).sort((a, b) => b.score - a.score);
 
   const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({ record, score: STAFF_PICK_LIMIT - index }));

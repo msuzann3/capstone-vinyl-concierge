@@ -22,6 +22,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Changed the recommendation detail language from `CLERK NOTES & DIALOGUE` / `Aesthetic match criteria` to staff-review language, and rewrote live catalog recommendation copy so it reads like a short record-store review instead of an explanation of the matching algorithm.
 - Merged hand-written local catalog reviews into matching live Firestore album records, so known titles like Radiohead's `In Rainbows` keep their warmer staff-written notes, track cues, genre, and vibe while still coming from the live seeded catalog.
 - Replaced review/fit headings with the neutral `SHELF NOTE` label so both hand-written curated records and generated live-catalog notes read as human-facing shelf descriptions without implying the store has written 110 full reviews.
+- Fixed artist matching so favorite-artist terms are checked against artist names only, preventing inputs like `Queen` from matching album titles such as The Smiths' `The Queen Is Dead`.
 - Updated the customer header with a Firebase Google sign-in control; signed-in customer recommendation sessions now save privately and emit aggregate demand signals.
 - Updated `src/recommender.ts` to read the Firestore `albums` collection first, check `config/system.recommendationsEnabled`, and fall back to the in-repo catalog if Firestore is empty or unavailable.
 - Updated the Owner Intelligence Dashboard with a live Firestore demand panel for owner-only aggregate top genres/top artists while preserving the Week 3 synthetic demo cards.
