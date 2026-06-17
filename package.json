@@ -11,7 +11,8 @@
     "build:pages": "GITHUB_PAGES=true vite build",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "seed:albums": "node scripts/seedAlbums.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",

@@ -63,14 +63,14 @@ Current GitHub Pages checkpoint: the live prototype should include both the orig
 
 Module 4 asks for a real backend, authentication, a Firestore schema diagram screenshot, database risk reflection, governance responsibility mapping, two failure scenarios, and 3-5 early warning governance signals.
 
-The Firebase backend integration has started from `Firebase Build Pack/`. Active app files now include Firebase initialization, Google/email auth helpers, private session saving under `users/{uid}/sessions`, de-identified aggregate `demandSignals`, owner-only demand summary reads, Firestore rules, a Discogs-to-Firestore seed script, and a standalone `schema_diagram.html` file for the required schema screenshot.
+The Firebase backend integration has started from `Firebase Build Pack/`. Active app files now include Firebase initialization, Google/email auth helpers, private session saving under `users/{uid}/sessions`, de-identified aggregate `demandSignals`, owner-only demand summary reads, Firestore rules, a Discogs-to-Firestore seed script, a manual GitHub Action for seeding Firestore from repository secrets, and a standalone `schema_diagram.html` file for the required schema screenshot.
 
-Important distinction for the assignment narrative: the browser app now has a real Firebase path, but Firestore still needs console setup before live data is fully useful. Michelle still needs to publish `firestore.rules`, create `config/system`, sign in once, manually mark her user profile as `role: "owner"`, and add local-only Discogs/service-account secrets before running the catalog seed script.
+Important distinction for the assignment narrative: the browser app now has a real Firebase path, but Firestore still needs console setup before live data is fully useful. Michelle still needs to publish `firestore.rules`, create `config/system`, sign in once, manually mark her user profile as `role: "owner"`, and run the `Seed Firestore Catalog` GitHub Action after adding repository secrets `DISCOGS_TOKEN` and `FIREBASE_SERVICE_ACCOUNT_JSON`.
 
 ## Working Guidance
 
 - Keep the customer and owner experiences aligned with the Week 3 checkpoint while layering Module 4 backend evidence on top.
 - Treat synthetic data as acceptable and intentional where it remains, but distinguish it from live Firestore auth/session/demand-signal infrastructure.
-- Avoid implying real POS or purchase-history integration exists. Discogs is available only through the local seed script once Michelle supplies local secrets.
+- Avoid implying real POS or purchase-history integration exists. Discogs is available through the manual GitHub seed workflow, with local seeding only as an optional fallback.
 - When writing assignment language, preserve Michelle's natural voice and prior wording wherever possible.
 - When building product features, prefer changes that strengthen the customer-to-owner feedback loop or owner decision workflow.

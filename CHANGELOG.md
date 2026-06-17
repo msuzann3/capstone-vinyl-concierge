@@ -7,6 +7,8 @@ All notable project changes should be recorded here so Michelle can move between
 - Began Module 4 backend reality work from the Week 3 checkpoint using the local `Firebase Build Pack/` handoff.
 - Installed Firebase client SDK plus local-only seed dependencies (`firebase-admin`, `dotenv`), and updated `.env.example` / `.gitignore` so Discogs and service-account secrets stay local.
 - Added Firebase initialization, Auth helpers, private session saving, de-identified demand signals, owner aggregate demand reads, Firestore security rules, and a Discogs catalog seed script.
+- Added `.github/workflows/seed-firestore.yml` so the Firestore album catalog can be seeded from GitHub repository secrets instead of Michelle's local machine.
+- Updated `scripts/seedAlbums.mjs` to read Firebase service account credentials from `FIREBASE_SERVICE_ACCOUNT_JSON` in GitHub Actions, while keeping local `serviceAccount.json` as an optional fallback.
 - Updated the customer header with a Firebase Google sign-in control; signed-in customer recommendation sessions now save privately and emit aggregate demand signals.
 - Updated `src/recommender.ts` to read the Firestore `albums` collection first, check `config/system.recommendationsEnabled`, and fall back to the in-repo catalog if Firestore is empty or unavailable.
 - Updated the Owner Intelligence Dashboard with a live Firestore demand panel for owner-only aggregate top genres/top artists while preserving the Week 3 synthetic demo cards.

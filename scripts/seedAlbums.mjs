@@ -5,10 +5,16 @@ import admin from "firebase-admin";
 const TOKEN = process.env.DISCOGS_TOKEN;
 if (!TOKEN) throw new Error("Missing DISCOGS_TOKEN in .env");
 
+function loadServiceAccount() {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+  }
+
+  return JSON.parse(readFileSync("./serviceAccount.json", "utf8"));
+}
+
 admin.initializeApp({
-  credential: admin.credential.cert(
-    JSON.parse(readFileSync("./serviceAccount.json", "utf8")),
-  ),
+  credential: admin.credential.cert(loadServiceAccount()),
 });
 
 const db = admin.firestore();

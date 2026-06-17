@@ -82,6 +82,7 @@ The production Express server is still built with `npm run build` and can be run
 npm run lint
 npm run build
 npm run start
+npm run seed:albums
 npm run dev:vite
 npm run dev:server
 ```
@@ -93,6 +94,7 @@ npm run dev:server
 ```text
 .
 ├── .github/workflows/pages.yml
+├── .github/workflows/seed-firestore.yml
 ├── HANDOFF.md
 ├── PRD.md
 ├── README.md
@@ -121,6 +123,8 @@ npm run dev:server
 
 GitHub Pages is configured through `.github/workflows/pages.yml`.
 
+Firestore catalog seeding is configured through `.github/workflows/seed-firestore.yml`. Run it manually from GitHub Actions after adding repository secrets `DISCOGS_TOKEN` and `FIREBASE_SERVICE_ACCOUNT_JSON`.
+
 Tailwind v4 source detection is limited in `src/index.css` with `source("./")` so ignored local handoff zip folders are not scanned during builds.
 
 The Pages build uses:
@@ -140,7 +144,8 @@ The published artifact is `dist/`.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
 - Continue merging the customer-facing recommendation flow and business-facing owner workflow into one coherent feedback loop. Week 3 intentionally stays synthetic and does not claim live POS, purchase-history, customer-account, Discogs, or inventory integration yet.
 - Publish `firestore.rules` in the Firebase console before relying on live reads/writes.
-- Create local-only `.env` with `DISCOGS_TOKEN=...` and local-only `serviceAccount.json` before running `node scripts/seedAlbums.mjs`; neither file should be committed.
+- Use the manual GitHub Action `Seed Firestore Catalog` to populate the Firestore `albums` collection from GitHub secrets instead of Michelle's local machine.
+- Optional local fallback: create local-only `.env` with `DISCOGS_TOKEN=...` and local-only `serviceAccount.json`, then run `npm run seed:albums`; neither local file should be committed.
 - In Firestore, create `config/system` with `{ recommendationsEnabled: true, discogsEnabled: true }` for the Module 4 kill switch/config proof point.
 - Sign in once as Michelle, then manually change Michelle's `users/{uid}.role` from `customer` to `owner` in Firebase so the owner dashboard can read aggregate demand.
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
