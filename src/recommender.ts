@@ -641,6 +641,33 @@ function expandGenreTerms(genre: string): string[] {
     expanded.add("folk rock");
     expanded.add("soft rock");
   }
+  if (normalized === "pop / top 40") {
+    expanded.add("pop");
+    expanded.add("top 40");
+    expanded.add("modern pop");
+    expanded.add("dance pop");
+    expanded.add("contemporary r&b");
+    expanded.add("pop rock");
+  }
+  if (normalized === "ambient") {
+    expanded.add("ambient / drone");
+    expanded.add("drone");
+    expanded.add("minimalism");
+    expanded.add("electronic");
+  }
+  if (normalized === "soul / funk") {
+    expanded.add("soul");
+    expanded.add("funk");
+    expanded.add("r&b");
+    expanded.add("funk / soul");
+    expanded.add("neo soul");
+  }
+  if (normalized === "hip-hop") {
+    expanded.add("hip hop");
+    expanded.add("rap");
+    expanded.add("conscious hip hop");
+    expanded.add("r&b");
+  }
 
   return Array.from(expanded);
 }
