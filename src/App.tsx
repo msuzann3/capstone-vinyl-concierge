@@ -474,7 +474,7 @@ export default function App() {
                       {/* Track cues */}
                       <div className="border-t border-stone-100 pt-5 space-y-3">
                         <span className="text-[10px] font-mono tracking-wider uppercase text-stone-500 block">
-                          SIDE A TRACK CUES
+                          NEEDLE-DROP CUES
                         </span>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
