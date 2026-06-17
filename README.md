@@ -24,7 +24,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Brand references: source PDFs, implementation notes, and production logo PNGs in `docs/brand/`.
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
 - Module 4 Firebase backend pack: source handoff is in local folder `Firebase Build Pack/`; active integrated files now include `src/firebase.ts`, `src/auth.ts`, `src/sessions.ts`, `src/ownerSignals.ts`, `firestore.rules`, `scripts/seedAlbums.mjs`, and `schema_diagram.html`.
-- Module 4 backend state: the `Seed Firestore Catalog` GitHub Action successfully seeded 12 Discogs-backed albums into Firestore on 2026-06-17, and `config/system` has been set with recommendations and Discogs enabled.
+- Module 4 backend state: the `Seed Firestore Catalog` GitHub Action seeds a diverse 111-title Discogs-backed store catalog into Firestore, and `config/system` has been set with recommendations and Discogs enabled.
 - Latest catalog/UI polish: the header now uses the production Curate brandmark asset; the genre selector uses Classic Rock and Country instead of Trip-Hop and Electronic; the recommendation catalog now includes Dolly Parton and a country-rock bridge record; Owner Insights now includes Country and Americana browser profiles; the right-side bulletin board now shows Curate Community store information; recommendation cards use non-playback Staff Pick indicators.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.

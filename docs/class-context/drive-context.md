@@ -65,7 +65,7 @@ Module 4 asks for a real backend, authentication, a Firestore schema diagram scr
 
 The Firebase backend integration has started from `Firebase Build Pack/`. Active app files now include Firebase initialization, Google/email auth helpers, private session saving under `users/{uid}/sessions`, de-identified aggregate `demandSignals`, owner-only demand summary reads, Firestore rules, a Discogs-to-Firestore seed script, a manual GitHub Action for seeding Firestore from repository secrets, and a standalone `schema_diagram.html` file for the required schema screenshot.
 
-Important distinction for the assignment narrative: the browser app now has a real Firebase path, the `Seed Firestore Catalog` GitHub Action has populated 12 albums, and `config/system` is set. Michelle still needs to publish `firestore.rules` in the Firebase console, sign in once, and manually mark her user profile as `role: "owner"`.
+Important distinction for the assignment narrative: the browser app now has a real Firebase path, the `Seed Firestore Catalog` GitHub Action can populate a diverse 111-title Discogs-backed catalog, and `config/system` is set. Michelle still needs to publish `firestore.rules` in the Firebase console, sign in once, and manually mark her user profile as `role: "owner"`.
 
 ## Working Guidance
 
