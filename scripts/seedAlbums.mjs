@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { readFileSync } from "node:fs";
-import admin from "firebase-admin";
+import { cert, initializeApp } from "firebase-admin/app";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
 const TOKEN = process.env.DISCOGS_TOKEN;
 if (!TOKEN) throw new Error("Missing DISCOGS_TOKEN in .env");
@@ -13,11 +14,11 @@ function loadServiceAccount() {
   return JSON.parse(readFileSync("./serviceAccount.json", "utf8"));
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(loadServiceAccount()),
+initializeApp({
+  credential: cert(loadServiceAccount()),
 });
 
-const db = admin.firestore();
+const db = getFirestore();
 
 const SEED = [
   "Miles Davis Kind of Blue",
@@ -65,7 +66,7 @@ function toAlbum(r) {
     stockCount: 6,
     price: 28,
     source: "discogs",
-    discogsFetchedAt: admin.firestore.FieldValue.serverTimestamp(),
+    discogsFetchedAt: FieldValue.serverTimestamp(),
   };
 }
 
