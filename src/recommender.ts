@@ -605,6 +605,9 @@ const STAFF_PICK_LIMIT = 5;
 const RECOMMENDATION_LIMIT = 5;
 
 const ARTIST_AFFINITIES: Record<string, string[]> = {
+  "ozzy osbourne": ["black sabbath", "hard rock", "heavy metal", "classic rock", "metal", "heavy", "riff"],
+  "joni mitchell": ["folk rock", "pop rock", "singer-songwriter", "folk", "poetic", "acoustic"],
+  "the beatles": ["pop rock", "classic rock", "british invasion", "psychedelic rock", "melodic", "rock & roll"],
   "jimmy buffett": ["country", "country rock", "gulf", "western", "americana", "trop", "coastal", "beach", "breezy", "rock & roll"],
   "kenny chesney": ["country", "country pop", "country rock", "americana", "coastal", "beach", "breezy", "road trip", "summer"],
   "zac brown": ["country", "country rock", "americana", "southern rock", "folk rock", "acoustic", "harmony", "breezy"],
