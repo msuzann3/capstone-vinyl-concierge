@@ -68,13 +68,13 @@ Run locally:
 npm run dev
 ```
 
-The local Vite app runs at:
+The local built preview runs at:
 
 ```text
 http://localhost:3000
 ```
 
-The production Express server is still built with `npm run build` and can be run with `npm run start`. The older Express/Vite middleware dev wrapper is available as `npm run dev:server`, but normal local preview should use `npm run dev`.
+The production Express server is still built with `npm run build` and can be run with `npm run start`. Direct hot-reload Vite is available as `npm run dev:vite`, and the older Express/Vite middleware dev wrapper is available as `npm run dev:server`, but normal local preview should use `npm run dev`.
 
 ## Useful Commands
 
@@ -82,6 +82,7 @@ The production Express server is still built with `npm run build` and can be run
 npm run lint
 npm run build
 npm run start
+npm run dev:vite
 npm run dev:server
 ```
 

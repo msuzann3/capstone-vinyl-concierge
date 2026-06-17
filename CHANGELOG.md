@@ -11,7 +11,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Updated `src/recommender.ts` to read the Firestore `albums` collection first, check `config/system.recommendationsEnabled`, and fall back to the in-repo catalog if Firestore is empty or unavailable.
 - Updated the Owner Intelligence Dashboard with a live Firestore demand panel for owner-only aggregate top genres/top artists while preserving the Week 3 synthetic demo cards.
 - Added `schema_diagram.html` as the standalone Mermaid Firestore schema artifact required for the Module 4 screenshot.
-- Changed `npm run dev` to use direct Vite on port 3000 for reliable local preview; kept the Express wrapper as `npm run dev:server` and preserved production `npm run build` / `npm run start`.
+- Changed `npm run dev` to build and serve a reliable local preview on port 3000; kept direct Vite as `npm run dev:vite`, kept the Express wrapper as `npm run dev:server`, and preserved production `npm run build` / `npm run start`.
 - Verified `npm run lint`, `npm run build:pages`, `npm run build`, direct port response at `http://127.0.0.1:3000/`, and rendered preview behavior for the customer header and owner live-demand panel.
 - Confirmed the local MacBook Pro working copy is aligned with `origin/main` at commit `4a6acda` and that GitHub Pages should already be publishing the Week 3 Owner Intelligence Dashboard.
 - Re-verified the Mod 3 checkpoint with `npm run lint` and `npm run build:pages`.
