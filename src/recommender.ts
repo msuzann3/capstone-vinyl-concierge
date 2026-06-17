@@ -603,15 +603,7 @@ type FirestoreAlbum = {
 
 const STAFF_PICK_LIMIT = 5;
 const RECOMMENDATION_LIMIT = 5;
-
-const ARTIST_AFFINITIES: Record<string, string[]> = {
-  "ozzy osbourne": ["black sabbath", "hard rock", "heavy metal", "classic rock", "metal", "heavy", "riff"],
-  "joni mitchell": ["folk rock", "pop rock", "singer-songwriter", "folk", "poetic", "acoustic"],
-  "the beatles": ["pop rock", "classic rock", "british invasion", "psychedelic rock", "melodic", "rock & roll"],
-  "jimmy buffett": ["country", "country rock", "gulf", "western", "americana", "trop", "coastal", "beach", "breezy", "rock & roll"],
-  "kenny chesney": ["country", "country pop", "country rock", "americana", "coastal", "beach", "breezy", "road trip", "summer"],
-  "zac brown": ["country", "country rock", "americana", "southern rock", "folk rock", "acoustic", "harmony", "breezy"],
-};
+const BROAD_ANCHOR_TERMS = new Set(["rock", "pop", "electronic", "jazz", "folk, world, & country", "folk"]);
 
 function normalizeTerm(value: string): string {
   return value.trim().toLowerCase();
@@ -778,13 +770,18 @@ function buildRecommendationsFromCatalog(
 ): RecommendationResponse {
   const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
   const requestedArtists = parseArtistList(preferences.artists);
-  const query = [
-    preferences.artists,
-    requestedGenres.join(" "),
+  const contextQuery = [
     preferences.mood,
     preferences.listeningHabit,
     preferences.customPrompt
   ].join(" ").toLowerCase();
+  const artistAnchorTerms = new Set(
+    activeCatalog
+      .filter((record) => requestedArtists.some((artist) => record.artist.toLowerCase().includes(artist)))
+      .flatMap((record) => [record.genre, ...record.genreTags])
+      .map(normalizeTerm)
+      .filter((term) => term && !BROAD_ANCHOR_TERMS.has(term))
+  );
 
   const ranked = activeCatalog.map((record, index) => {
     const haystack = [
@@ -803,18 +800,17 @@ function buildRecommendationsFromCatalog(
       const adjacentHits = terms.filter((term) => term !== normalizeTerm(genre) && haystack.includes(term)).length;
       return score + (directHit ? 5 : 0) + Math.min(adjacentHits * 2, 4);
     }, 0);
-    const directArtistScore = requestedArtists.some((artist) => haystack.includes(artist)) ? 10 : 0;
-    const affinityScore = requestedArtists.reduce((score, artist) => {
-      const affinityTerms = ARTIST_AFFINITIES[artist] ?? [];
-      const hits = affinityTerms.filter((term) => haystack.includes(term)).length;
-      return score + Math.min(hits * 2, 8);
-    }, 0);
-    const moodScore = query
+    const directArtistScore = requestedArtists.some((artist) => haystack.includes(artist)) ? 12 : 0;
+    const artistAnchorScore = Array.from(artistAnchorTerms)
+      .filter((term) => haystack.includes(term))
+      .slice(0, 4)
+      .length * 2;
+    const moodScore = contextQuery
       .split(/\s+/)
       .filter((word) => word.length > 4 && haystack.includes(word))
       .length;
 
-    return { record, score: genreScore + directArtistScore + affinityScore + moodScore + (activeCatalog.length - index) / 100 };
+    return { record, score: genreScore + directArtistScore + artistAnchorScore + moodScore + (activeCatalog.length - index) / 100 };
   }).sort((a, b) => b.score - a.score);
 
   const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({ record, score: STAFF_PICK_LIMIT - index }));
