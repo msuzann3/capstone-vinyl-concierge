@@ -9,8 +9,11 @@ import {
   Gauge,
   LibraryBig,
   Ticket,
-  MapPinned
+  MapPinned,
+  LogIn,
+  LogOut
 } from "lucide-react";
+import type { User } from "firebase/auth";
 import QuestionnaireForm from "./components/QuestionnaireForm";
 import VinylDisc from "./components/VinylDisc";
 import OwnerInsightsView from "./components/OwnerInsightsView";
@@ -18,6 +21,8 @@ import OwnerIntelligenceDashboard from "./components/OwnerIntelligenceDashboard"
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
+import { logOut, signInWithGoogle, watchAuth } from "./auth";
+import { saveSessionAndSignals } from "./sessions";
 
 const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
 
@@ -70,6 +75,8 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingPhraseIndex, setLoadingPhraseIndex] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authBusy, setAuthBusy] = useState(false);
 
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
@@ -91,6 +98,26 @@ export default function App() {
     return () => clearInterval(interval);
   }, [loading]);
 
+  useEffect(() => watchAuth(setCurrentUser), []);
+
+  const handleAuthClick = async () => {
+    setAuthBusy(true);
+    setError(null);
+
+    try {
+      if (currentUser) {
+        await logOut();
+      } else {
+        await signInWithGoogle();
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "The sign-in window could not finish. Please try again.");
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
   const handleFormSubmit = async (prefs: UserPreferences) => {
     setLoading(true);
     setError(null);
@@ -98,12 +125,28 @@ export default function App() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 650));
-      const data = buildRecommendations(prefs);
+      const data = await buildRecommendations(prefs);
       if (data.recommendations && data.recommendations.length > 0) {
         setRecommendations(data.recommendations);
         setOwnerInsights(data.ownerInsights);
         setCollectionInsights(data.collectionInsights);
         setSelectedAlbumIdx(0);
+        await saveSessionAndSignals(
+          {
+            artists: prefs.artists.split(",").map((artist) => artist.trim()).filter(Boolean),
+            genres: prefs.genres,
+            mood: prefs.mood,
+            context: prefs.listeningHabit,
+          },
+          data.recommendations.map((rec) => ({
+            albumId: rec.albumId ?? `${rec.artist}-${rec.title}`,
+            title: rec.title,
+            artist: rec.artist,
+            type: rec.classification === "Familiar Classic" ? "familiar" : "discovery",
+            matchScore: rec.matchScore,
+          })),
+          data.collectionInsights.coverageScore,
+        );
       } else {
         throw new Error("Empty recommendations response structure received.");
       }
@@ -159,6 +202,20 @@ export default function App() {
               and the book falls open."
             </span>
             <div className="h-6 w-px bg-stone-800 hidden md:block"></div>
+            <button
+              onClick={handleAuthClick}
+              disabled={authBusy}
+              className="flex items-center gap-2 bg-stone-900 px-3 py-1.5 rounded-full border border-sleeve-mustard/30 shadow-inner text-[10px] text-stone-300 font-mono font-bold tracking-wider uppercase hover:text-bone-cream hover:border-sleeve-mustard/60 disabled:opacity-60"
+            >
+              {currentUser ? <LogOut className="w-3.5 h-3.5 text-sleeve-mustard" /> : <LogIn className="w-3.5 h-3.5 text-sleeve-mustard" />}
+              <span className="max-w-36 truncate">
+                {authBusy
+                  ? "Working"
+                  : currentUser
+                    ? currentUser.displayName || currentUser.email || "Signed In"
+                    : "Sign In"}
+              </span>
+            </button>
             <div className="flex rounded-full border border-sleeve-mustard/30 bg-stone-950 p-1">
               {[
                 { id: "customer", label: "Customer" },

@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   BarChart3,
@@ -18,6 +18,7 @@ import {
   ownerSalesTrends,
 } from "../ownerIntelligenceData";
 import { PurchaseRecommendation } from "../ownerIntelligenceTypes";
+import { getDemandSummary, type ArtistDemand, type GenreDemand } from "../ownerSignals";
 
 type OwnerStep = "inventory" | "demand" | "recommendations" | "outcomes";
 
@@ -60,12 +61,42 @@ export default function OwnerIntelligenceDashboard() {
   const [recommendations, setRecommendations] = useState(initialOwnerRecommendations);
   const [logs, setLogs] = useState(initialStoreLogs);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [liveDemand, setLiveDemand] = useState<{
+    topGenres: GenreDemand[];
+    topArtists: ArtistDemand[];
+    sampleSize: number;
+  } | null>(null);
+  const [liveDemandError, setLiveDemandError] = useState<string | null>(null);
 
   const lowStock = useMemo(() => inventory.filter((item) => item.inStock <= 2), [inventory]);
   const totalDemandUnits = useMemo(
     () => requests.reduce((sum, request) => sum + request.quantity, 0),
     [requests],
   );
+
+  useEffect(() => {
+    let ignore = false;
+
+    getDemandSummary()
+      .then((summary) => {
+        if (!ignore) {
+          setLiveDemand(summary);
+          setLiveDemandError(null);
+        }
+      })
+      .catch((error) => {
+        if (!ignore) {
+          const message = error instanceof Error && error.message.includes("permissions")
+            ? "Sign in as owner to read live demand signals."
+            : "Live demand signals are unavailable right now.";
+          setLiveDemandError(message);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const refreshRecommendations = async () => {
     setIsRefreshing(true);
@@ -131,7 +162,7 @@ export default function OwnerIntelligenceDashboard() {
             <Metric label="Revenue" value={`$${ownerDashboardStats.totalRevenue.toLocaleString()}`} />
             <Metric label="Patrons" value={ownerDashboardStats.activePatrons.toLocaleString()} />
             <Metric label="Low Stock" value={lowStock.length.toString()} danger={lowStock.length > 0} />
-            <Metric label="Demand Units" value={totalDemandUnits.toString()} />
+            <Metric label="Live Signals" value={(liveDemand?.sampleSize ?? totalDemandUnits).toString()} />
           </div>
         </header>
 
@@ -202,7 +233,38 @@ export default function OwnerIntelligenceDashboard() {
 
         {activeStep === "demand" && (
           <Panel icon={<ClipboardList className="w-5 h-5" />} title="Active Patron Demand Cards">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="rounded border border-vinyl-black/10 bg-sleeve-white p-5 lg:col-span-1">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-display text-sm uppercase text-vinyl-black">Live Firestore Demand</h3>
+                  <span className="rounded bg-vinyl-black px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-bone-cream">
+                    {liveDemand?.sampleSize ?? 0} signals
+                  </span>
+                </div>
+                {liveDemandError ? (
+                  <p className="mt-4 text-xs text-stone-500">{liveDemandError}</p>
+                ) : (
+                  <div className="mt-4 space-y-5">
+                    <DemandList
+                      title="Top Genres"
+                      emptyLabel="No saved sessions yet"
+                      items={(liveDemand?.topGenres ?? []).slice(0, 5).map((item) => ({
+                        label: item.genre,
+                        value: `${item.count} requests`,
+                      }))}
+                    />
+                    <DemandList
+                      title="Top Artists"
+                      emptyLabel="No saved artists yet"
+                      items={(liveDemand?.topArtists ?? []).slice(0, 5).map((item) => ({
+                        label: item.artist,
+                        value: `${item.count} requests`,
+                      }))}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:col-span-2">
               {requests.map((request) => (
                 <article key={request.id} className="rounded border border-vinyl-black/10 bg-paper-white p-5">
                   <div className="flex flex-wrap items-center gap-2">
@@ -225,6 +287,7 @@ export default function OwnerIntelligenceDashboard() {
                   </div>
                 </article>
               ))}
+              </div>
             </div>
           </Panel>
         )}
@@ -279,11 +342,43 @@ export default function OwnerIntelligenceDashboard() {
         )}
 
         <div className="rounded border border-dashed border-vinyl-black/20 bg-paper-white p-4 text-xs text-stone-500">
-          Week 3 note: this side is intentionally local and synthetic. It does not claim real POS,
-          purchase-history, Discogs, or live inventory integration yet.
+          Module 4 note: live Firestore demand signals are now available for signed-in owner review.
+          Synthetic request cards remain as demonstration data until the seeded catalog and customer sessions mature.
         </div>
       </div>
     </section>
+  );
+}
+
+function DemandList({
+  title,
+  emptyLabel,
+  items,
+}: {
+  title: string;
+  emptyLabel: string;
+  items: Array<{ label: string; value: string }>;
+}) {
+  return (
+    <div>
+      <span className="font-mono text-[10px] uppercase tracking-widest text-stone-500">
+        {title}
+      </span>
+      <div className="mt-2 space-y-2">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <div key={item.label} className="flex items-center justify-between gap-3 rounded border border-vinyl-black/10 bg-paper-white px-3 py-2">
+              <span className="text-sm font-bold text-vinyl-black">{item.label}</span>
+              <span className="font-mono text-[10px] text-stone-500">{item.value}</span>
+            </div>
+          ))
+        ) : (
+          <p className="rounded border border-dashed border-vinyl-black/20 bg-paper-white px-3 py-2 text-xs text-stone-500">
+            {emptyLabel}
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 

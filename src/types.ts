@@ -1,4 +1,5 @@
 export interface Recommendation {
+  albumId?: string;
   title: string;
   artist: string;
   genre: string;
@@ -7,6 +8,7 @@ export interface Recommendation {
   whyThisMatches: string;
   aestheticVibe: string;
   tracksToListenTo: string[];
+  matchScore?: number;
 }
 
 export interface OwnerInsights {

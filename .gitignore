@@ -6,4 +6,5 @@ coverage/
 *.log
 .env*
 !.env.example
+serviceAccount.json
 Handoff from Google/

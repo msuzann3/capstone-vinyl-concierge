@@ -1,8 +1,11 @@
 import { CollectionInsights, RecommendationResponse, UserPreferences } from "./types";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
 
 type Classification = "Familiar Classic" | "Discovery Gem";
 
 interface CatalogRecord {
+  albumId?: string;
   title: string;
   artist: string;
   genre: string;
@@ -584,6 +587,82 @@ const COLLECTION_OPPORTUNITIES = [
   }
 ];
 
+type FirestoreAlbum = {
+  title?: string;
+  artist?: string;
+  year?: number | string | null;
+  releaseYear?: number | string | null;
+  genre?: string;
+  genres?: string[];
+  styles?: string[];
+  moodTags?: string[];
+  contextTags?: string[];
+  thumbUrl?: string | null;
+  inStock?: boolean;
+};
+
+const STAFF_PICK_LIMIT = 5;
+
+function normalizeList(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    : [];
+}
+
+function inferClassification(index: number): Classification {
+  return index < 2 ? "Familiar Classic" : "Discovery Gem";
+}
+
+function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): CatalogRecord | null {
+  if (!album.title || !album.artist) return null;
+
+  const genres = normalizeList(album.genres);
+  const styles = normalizeList(album.styles);
+  const moodTags = normalizeList(album.moodTags);
+  const contextTags = normalizeList(album.contextTags);
+  const primaryGenre = album.genre || genres[0] || styles[0] || "Staff Pick";
+  const releaseYear = String(album.releaseYear ?? album.year ?? "TBD");
+  const searchTags = [...genres, ...styles, primaryGenre].filter(Boolean);
+
+  return {
+    albumId: id,
+    title: album.title,
+    artist: album.artist,
+    genre: primaryGenre,
+    releaseYear,
+    classification: inferClassification(index),
+    vibe: `${primaryGenre} record with live catalog demand`,
+    genreTags: searchTags,
+    moodTags,
+    contextTags,
+    tracksToListenTo: ["Side A opening cut", "Staff listening cue", "Deep shelf note"],
+    shelfNote: `${album.artist}'s ${album.title} is currently available from the live Firestore catalog. Use it when the customer's request points toward ${primaryGenre.toLowerCase()} or nearby shelf territory.`,
+  };
+}
+
+async function getRecommendationsEnabled(): Promise<boolean> {
+  try {
+    const snap = await getDoc(doc(db, "config", "system"));
+    if (!snap.exists()) return true;
+    return snap.data().recommendationsEnabled !== false;
+  } catch (error) {
+    console.warn("Using local recommendation fallback; config read failed.", error);
+    return true;
+  }
+}
+
+async function getFirestoreCatalog(): Promise<CatalogRecord[]> {
+  try {
+    const snap = await getDocs(collection(db, "albums"));
+    return snap.docs
+      .map((albumDoc, index) => toCatalogRecord(albumDoc.id, albumDoc.data() as FirestoreAlbum, index))
+      .filter((record): record is CatalogRecord => Boolean(record));
+  } catch (error) {
+    console.warn("Using local recommendation fallback; catalog read failed.", error);
+    return [];
+  }
+}
+
 function buildCollectionInsights(preferences: UserPreferences, recommendations: CatalogRecord[]): CollectionInsights {
   const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
   const query = [
@@ -643,7 +722,10 @@ function buildCollectionInsights(preferences: UserPreferences, recommendations: 
   };
 }
 
-export function buildRecommendations(preferences: UserPreferences): RecommendationResponse {
+export async function buildRecommendations(preferences: UserPreferences): Promise<RecommendationResponse> {
+  const recommendationsEnabled = await getRecommendationsEnabled();
+  const liveCatalog = recommendationsEnabled ? await getFirestoreCatalog() : [];
+  const activeCatalog = liveCatalog.length > 0 ? liveCatalog : CATALOG;
   const requestedGenres = Array.isArray(preferences.genres) ? preferences.genres : [];
   const query = [
     preferences.artists,
@@ -653,7 +735,7 @@ export function buildRecommendations(preferences: UserPreferences): Recommendati
     preferences.customPrompt
   ].join(" ").toLowerCase();
 
-  const ranked = CATALOG.map((record, index) => {
+  const ranked = activeCatalog.map((record, index) => {
     const haystack = [
       record.artist,
       record.genre,
@@ -673,32 +755,40 @@ export function buildRecommendations(preferences: UserPreferences): Recommendati
       .filter((word) => word.length > 4 && haystack.includes(word))
       .length;
 
-    return { record, score: genreScore + artistScore + moodScore + (CATALOG.length - index) / 100 };
+    return { record, score: genreScore + artistScore + moodScore + (activeCatalog.length - index) / 100 };
   }).sort((a, b) => b.score - a.score);
 
-  const familiar = ranked.filter(({ record }) => record.classification === "Familiar Classic").slice(0, 2);
-  const discoveries = ranked.filter(({ record }) => record.classification === "Discovery Gem").slice(0, 3);
+  const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({ record, score: STAFF_PICK_LIMIT - index }));
+  const rankedSelection = recommendationsEnabled ? ranked : staffPicks;
+  const familiar = rankedSelection.filter(({ record }) => record.classification === "Familiar Classic").slice(0, 2);
+  const discoveries = rankedSelection.filter(({ record }) => record.classification === "Discovery Gem").slice(0, 3);
   const shelfPhrase = requestedGenres.slice(0, 2).join(" and ") || "the late-night listening stack";
 
-  const selectedRecords = [...familiar, ...discoveries].slice(0, 5).map(({ record }) => record);
+  const selectedRecords = [...familiar, ...discoveries].slice(0, 5);
 
   return {
-    recommendations: selectedRecords.map((record) => ({
+    recommendations: selectedRecords.map(({ record, score }) => ({
+      albumId: record.albumId ?? `${record.artist}-${record.title}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       title: record.title,
       artist: record.artist,
       genre: record.genre,
       releaseYear: record.releaseYear,
       classification: record.classification,
+      matchScore: score,
       aestheticVibe: record.vibe.split(",").slice(0, 2).join(","),
       tracksToListenTo: record.tracksToListenTo,
-      whyThisMatches: `${record.shelfNote}\n\nFor this request, I would file it beside ${shelfPhrase} and cue it up for a ${preferences.mood || "reflective"} room. It gives the customer something recognizable to hold onto while still opening a side door into a deeper shelf.`
+      whyThisMatches: recommendationsEnabled
+        ? `${record.shelfNote}\n\nFor this request, I would file it beside ${shelfPhrase} and cue it up for a ${preferences.mood || "reflective"} room. It gives the customer something recognizable to hold onto while still opening a side door into a deeper shelf.`
+        : `${record.shelfNote}\n\nThe recommendation kill switch is off, so this is a staff-pick shelf pull rather than a personalized ranking.`
     })),
     ownerInsights: {
-      trendsSummary: `This customer is clustering around ${requestedGenres.slice(0, 3).join(", ") || "mood-led discovery"} with a ${preferences.mood || "slow-browse"} listening frame. Treat that as a signal for records that feel personal, tactile, and playable in quiet domestic settings.`,
+      trendsSummary: recommendationsEnabled
+        ? `This customer is clustering around ${requestedGenres.slice(0, 3).join(", ") || "mood-led discovery"} with a ${preferences.mood || "slow-browse"} listening frame. Treat that as a signal for records that feel personal, tactile, and playable in quiet domestic settings.`
+        : "Recommendations are paused by the Firestore config kill switch, so this session should be treated as a staff-pick browse rather than an AI-ranked demand signal.",
       inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Phoebe Bridgers, Nick Drake, Dolly Parton, Fleetwood Mac, and Cocteau Twins in view, then deepen the adjacent bins with classic country, country rock, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
       underrepresentedAreas: "The likely gaps are country foundations, classic-rock side-door discoveries, spiritual jazz beyond the obvious classics, and small-label dream pop reissues.",
       merchandisingStrategy: "Chalkcard title: 'Records for Low Light and Good Headphones.' Place one familiar classic beside two discovery records so the table feels welcoming rather than obscure."
     },
-    collectionInsights: buildCollectionInsights(preferences, selectedRecords)
+    collectionInsights: buildCollectionInsights(preferences, selectedRecords.map(({ record }) => record))
   };
 }

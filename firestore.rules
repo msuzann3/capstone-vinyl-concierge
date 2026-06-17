@@ -1,0 +1,50 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'owner';
+    }
+
+    match /users/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+
+      match /sessions/{sessionId} {
+        allow read, write: if isSignedIn() && request.auth.uid == uid;
+      }
+    }
+
+    match /albums/{albumId} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+
+    match /demandSignals/{signalId} {
+      allow create: if isSignedIn();
+      allow read: if isOwner();
+      allow update, delete: if false;
+    }
+
+    match /inventoryEvents/{id} {
+      allow read, write: if isOwner();
+    }
+
+    match /ownerActions/{id} {
+      allow read, write: if isOwner();
+    }
+
+    match /governanceEvents/{id} {
+      allow read, write: if isOwner();
+    }
+
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+  }
+}

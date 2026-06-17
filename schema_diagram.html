@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Vinyl Concierge Firestore Schema</title>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        background: "#F4EFE3",
+        primaryColor: "#ECE5D2",
+        primaryTextColor: "#1D1D1B",
+        primaryBorderColor: "#1D1D1B",
+        lineColor: "#8B2418",
+        secondaryColor: "#C9A878",
+        tertiaryColor: "#FFFFFF",
+        fontFamily: "Arial, sans-serif"
+      }
+    });
+  </script>
+  <style>
+    body {
+      margin: 0;
+      background: #f4efe3;
+      color: #1d1d1b;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    p {
+      max-width: 860px;
+      line-height: 1.5;
+    }
+
+    .diagram-shell {
+      margin-top: 24px;
+      padding: 24px;
+      border: 2px solid #1d1d1b;
+      background: #ece5d2;
+      overflow-x: auto;
+    }
+
+    .note {
+      margin-top: 18px;
+      border-left: 4px solid #db1d1b;
+      padding-left: 14px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>The Vinyl Concierge Firestore Schema</h1>
+    <p>
+      Firebase Auth identifies signed-in customers and the owner. Firestore stores private customer sessions,
+      public catalog records, de-identified demand signals, owner-only operations, and a public read-only
+      configuration document for the recommendation kill switch.
+    </p>
+
+    <section class="diagram-shell">
+      <pre class="mermaid">
+erDiagram
+  AUTH_USER ||--|| USERS : "creates profile"
+  USERS ||--o{ USER_SESSIONS : "owns private sessions"
+  USER_SESSIONS ||--o{ DEMAND_SIGNALS : "emits de-identified demand"
+  ALBUMS ||--o{ DEMAND_SIGNALS : "referenced by albumId"
+  USERS ||--o{ INVENTORY_EVENTS : "owner writes"
+  USERS ||--o{ OWNER_ACTIONS : "owner writes"
+  USERS ||--o{ GOVERNANCE_EVENTS : "owner writes"
+  CONFIG ||--o{ USER_SESSIONS : "recommendationsEnabled gates"
+
+  AUTH_USER {
+    string uid PK
+    string email
+    string displayName
+    string photoURL
+  }
+
+  USERS {
+    string uid PK
+    string email
+    string displayName
+    string photoURL
+    string role "customer or owner"
+    timestamp createdAt
+    timestamp lastActiveAt
+  }
+
+  USER_SESSIONS {
+    string sessionId PK
+    map input "artists, genres, mood, context"
+    array recommendations
+    number collectionCoverageScore
+    timestamp createdAt
+  }
+
+  DEMAND_SIGNALS {
+    string signalId PK
+    string albumId FK
+    string artist
+    string genre
+    string signalType "rec_request"
+    number weight
+    timestamp createdAt
+  }
+
+  ALBUMS {
+    string albumId PK
+    number discogsReleaseId
+    string title
+    string artist
+    number year
+    array genres
+    array styles
+    array moodTags
+    array contextTags
+    string thumbUrl
+    boolean inStock
+    number stockCount
+    number price
+    string source
+    timestamp discogsFetchedAt
+  }
+
+  INVENTORY_EVENTS {
+    string id PK
+    string albumId FK
+    string action
+    number quantity
+    string note
+    timestamp createdAt
+  }
+
+  OWNER_ACTIONS {
+    string id PK
+    string actionType
+    string status
+    string rationale
+    timestamp createdAt
+  }
+
+  GOVERNANCE_EVENTS {
+    string id PK
+    string eventType
+    string severity
+    string ownerAction
+    timestamp createdAt
+  }
+
+  CONFIG {
+    string docId PK
+    boolean recommendationsEnabled
+    boolean discogsEnabled
+  }
+      </pre>
+    </section>
+
+    <p class="note">
+      Security boundary: customers can read and write only their own user profile and session subcollection.
+      The owner can read aggregate demand signals and write operational collections. Demand signals deliberately
+      omit user id, name, and email.
+    </p>
+  </main>
+</body>
+</html>

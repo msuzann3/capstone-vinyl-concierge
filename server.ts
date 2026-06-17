@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { buildRecommendations } from "./src/recommender";
 
 const app = express();
 app.use(express.json());
@@ -12,8 +11,13 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", recommendationEngine: "local-codex-catalog" });
 });
 
-app.post("/api/recommendations", (req, res) => {
-  res.json(buildRecommendations(req.body));
+app.post("/api/recommendations", async (req, res, next) => {
+  try {
+    const { buildRecommendations } = await import("./src/recommender");
+    res.json(await buildRecommendations(req.body));
+  } catch (error) {
+    next(error);
+  }
 });
 
 async function startServer() {

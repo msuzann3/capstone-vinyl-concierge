@@ -13,16 +13,17 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
-- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf` and Michelle's weekly submitted `.docx` files. Current course point: Week 3 / Module 3 checkpoint complete; next work should begin from Module 4 unless Michelle asks to revise Module 3.
-- Local app: React, Vite, Tailwind, Motion, and an Express server.
-- Recommendation engine: local in-repo catalog logic in `src/recommender.ts`; the Assignment 2 catalog now contains 35 albums with genre, mood, and listening-context tags for broader recommendation variety. No Gemini or Google API key required.
+- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf` and Michelle's weekly submitted `.docx` files. Current course point: Module 4 backend/governance work has begun from the Week 3 checkpoint.
+- Local app: React, Vite, Tailwind, Motion, Firebase client SDK, and a production Express server.
+- Recommendation engine: Firestore-backed catalog reads in `src/recommender.ts`, with the local in-repo catalog retained as a fallback when the `albums` collection is empty or unavailable. No Gemini or Google API key required.
 - Image generation: no active OpenAI image model configuration, image endpoint, or `gpt-image-2` reference exists in this repo; the prototype does not generate images.
 - Collection Insights: customer-facing local heuristics in `src/recommender.ts` estimate collection coverage and suggest missing albums/artists plus exploration areas after recommendations are displayed.
-- Customer-facing side: active recommendation experience in `src/App.tsx`, `src/recommender.ts`, and related components.
-- Business-facing side: active Week 3 Owner Intelligence Dashboard in `src/components/OwnerIntelligenceDashboard.tsx`, with local synthetic owner data in `src/ownerIntelligenceData.ts`. The header has a Customer / Owner switch; this side is additive and does not replace the customer experience.
+- Customer-facing side: active recommendation experience in `src/App.tsx`, `src/recommender.ts`, and related components. The header now includes Firebase Google sign-in, and signed-in customer recommendation sessions save privately under `users/{uid}/sessions`.
+- Business-facing side: active Owner Intelligence Dashboard in `src/components/OwnerIntelligenceDashboard.tsx`, with local synthetic owner data still present for demo continuity plus live Firestore aggregate demand reads from `demandSignals` for signed-in owners. The header has a Customer / Owner switch; this side is additive and does not replace the customer experience.
 - Owner Insights dashboard: the older staff-ledger analytics panel in `src/components/OwnerInsightsView.tsx` still exists on the customer side, using synthetic analytics in `src/syntheticOwnerInsights.ts`.
 - Brand references: source PDFs, implementation notes, and production logo PNGs in `docs/brand/`.
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
+- Module 4 Firebase backend pack: source handoff is in local folder `Firebase Build Pack/`; active integrated files now include `src/firebase.ts`, `src/auth.ts`, `src/sessions.ts`, `src/ownerSignals.ts`, `firestore.rules`, `scripts/seedAlbums.mjs`, and `schema_diagram.html`.
 - Latest catalog/UI polish: the header now uses the production Curate brandmark asset; the genre selector uses Classic Rock and Country instead of Trip-Hop and Electronic; the recommendation catalog now includes Dolly Parton and a country-rock bridge record; Owner Insights now includes Country and Americana browser profiles; the right-side bulletin board now shows Curate Community store information; recommendation cards use non-playback Staff Pick indicators.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
@@ -67,11 +68,13 @@ Run locally:
 npm run dev
 ```
 
-The local Express/Vite app runs at:
+The local Vite app runs at:
 
 ```text
 http://localhost:3000
 ```
+
+The production Express server is still built with `npm run build` and can be run with `npm run start`. The older Express/Vite middleware dev wrapper is available as `npm run dev:server`, but normal local preview should use `npm run dev`.
 
 ## Useful Commands
 
@@ -79,6 +82,7 @@ http://localhost:3000
 npm run lint
 npm run build
 npm run start
+npm run dev:server
 ```
 
 `npm run lint` runs TypeScript checks. `npm run build` creates the production front-end bundle and compiled server bundle in `dist/`.
@@ -94,13 +98,20 @@ npm run start
 ├── CHANGELOG.md
 ├── docs/class-context/
 ├── docs/brand/
+├── firestore.rules
+├── schema_diagram.html
+├── scripts/seedAlbums.mjs
 ├── server.ts
 ├── src/
 │   ├── App.tsx
+│   ├── auth.ts
 │   ├── components/
+│   ├── firebase.ts
 │   ├── index.css
 │   ├── main.tsx
+│   ├── ownerSignals.ts
 │   ├── recommender.ts
+│   ├── sessions.ts
 │   └── types.ts
 └── vite.config.ts
 ```
@@ -127,6 +138,10 @@ The published artifact is `dist/`.
 - For strong Assignment 2 screenshots, use test profiles that emphasize indie/alternative songwriting, jazz/fusion listening, and soul/classic-rock dinner-party listening.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
 - Continue merging the customer-facing recommendation flow and business-facing owner workflow into one coherent feedback loop. Week 3 intentionally stays synthetic and does not claim live POS, purchase-history, customer-account, Discogs, or inventory integration yet.
-- Begin Module 4 from the current GitHub Pages prototype, treating the Week 3 owner dashboard as the latest checkpoint rather than a replacement for the customer-facing flow.
+- Publish `firestore.rules` in the Firebase console before relying on live reads/writes.
+- Create local-only `.env` with `DISCOGS_TOKEN=...` and local-only `serviceAccount.json` before running `node scripts/seedAlbums.mjs`; neither file should be committed.
+- In Firestore, create `config/system` with `{ recommendationsEnabled: true, discogsEnabled: true }` for the Module 4 kill switch/config proof point.
+- Sign in once as Michelle, then manually change Michelle's `users/{uid}.role` from `customer` to `owner` in Firebase so the owner dashboard can read aggregate demand.
+- Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.

@@ -5,10 +5,10 @@ https://drive.google.com/drive/folders/10307xAn-ocGKV5ZuchRrzJV6ZMIKQnTG
 
 ## Current Course Position
 
-- Current point in the course: Week 3 / Module 3 checkpoint complete. Begin the next conversation from Module 4 unless Michelle asks to revise Module 3.
+- Current point in the course: Module 4 backend/governance work has begun from the Week 3 checkpoint.
 - Use `capstone-combined.pdf` as the best all-up reference for assignment requirements across the course.
 - Use Michelle's submitted `.docx` files in each weekly module folder as the best reference for what has already been said, decided, and submitted.
-- For now, prioritize Modules 1-3. Modules 4-7 and final deliverables are future-facing requirements, not current implementation scope unless Michelle asks to plan ahead.
+- For now, prioritize Module 4 backend reality, authentication, database design, governance mapping, and early warning dashboard work.
 
 ## Primary Reference Files
 
@@ -59,10 +59,18 @@ The Google AI Studio Week 3 owner-intelligence handoff is additive. It represent
 
 Current GitHub Pages checkpoint: the live prototype should include both the original customer recommendation side and the Week 3 business-facing Owner Intelligence Dashboard, reachable through the header Customer / Owner switch.
 
+## Week 4 / Module 4 Working Notes
+
+Module 4 asks for a real backend, authentication, a Firestore schema diagram screenshot, database risk reflection, governance responsibility mapping, two failure scenarios, and 3-5 early warning governance signals.
+
+The Firebase backend integration has started from `Firebase Build Pack/`. Active app files now include Firebase initialization, Google/email auth helpers, private session saving under `users/{uid}/sessions`, de-identified aggregate `demandSignals`, owner-only demand summary reads, Firestore rules, a Discogs-to-Firestore seed script, and a standalone `schema_diagram.html` file for the required schema screenshot.
+
+Important distinction for the assignment narrative: the browser app now has a real Firebase path, but Firestore still needs console setup before live data is fully useful. Michelle still needs to publish `firestore.rules`, create `config/system`, sign in once, manually mark her user profile as `role: "owner"`, and add local-only Discogs/service-account secrets before running the catalog seed script.
+
 ## Working Guidance
 
-- Keep the prototype aligned with the Week 3 checkpoint unless Michelle explicitly asks to revise Week 3 or begin Module 4 work.
-- Treat synthetic data as acceptable and intentional for current assignments.
-- Avoid implying real POS, purchase-history, customer-account, Discogs, or live inventory integration exists until implemented.
+- Keep the customer and owner experiences aligned with the Week 3 checkpoint while layering Module 4 backend evidence on top.
+- Treat synthetic data as acceptable and intentional where it remains, but distinguish it from live Firestore auth/session/demand-signal infrastructure.
+- Avoid implying real POS or purchase-history integration exists. Discogs is available only through the local seed script once Michelle supplies local secrets.
 - When writing assignment language, preserve Michelle's natural voice and prior wording wherever possible.
 - When building product features, prefer changes that strengthen the customer-to-owner feedback loop or owner decision workflow.

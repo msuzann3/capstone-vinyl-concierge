@@ -1,0 +1,50 @@
+rules_version = '2';
+// Security rules for The Vinyl Concierge.
+// Paste these into Firebase console > Firestore > Rules (or deploy with the CLI),
+// then click Publish. They enforce the privacy split from the schema:
+// customers see only their own data; only the owner reads aggregate demand.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function isOwner() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'owner';
+    }
+
+    // A person can read and write only their own profile and recommendation sessions.
+    match /users/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+      match /sessions/{sessionId} {
+        allow read, write: if isSignedIn() && request.auth.uid == uid;
+      }
+    }
+
+    // Catalog is publicly readable (so the storefront works before sign-in);
+    // only the owner can change it.
+    match /albums/{albumId} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+
+    // De-identified demand signals: any signed-in customer may CREATE one
+    // (the loop), but only the owner may read/aggregate. No edits or deletes.
+    match /demandSignals/{signalId} {
+      allow create: if isSignedIn();
+      allow read: if isOwner();
+      allow update, delete: if false;
+    }
+
+    // Owner-only operational collections.
+    match /inventoryEvents/{id}  { allow read, write: if isOwner(); }
+    match /ownerActions/{id}     { allow read, write: if isOwner(); }
+    match /governanceEvents/{id} { allow read, write: if isOwner(); }
+
+    // System config incl. the recommendationsEnabled kill switch:
+    // the app reads it; only the owner writes it.
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+  }
+}
