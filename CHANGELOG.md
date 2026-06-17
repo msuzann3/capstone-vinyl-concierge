@@ -15,6 +15,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Fixed the Firebase Auth `auth/unauthorized-domain` sign-in error by adding `msuzann3.github.io` to authorized domains; verified Google sign-in is enabled.
 - Changed auth and session-save failures to show as a small account notice instead of replacing the customer questionnaire/results with the full recommendation error panel.
 - Added an extra recommendation fallback guard so Firestore permission failures cannot block customer-facing recommendations; session persistence now catches its own Firestore write failures internally.
+- Published the repo `firestore.rules` to Firebase via the Rules API as ruleset `projects/vinyl-concierge/rulesets/f430f4a9-7696-4c9b-bea8-b8ff8a7b6386`, resolving the default deny-all rules that caused signed-in questionnaire submissions to show `Missing or insufficient permissions`.
 - Updated the customer header with a Firebase Google sign-in control; signed-in customer recommendation sessions now save privately and emit aggregate demand signals.
 - Updated `src/recommender.ts` to read the Firestore `albums` collection first, check `config/system.recommendationsEnabled`, and fall back to the in-repo catalog if Firestore is empty or unavailable.
 - Updated the Owner Intelligence Dashboard with a live Firestore demand panel for owner-only aggregate top genres/top artists while preserving the Week 3 synthetic demo cards.

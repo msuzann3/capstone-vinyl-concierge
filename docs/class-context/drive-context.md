@@ -65,7 +65,7 @@ Module 4 asks for a real backend, authentication, a Firestore schema diagram scr
 
 The Firebase backend integration has started from `Firebase Build Pack/`. Active app files now include Firebase initialization, Google/email auth helpers, private session saving under `users/{uid}/sessions`, de-identified aggregate `demandSignals`, owner-only demand summary reads, Firestore rules, a Discogs-to-Firestore seed script, a manual GitHub Action for seeding Firestore from repository secrets, and a standalone `schema_diagram.html` file for the required schema screenshot.
 
-Important distinction for the assignment narrative: the browser app now has a real Firebase path, the `Seed Firestore Catalog` GitHub Action can populate a diverse 111-title Discogs-backed catalog, `config/system` is set, Google sign-in is enabled, and `msuzann3.github.io` is authorized for Firebase Auth. Michelle still needs to publish `firestore.rules` in the Firebase console, sign in once, and manually mark her user profile as `role: "owner"`.
+Important distinction for the assignment narrative: the browser app now has a real Firebase path, the `Seed Firestore Catalog` GitHub Action can populate a diverse 111-title Discogs-backed catalog, `config/system` is set, Google sign-in is enabled, `msuzann3.github.io` is authorized for Firebase Auth, and `firestore.rules` is published to Firebase as ruleset `projects/vinyl-concierge/rulesets/f430f4a9-7696-4c9b-bea8-b8ff8a7b6386`. Michelle still needs to sign in once and manually mark her user profile as `role: "owner"` if she wants the owner-only live demand panel to read aggregate demand.
 
 ## Working Guidance
 
