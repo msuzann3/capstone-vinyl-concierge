@@ -13,7 +13,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
-- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf` and Michelle's weekly submitted `.docx` files. Current course point: Week 3 / Module 3.
+- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf` and Michelle's weekly submitted `.docx` files. Current course point: Week 3 / Module 3 checkpoint complete; next work should begin from Module 4 unless Michelle asks to revise Module 3.
 - Local app: React, Vite, Tailwind, Motion, and an Express server.
 - Recommendation engine: local in-repo catalog logic in `src/recommender.ts`; the Assignment 2 catalog now contains 35 albums with genre, mood, and listening-context tags for broader recommendation variety. No Gemini or Google API key required.
 - Image generation: no active OpenAI image model configuration, image endpoint, or `gpt-image-2` reference exists in this repo; the prototype does not generate images.
@@ -127,5 +127,6 @@ The published artifact is `dist/`.
 - For strong Assignment 2 screenshots, use test profiles that emphasize indie/alternative songwriting, jazz/fusion listening, and soul/classic-rock dinner-party listening.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
 - Continue merging the customer-facing recommendation flow and business-facing owner workflow into one coherent feedback loop. Week 3 intentionally stays synthetic and does not claim live POS, purchase-history, customer-account, Discogs, or inventory integration yet.
+- Begin Module 4 from the current GitHub Pages prototype, treating the Week 3 owner dashboard as the latest checkpoint rather than a replacement for the customer-facing flow.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.

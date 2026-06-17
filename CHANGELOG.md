@@ -2,6 +2,12 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-17
+
+- Confirmed the local MacBook Pro working copy is aligned with `origin/main` at commit `4a6acda` and that GitHub Pages should already be publishing the Week 3 Owner Intelligence Dashboard.
+- Re-verified the Mod 3 checkpoint with `npm run lint` and `npm run build:pages`.
+- Updated `README.md` and `docs/class-context/drive-context.md` to mark the Week 3 / Module 3 checkpoint complete and make Module 4 the next starting point unless Michelle asks for Module 3 revisions.
+
 ## 2026-06-11
 
 - Updated the README path notes so the MacBook Pro working copy is `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`, the MacBook Air copy is `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`, and both represent the same iCloud-synced project.

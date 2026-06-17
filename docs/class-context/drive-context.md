@@ -5,7 +5,7 @@ https://drive.google.com/drive/folders/10307xAn-ocGKV5ZuchRrzJV6ZMIKQnTG
 
 ## Current Course Position
 
-- Current point in the course: Week 3 / Module 3.
+- Current point in the course: Week 3 / Module 3 checkpoint complete. Begin the next conversation from Module 4 unless Michelle asks to revise Module 3.
 - Use `capstone-combined.pdf` as the best all-up reference for assignment requirements across the course.
 - Use Michelle's submitted `.docx` files in each weekly module folder as the best reference for what has already been said, decided, and submitted.
 - For now, prioritize Modules 1-3. Modules 4-7 and final deliverables are future-facing requirements, not current implementation scope unless Michelle asks to plan ahead.
@@ -57,9 +57,11 @@ The proposed mitigation direction is stronger demand validation, including weigh
 
 The Google AI Studio Week 3 owner-intelligence handoff is additive. It represents business-facing pages that work alongside the existing customer-facing recommendation flow. The original export zip is kept locally in `Handoff from Google/week3-owner-intelligence/`, and the active app now contains a lean adapted Owner Intelligence Dashboard rather than replacing the existing customer side.
 
+Current GitHub Pages checkpoint: the live prototype should include both the original customer recommendation side and the Week 3 business-facing Owner Intelligence Dashboard, reachable through the header Customer / Owner switch.
+
 ## Working Guidance
 
-- Keep the prototype aligned with the Week 3 state unless Michelle explicitly asks to jump ahead.
+- Keep the prototype aligned with the Week 3 checkpoint unless Michelle explicitly asks to revise Week 3 or begin Module 4 work.
 - Treat synthetic data as acceptable and intentional for current assignments.
 - Avoid implying real POS, purchase-history, customer-account, Discogs, or live inventory integration exists until implemented.
 - When writing assignment language, preserve Michelle's natural voice and prior wording wherever possible.
