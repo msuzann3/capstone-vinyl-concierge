@@ -718,7 +718,7 @@ function buildTrackCues(primaryGenre: string): string[] {
 function buildLiveShelfNote(album: FirestoreAlbum, primaryGenre: string, tags: string[]): string {
   const vibe = buildAestheticVibe(primaryGenre, tags).split(", ")[0]?.toLowerCase() || primaryGenre.toLowerCase();
 
-  return `We do not have a full staff review written for ${album.title} yet, but it fits the shelf profile better than a blind pull. It sits closest to the ${primaryGenre} bin, with enough ${vibe} overlap to connect with the preferences in this request.`;
+  return `${album.title} lands in that useful space between a familiar bin pull and a small discovery. ${album.artist} keeps the record close to ${primaryGenre.toLowerCase()}, but there is enough ${vibe} texture around the edges to make it feel like more than the obvious answer.`;
 }
 
 function formatListeningSetting(mood: string): string {
@@ -916,9 +916,7 @@ function buildRecommendationsFromCatalog(
       tracksToListenTo: record.tracksToListenTo,
       reviewType: record.reviewType || "staff",
       whyThisMatches: recommendationsEnabled
-        ? record.reviewType === "fit"
-          ? `${record.shelfNote}\n\n${buildFitContext(preferences, shelfPhrase)}`
-          : record.shelfNote
+        ? `${record.shelfNote}\n\n${buildFitContext(preferences, shelfPhrase)}`
         : `${record.shelfNote}\n\nThe recommendation kill switch is off, so this is a staff-pick shelf pull rather than a personalized ranking.`
     })),
     ownerInsights: {
