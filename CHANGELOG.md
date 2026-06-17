@@ -13,6 +13,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Set Firestore `config/system` to enable recommendations and Discogs-backed catalog behavior.
 - Added `firebase.json` pointing to `firestore.rules`; attempted CLI rules deployment, but the service account can write Firestore data and cannot perform the Firebase CLI service-usage permission check, so rules still need to be published in Firebase Console.
 - Fixed the Firebase Auth `auth/unauthorized-domain` sign-in error by adding `msuzann3.github.io` to authorized domains; verified Google sign-in is enabled.
+- Changed auth and session-save failures to show as a small account notice instead of replacing the customer questionnaire/results with the full recommendation error panel.
 - Updated the customer header with a Firebase Google sign-in control; signed-in customer recommendation sessions now save privately and emit aggregate demand signals.
 - Updated `src/recommender.ts` to read the Firestore `albums` collection first, check `config/system.recommendationsEnabled`, and fall back to the in-repo catalog if Firestore is empty or unavailable.
 - Updated the Owner Intelligence Dashboard with a live Firestore demand panel for owner-only aggregate top genres/top artists while preserving the Week 3 synthetic demo cards.

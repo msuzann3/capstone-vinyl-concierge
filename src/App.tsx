@@ -75,6 +75,7 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingPhraseIndex, setLoadingPhraseIndex] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
 
@@ -98,11 +99,16 @@ export default function App() {
     return () => clearInterval(interval);
   }, [loading]);
 
-  useEffect(() => watchAuth(setCurrentUser), []);
+  useEffect(() => watchAuth((user) => {
+    setCurrentUser(user);
+    if (user) {
+      setAuthNotice(null);
+    }
+  }), []);
 
   const handleAuthClick = async () => {
     setAuthBusy(true);
-    setError(null);
+    setAuthNotice(null);
 
     try {
       if (currentUser) {
@@ -112,7 +118,7 @@ export default function App() {
       }
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "The sign-in window could not finish. Please try again.");
+      setAuthNotice(err.message || "The sign-in window could not finish. Please try again.");
     } finally {
       setAuthBusy(false);
     }
@@ -131,22 +137,28 @@ export default function App() {
         setOwnerInsights(data.ownerInsights);
         setCollectionInsights(data.collectionInsights);
         setSelectedAlbumIdx(0);
-        await saveSessionAndSignals(
-          {
-            artists: prefs.artists.split(",").map((artist) => artist.trim()).filter(Boolean),
-            genres: prefs.genres,
-            mood: prefs.mood,
-            context: prefs.listeningHabit,
-          },
-          data.recommendations.map((rec) => ({
-            albumId: rec.albumId ?? `${rec.artist}-${rec.title}`,
-            title: rec.title,
-            artist: rec.artist,
-            type: rec.classification === "Familiar Classic" ? "familiar" : "discovery",
-            matchScore: rec.matchScore,
-          })),
-          data.collectionInsights.coverageScore,
-        );
+        try {
+          await saveSessionAndSignals(
+            {
+              artists: prefs.artists.split(",").map((artist) => artist.trim()).filter(Boolean),
+              genres: prefs.genres,
+              mood: prefs.mood,
+              context: prefs.listeningHabit,
+            },
+            data.recommendations.map((rec) => ({
+              albumId: rec.albumId ?? `${rec.artist}-${rec.title}`,
+              title: rec.title,
+              artist: rec.artist,
+              type: rec.classification === "Familiar Classic" ? "familiar" : "discovery",
+              matchScore: rec.matchScore,
+            })),
+            data.collectionInsights.coverageScore,
+          );
+          setAuthNotice(null);
+        } catch (sessionError: any) {
+          console.error(sessionError);
+          setAuthNotice("Recommendations are showing, but this signed-in session could not be saved yet. Check the Firestore rules if this keeps happening.");
+        }
       } else {
         throw new Error("Empty recommendations response structure received.");
       }
@@ -164,6 +176,7 @@ export default function App() {
     setCollectionInsights(null);
     setSelectedAlbumIdx(0);
     setError(null);
+    setAuthNotice(null);
   };
 
   const activeAlbum = recommendations[selectedAlbumIdx] || DEFAULT_STORE_DISPLAY[0];
@@ -261,6 +274,15 @@ export default function App() {
             Pull up a stool. Share your favorite albums, rotating genres, and the specific atmosphere you are chasing. Our experienced shop clerk recommendation engine will hand-pick custom shelf items for your listening stack.
           </p>
         </div>
+
+        {authNotice && (
+          <div className="mb-6 rounded-md border border-sleeve-mustard bg-sleeve-white px-4 py-3 text-sm text-stone-700 shadow-sm">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-curate-red font-bold block mb-1">
+              Account note
+            </span>
+            {authNotice}
+          </div>
+        )}
 
         {/* Core Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
