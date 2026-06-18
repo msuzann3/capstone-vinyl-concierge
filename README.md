@@ -25,7 +25,9 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
 - Module 4 Firebase backend pack: source handoff is in local folder `Firebase Build Pack/`; active integrated files now include `src/firebase.ts`, `src/auth.ts`, `src/sessions.ts`, `src/ownerSignals.ts`, `firestore.rules`, `scripts/seedAlbums.mjs`, and `schema_diagram.html`.
 - Module 4 backend state: the `Seed Firestore Catalog` GitHub Action seeds a diverse 111-title Discogs-backed store catalog into Firestore, `config/system` has been set with recommendations and Discogs enabled, and the repo `firestore.rules` file is published to Firebase.
+- Module 4 Firebase evidence: `docs/class-context/firebase-evidence/firebase-data-snapshot-2026-06-18.png` is a redacted live Firestore data screenshot showing `albums`, `config`, `demandSignals`, and masked `users`; regenerate the HTML/SVG/JSON source files with `npm run firebase:evidence`.
 - Firebase Auth state: Google sign-in and email/password sign-in are enabled, and the authorized domains include `localhost`, `vinyl-concierge.firebaseapp.com`, `vinyl-concierge.web.app`, and `msuzann3.github.io`.
+- Firebase browser API key state: GitHub secret scanning alert `#1` was reviewed on 2026-06-18; the key is the Firebase web client config key, now restricted in Google Cloud Console to HTTP referrers for GitHub Pages, Firebase Hosting, `localhost`, and `127.0.0.1`, while retaining the Firebase-related API allowlist.
 - Latest catalog/UI polish: the header now uses the production Curate brandmark asset; the genre selector uses Classic Rock and Country instead of Trip-Hop and Electronic; the recommendation catalog now includes Dolly Parton and a country-rock bridge record; Owner Insights now includes Country and Americana browser profiles; the right-side bulletin board now shows Curate Community store information; recommendation cards use non-playback Staff Pick indicators.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
@@ -85,6 +87,7 @@ npm run lint
 npm run build
 npm run start
 npm run seed:albums
+npm run firebase:evidence
 npm run dev:vite
 npm run dev:server
 ```
@@ -147,6 +150,7 @@ The published artifact is `dist/`.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
 - Continue merging the customer-facing recommendation flow and business-facing owner workflow into one coherent feedback loop. Week 3 intentionally stays synthetic and does not claim live POS, purchase-history, customer-account, Discogs, or inventory integration yet.
 - Firestore rules are live in Firebase as ruleset `projects/vinyl-concierge/rulesets/f430f4a9-7696-4c9b-bea8-b8ff8a7b6386`, published on 2026-06-17. Public catalog/config reads, signed-in customer session writes, and signed-in demand-signal creates are now allowed by rules.
+- Use `docs/class-context/firebase-evidence/firebase-data-snapshot-2026-06-18.png` as the Module 4 Firebase data screenshot. It was generated from live Firestore data and masks user IDs, emails, names, and profile image URLs.
 - Use the manual GitHub Action `Seed Firestore Catalog` to populate the Firestore `albums` collection from GitHub secrets instead of Michelle's local machine.
 - Optional local fallback: create local-only `.env` with `DISCOGS_TOKEN=...` and local-only `serviceAccount.json`, then run `npm run seed:albums`; neither local file should be committed.
 - `config/system` is already set to `{ recommendationsEnabled: true, discogsEnabled: true }` for the Module 4 kill switch/config proof point.

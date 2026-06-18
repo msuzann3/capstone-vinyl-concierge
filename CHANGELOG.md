@@ -2,6 +2,12 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-18
+
+- Restricted the Firebase browser API key in Google Cloud Console to HTTP referrers for GitHub Pages, Firebase Hosting, `localhost`, and `127.0.0.1`; verified the key still has the Firebase-related 25-API allowlist and resolved GitHub secret scanning alert `#1` as an intentional Firebase client config key.
+- Generated a redacted live Firestore evidence screenshot at `docs/class-context/firebase-evidence/firebase-data-snapshot-2026-06-18.png`, showing current collection counts for `albums`, `config`, `demandSignals`, and masked `users`.
+- Added `scripts/generateFirebaseDataScreenshot.mjs` plus `npm run firebase:evidence` to regenerate the HTML, SVG, redacted JSON, and screenshot source files for Module 4 backend proof without exposing customer emails, names, profile photos, or full user IDs.
+
 ## 2026-06-17
 
 - Began Module 4 backend reality work from the Week 3 checkpoint using the local `Firebase Build Pack/` handoff.

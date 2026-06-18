@@ -12,7 +12,8 @@
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "seed:albums": "node scripts/seedAlbums.mjs"
+    "seed:albums": "node scripts/seedAlbums.mjs",
+    "firebase:evidence": "node scripts/generateFirebaseDataScreenshot.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",

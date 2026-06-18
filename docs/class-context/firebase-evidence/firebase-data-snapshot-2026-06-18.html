@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Firebase Data Snapshot - The Vinyl Concierge</title>
+  <style>
+    :root {
+      color: #231f20;
+      background: #f8f3e8;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #f8f3e8;
+    }
+    main {
+      width: 1440px;
+      min-height: 1180px;
+      box-sizing: border-box;
+      padding: 54px 64px 60px;
+      background: linear-gradient(180deg, #f8f3e8 0%, #efe7d6 100%);
+    }
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 30px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 54px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin: 0;
+      color: #62594f;
+      font-size: 18px;
+      max-width: 780px;
+      line-height: 1.45;
+    }
+    .badge {
+      border: 2px solid #231f20;
+      padding: 14px 18px;
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 14px;
+      background: #f2c94c;
+      white-space: nowrap;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric {
+      border: 2px solid #231f20;
+      background: #fffaf0;
+      padding: 18px;
+    }
+    .metric span {
+      display: block;
+      color: #6f6258;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 38px;
+      line-height: 1;
+    }
+    section {
+      border: 2px solid #231f20;
+      background: #fffaf0;
+      margin-top: 18px;
+    }
+    section h2 {
+      margin: 0;
+      padding: 16px 18px;
+      background: #231f20;
+      color: #fffaf0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .note {
+      border: 2px solid #231f20;
+      background: #fffaf0;
+      padding: 18px;
+      line-height: 1.45;
+      font-size: 16px;
+    }
+    .note strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+    th, td {
+      border-top: 1px solid #d8cdbb;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+    th {
+      color: #5d534a;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .04em;
+      background: #f3ead8;
+    }
+    footer {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #6b5f54;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>The Vinyl Concierge</h1>
+        <p class="subtitle">Firebase Firestore data snapshot for Module 4 evidence. Generated from live project data with user identifiers, emails, names, and profile images redacted.</p>
+      </div>
+      <div class="badge">Firestore Evidence</div>
+    </header>
+
+    <div class="metrics">
+      <div class="metric"><span>Albums</span><strong>111</strong></div>
+      <div class="metric"><span>Demand Signals</span><strong>20</strong></div>
+      <div class="metric"><span>Users</span><strong>2</strong></div>
+      <div class="metric"><span>Config Docs</span><strong>1</strong></div>
+    </div>
+
+    <div class="summary">
+      <div class="note"><strong>Backend proof point</strong>The catalog is stored in Firestore, recommendation behavior is controlled by <code>config/system</code>, and signed-in recommendation activity creates de-identified aggregate demand signals.</div>
+      <div class="note"><strong>Privacy note</strong>Customer records are intentionally masked here. The app stores private saved sessions under each user and aggregate demand separately for owner review.</div>
+    </div>
+
+    <section>
+      <h2>config / system</h2>
+      <table>
+        <thead><tr><th>recommendationsEnabled</th><th>discogsEnabled</th></tr></thead>
+        <tbody><tr><td>true</td><td>true</td></tr></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>albums sample</h2>
+      <table>
+        <thead><tr><th>ID</th><th>Artist</th><th>Title</th><th>Year</th><th>Genres</th><th>Styles</th><th>Stock</th></tr></thead>
+        <tbody><tr><td>390411</td><td>A Tribe Called Quest</td><td>The Low End Theory</td><td>1996</td><td>Hip Hop</td><td>Conscious, Jazzy Hip-Hop</td><td>6 in stock</td></tr><tr><td>551002</td><td>Al Green</td><td>Call Me</td><td>1973</td><td>Funk / Soul</td><td>Rhythm &amp; Blues, Soul</td><td>6 in stock</td></tr><tr><td>549847</td><td>Alice Coltrane Featuring Pharoah Sanders</td><td>Journey In Satchidananda</td><td>1971</td><td>Jazz</td><td>Avant-garde Jazz, Modal, Post Bop</td><td>6 in stock</td></tr><tr><td>4887177</td><td>Aphex Twin</td><td>Selected Ambient Works 85-92</td><td>2013</td><td>Electronic</td><td>IDM, Techno, Electro</td><td>6 in stock</td></tr><tr><td>14509303</td><td>Aretha Franklin</td><td>I Never Loved A Man The Way I Love You</td><td>2019</td><td>Funk / Soul</td><td>Rhythm &amp; Blues, Soul</td><td>6 in stock</td></tr></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>demandSignals sample</h2>
+      <table>
+        <thead><tr><th>Masked ID</th><th>Artist</th><th>Genre</th><th>Signal Type</th><th>Weight</th><th>Created At</th></tr></thead>
+        <tbody><tr><td>ZJpL...2aj0</td><td>Joni Mitchell</td><td>Alternative</td><td>rec_request</td><td>1</td><td>2026-06-17T21:35:51.435Z</td></tr><tr><td>Z3s1...barm</td><td>Taylor Swift</td><td>Alternative</td><td>rec_request</td><td>1</td><td>2026-06-17T21:35:51.435Z</td></tr><tr><td>ViNE...rEvT</td><td>The Smiths</td><td>Alternative</td><td>rec_request</td><td>0.6</td><td>2026-06-17T21:35:51.435Z</td></tr><tr><td>U6E9...oZ7y</td><td>boygenius</td><td>Alternative</td><td>rec_request</td><td>1</td><td>2026-06-17T21:35:51.435Z</td></tr><tr><td>70sa...84X1</td><td>Phoebe Bridgers</td><td>Alternative</td><td>rec_request</td><td>1</td><td>2026-06-17T21:35:51.435Z</td></tr></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>users sample</h2>
+      <table>
+        <thead><tr><th>Masked UID</th><th>Role</th><th>Email</th><th>Name</th><th>Session Subcollection</th><th>Last Active</th></tr></thead>
+        <tbody><tr><td>2aIq...qxY2</td><td>customer</td><td>[redacted]</td><td>[redacted]</td><td>4 saved sessions</td><td>2026-06-17T19:25:25.479Z</td></tr><tr><td>C7Ty...nxe2</td><td>customer</td><td>[redacted]</td><td>[redacted]</td><td>0 saved sessions</td><td>2026-06-17T22:12:51.912Z</td></tr></tbody>
+      </table>
+    </section>
+
+    <footer>Generated 6/17/2026, 7:31:00 PM Pacific from project <code>vinyl-concierge</code>.</footer>
+  </main>
+</body>
+</html>

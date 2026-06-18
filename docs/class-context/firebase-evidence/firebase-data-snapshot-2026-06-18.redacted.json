@@ -1,0 +1,154 @@
+{
+  "counts": {
+    "albums": 111,
+    "config": 1,
+    "demandSignals": 20,
+    "users": 2
+  },
+  "config": {
+    "recommendationsEnabled": true,
+    "discogsEnabled": true
+  },
+  "albumSamples": [
+    {
+      "id": "390411",
+      "artist": "A Tribe Called Quest",
+      "title": "The Low End Theory",
+      "year": 1996,
+      "genres": [
+        "Hip Hop"
+      ],
+      "styles": [
+        "Conscious",
+        "Jazzy Hip-Hop"
+      ],
+      "inStock": true,
+      "stockCount": 6
+    },
+    {
+      "id": "551002",
+      "artist": "Al Green",
+      "title": "Call Me",
+      "year": 1973,
+      "genres": [
+        "Funk / Soul"
+      ],
+      "styles": [
+        "Rhythm & Blues",
+        "Soul"
+      ],
+      "inStock": true,
+      "stockCount": 6
+    },
+    {
+      "id": "549847",
+      "artist": "Alice Coltrane Featuring Pharoah Sanders",
+      "title": "Journey In Satchidananda",
+      "year": 1971,
+      "genres": [
+        "Jazz"
+      ],
+      "styles": [
+        "Avant-garde Jazz",
+        "Modal",
+        "Post Bop",
+        "Spiritual Jazz"
+      ],
+      "inStock": true,
+      "stockCount": 6
+    },
+    {
+      "id": "4887177",
+      "artist": "Aphex Twin",
+      "title": "Selected Ambient Works 85-92",
+      "year": 2013,
+      "genres": [
+        "Electronic"
+      ],
+      "styles": [
+        "IDM",
+        "Techno",
+        "Electro",
+        "Experimental",
+        "Ambient"
+      ],
+      "inStock": true,
+      "stockCount": 6
+    },
+    {
+      "id": "14509303",
+      "artist": "Aretha Franklin",
+      "title": "I Never Loved A Man The Way I Love You",
+      "year": 2019,
+      "genres": [
+        "Funk / Soul"
+      ],
+      "styles": [
+        "Rhythm & Blues",
+        "Soul"
+      ],
+      "inStock": true,
+      "stockCount": 6
+    }
+  ],
+  "demandSamples": [
+    {
+      "id": "ZJpL...2aj0",
+      "artist": "Joni Mitchell",
+      "genre": "Alternative",
+      "signalType": "rec_request",
+      "weight": 1,
+      "createdAt": "2026-06-17T21:35:51.435Z"
+    },
+    {
+      "id": "Z3s1...barm",
+      "artist": "Taylor Swift",
+      "genre": "Alternative",
+      "signalType": "rec_request",
+      "weight": 1,
+      "createdAt": "2026-06-17T21:35:51.435Z"
+    },
+    {
+      "id": "ViNE...rEvT",
+      "artist": "The Smiths",
+      "genre": "Alternative",
+      "signalType": "rec_request",
+      "weight": 0.6,
+      "createdAt": "2026-06-17T21:35:51.435Z"
+    },
+    {
+      "id": "U6E9...oZ7y",
+      "artist": "boygenius",
+      "genre": "Alternative",
+      "signalType": "rec_request",
+      "weight": 1,
+      "createdAt": "2026-06-17T21:35:51.435Z"
+    },
+    {
+      "id": "70sa...84X1",
+      "artist": "Phoebe Bridgers",
+      "genre": "Alternative",
+      "signalType": "rec_request",
+      "weight": 1,
+      "createdAt": "2026-06-17T21:35:51.435Z"
+    }
+  ],
+  "userSummaries": [
+    {
+      "id": "2aIq...qxY2",
+      "role": "customer",
+      "email": "[redacted]",
+      "displayName": "[redacted]",
+      "sessions": 4,
+      "lastActiveAt": "2026-06-17T19:25:25.479Z"
+    },
+    {
+      "id": "C7Ty...nxe2",
+      "role": "customer",
+      "email": "[redacted]",
+      "displayName": "[redacted]",
+      "sessions": 0,
+      "lastActiveAt": "2026-06-17T22:12:51.912Z"
+    }
+  ]
+}

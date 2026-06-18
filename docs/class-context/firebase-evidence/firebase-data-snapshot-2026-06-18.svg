@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1600" viewBox="0 0 1600 1600">
+  <rect width="1600" height="1600" fill="#f8f3e8"/>
+  <rect x="36" y="36" width="1528" height="1528" fill="#fffaf0" stroke="#231f20" stroke-width="3"/>
+  <rect x="36" y="36" width="1528" height="124" fill="#231f20"/>
+  <text x="76" y="96" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" fill="#fffaf0">The Vinyl Concierge</text>
+  <text x="78" y="134" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="400" fill="#f2c94c">Firebase Firestore data snapshot - redacted evidence view</text>
+  <rect x="1165" y="70" width="310" height="54" fill="#f2c94c" stroke="#fffaf0" stroke-width="2"/>
+  <text x="1204" y="105" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#231f20">FIRESTORE EVIDENCE</text>
+
+  <rect x="76" y="196" width="332" height="120" fill="#f2c94c" stroke="#231f20" stroke-width="3"/>
+  <rect x="434" y="196" width="332" height="120" fill="#cfe6d6" stroke="#231f20" stroke-width="3"/>
+  <rect x="792" y="196" width="332" height="120" fill="#f0d3c2" stroke="#231f20" stroke-width="3"/>
+  <rect x="1150" y="196" width="332" height="120" fill="#d6d8ef" stroke="#231f20" stroke-width="3"/>
+  <text x="104" y="238" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">ALBUMS</text>
+<text x="104" y="273" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">111</text>
+  <text x="462" y="238" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">DEMAND SIGNALS</text>
+<text x="462" y="273" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">20</text>
+  <text x="820" y="238" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">USERS</text>
+<text x="820" y="273" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">2</text>
+  <text x="1178" y="238" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">CONFIG DOCS</text>
+<text x="1178" y="273" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">1</text>
+  <text x="76" y="370" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#231f20">config/system: recommendationsEnabled=true; discogsEnabled=true</text>
+
+  <rect x="76" y="420" width="1406" height="250" fill="#ffffff" stroke="#231f20" stroke-width="2"/>
+  <rect x="76" y="420" width="1406" height="48" fill="#231f20"/>
+  <text x="100" y="452" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#fffaf0">albums sample</text>
+  <text x="100" y="506" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">A Tribe Called Quest - The Low End Theory (1996) / Hip Hop / 6 in stock</text>
+<text x="100" y="540" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">Al Green - Call Me (1973) / Funk / Soul / 6 in stock</text>
+<text x="100" y="574" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">Alice Coltrane Featuring Pharoah Sanders - Journey In Satchidananda (1971) / Jazz / 6 in stock</text>
+<text x="100" y="608" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">Aphex Twin - Selected Ambient Works 85-92 (2013) / Electronic / 6 in stock</text>
+<text x="100" y="642" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">Aretha Franklin - I Never Loved A Man The Way I Love You (2019) / Funk / Soul / 6 in stock</text>
+
+  <rect x="76" y="718" width="1406" height="250" fill="#ffffff" stroke="#231f20" stroke-width="2"/>
+  <rect x="76" y="718" width="1406" height="48" fill="#231f20"/>
+  <text x="100" y="750" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#fffaf0">demandSignals sample</text>
+  <text x="100" y="804" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">ZJpL...2aj0  Joni Mitchell  Alternative  rec_request  weight 1</text>
+<text x="100" y="838" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">Z3s1...barm  Taylor Swift  Alternative  rec_request  weight 1</text>
+<text x="100" y="872" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">ViNE...rEvT  The Smiths  Alternative  rec_request  weight 0.6</text>
+<text x="100" y="906" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">U6E9...oZ7y  boygenius  Alternative  rec_request  weight 1</text>
+<text x="100" y="940" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">70sa...84X1  Phoebe Bridgers  Alternative  rec_request  weight 1</text>
+
+  <rect x="76" y="1016" width="1406" height="178" fill="#ffffff" stroke="#231f20" stroke-width="2"/>
+  <rect x="76" y="1016" width="1406" height="48" fill="#231f20"/>
+  <text x="100" y="1048" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#fffaf0">users sample - IDs, emails, names, and profile images redacted</text>
+  <text x="100" y="1104" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">2aIq...qxY2  role: customer  email/name: [redacted]  sessions: 4</text>
+<text x="100" y="1138" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#231f20">C7Ty...nxe2  role: customer  email/name: [redacted]  sessions: 0</text>
+
+  <rect x="76" y="1242" width="1406" height="192" fill="#f3ead8" stroke="#231f20" stroke-width="2"/>
+  <text x="100" y="1294" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#231f20">Why this screenshot works for Module 4</text>
+  <text x="100" y="1342" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="400" fill="#231f20">Shows live Firestore collections used by the prototype: albums, config, demandSignals, and users.</text>
+<text x="100" y="1380" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="400" fill="#231f20">Confirms the 111-record Discogs-backed catalog and the recommendation/config kill switch.</text>
+<text x="100" y="1418" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="400" fill="#231f20">Keeps customer privacy intact by masking user IDs, emails, names, and profile image data.</text>
+  <text x="76" y="1518" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="400" fill="#6b5f54">Generated 6/17/2026, 7:31:00 PM Pacific from live Firestore data.</text>
+</svg>
