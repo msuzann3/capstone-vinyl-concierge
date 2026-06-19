@@ -7,6 +7,8 @@ All notable project changes should be recorded here so Michelle can move between
 - Began customer feedback-week prep for three non-technical music/record buyers, with next work focused on an intro video script and a tester feedback form.
 - Expanded `scripts/seedAlbums.mjs` from 111 to 211 unique Discogs seed queries by adding 100 more diverse album searches across jazz, indie/alternative, pop, R&B, hip-hop, Latin, Japanese/electronic, punk, metal, folk, and country-adjacent shelves.
 - Verified the expanded seed list has 211 unique entries and passes `npm run lint`; the live Firestore catalog still needs the manual `Seed Firestore Catalog` GitHub Action or local `npm run seed:albums` run before Firebase reflects the new entries.
+- Added a customer-questionnaire prototype note explaining that the test catalog is limited to about 200 random Discogs albums and may not include testers' favorite artists yet; also changed the form footer to say it is searching a 200-ish Discogs seed catalog.
+- Added `docs/customer-feedback-questionnaire.md` with a short tester-ready form draft covering ease of use, recommendation relevance, trust, catalog-limit clarity, purchase/exploration interest, and open-ended improvement feedback.
 
 ## 2026-06-18
 
