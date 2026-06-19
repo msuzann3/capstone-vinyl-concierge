@@ -2,6 +2,12 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-19
+
+- Began customer feedback-week prep for three non-technical music/record buyers, with next work focused on an intro video script and a tester feedback form.
+- Expanded `scripts/seedAlbums.mjs` from 111 to 211 unique Discogs seed queries by adding 100 more diverse album searches across jazz, indie/alternative, pop, R&B, hip-hop, Latin, Japanese/electronic, punk, metal, folk, and country-adjacent shelves.
+- Verified the expanded seed list has 211 unique entries and passes `npm run lint`; the live Firestore catalog still needs the manual `Seed Firestore Catalog` GitHub Action or local `npm run seed:albums` run before Firebase reflects the new entries.
+
 ## 2026-06-18
 
 - Restricted the Firebase browser API key in Google Cloud Console to HTTP referrers for GitHub Pages, Firebase Hosting, `localhost`, and `127.0.0.1`; verified the key still has the Firebase-related 25-API allowlist and resolved GitHub secret scanning alert `#1` as an intentional Firebase client config key.

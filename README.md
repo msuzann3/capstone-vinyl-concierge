@@ -24,7 +24,8 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Brand references: source PDFs, implementation notes, and production logo PNGs in `docs/brand/`.
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
 - Module 4 Firebase backend pack: source handoff is in local folder `Firebase Build Pack/`; active integrated files now include `src/firebase.ts`, `src/auth.ts`, `src/sessions.ts`, `src/ownerSignals.ts`, `firestore.rules`, `scripts/seedAlbums.mjs`, and `schema_diagram.html`.
-- Module 4 backend state: the `Seed Firestore Catalog` GitHub Action seeds a diverse 111-title Discogs-backed store catalog into Firestore, `config/system` has been set with recommendations and Discogs enabled, and the repo `firestore.rules` file is published to Firebase.
+- Module 4 backend state: the `Seed Firestore Catalog` GitHub Action seeds a diverse 211-title Discogs-backed store catalog into Firestore, `config/system` has been set with recommendations and Discogs enabled, and the repo `firestore.rules` file is published to Firebase.
+- Customer feedback prep: next working focus is an intro video for non-technical music/record buyers, a short feedback form, and a broader customer-side test catalog.
 - Module 4 Firebase evidence: `docs/class-context/firebase-evidence/firebase-data-snapshot-2026-06-18.png` is a redacted live Firestore data screenshot showing `albums`, `config`, `demandSignals`, and masked `users`; regenerate the HTML/SVG/JSON source files with `npm run firebase:evidence`.
 - Firebase Auth state: Google sign-in and email/password sign-in are enabled, and the authorized domains include `localhost`, `vinyl-concierge.firebaseapp.com`, `vinyl-concierge.web.app`, and `msuzann3.github.io`.
 - Firebase browser API key state: GitHub secret scanning alert `#1` was reviewed on 2026-06-18; the key is the Firebase web client config key, now restricted in Google Cloud Console to HTTP referrers for GitHub Pages, Firebase Hosting, `localhost`, and `127.0.0.1`, while retaining the Firebase-related API allowlist.
@@ -158,3 +159,4 @@ The published artifact is `dist/`.
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.
+- Draft the customer-side intro video script and tester feedback form for three non-technical music/record buyers.
