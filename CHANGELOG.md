@@ -18,6 +18,8 @@ All notable project changes should be recorded here so Michelle can move between
 - Reframed the intro caveats and feedback questions so testers focus on app usability and clarity rather than judging the exact prototype recommendations from the small test catalog.
 - Added Michelle's limited-database reminder under the feedback form heading so testers know the feedback is about ease of use, not recommendation accuracy.
 - Verified `npm run lint`, `npm run build:pages`, local preview routes, desktop feedback-form rendering, intro-to-app navigation, disabled send state without a webhook, and mobile intro/feedback rendering.
+- Confirmed the GitHub repository does not yet have the `N8N_FEEDBACK_WEBHOOK_URL` secret, which explains why the deployed feedback form cannot submit to n8n yet.
+- Changed the feedback form so a missing webhook shows a clear setup error after submit instead of silently disabling the send button.
 
 ## 2026-06-19
 

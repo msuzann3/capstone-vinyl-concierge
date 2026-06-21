@@ -47,7 +47,7 @@ export function hasFeedbackWebhook() {
 
 export async function submitFeedbackToWebhook(payload: FeedbackPayload) {
   if (!hasFeedbackWebhook() || !configuredWebhookUrl) {
-    throw new Error("No n8n webhook is configured yet.");
+    throw new Error("The feedback form is not connected yet. Michelle needs to add the webhook link and redeploy the site.");
   }
 
   const response = await fetch(configuredWebhookUrl, {

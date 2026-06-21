@@ -158,7 +158,17 @@ For GitHub Pages, the shareable links will be:
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/app`
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/feedback`
 
-To send feedback responses to Google Sheets, create an n8n workflow with a Webhook trigger and a Google Sheets append-row step, then set the public webhook URL as `VITE_N8N_FEEDBACK_WEBHOOK_URL` before building locally or as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` before deploying Pages. If no webhook is configured, the feedback page keeps the send button disabled.
+To send feedback responses to Google Sheets, create an n8n workflow with a Webhook trigger and a Google Sheets append-row step, then set the public production webhook URL as `VITE_N8N_FEEDBACK_WEBHOOK_URL` before building locally or as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` before deploying Pages. If no webhook is configured, the feedback page shows a setup error when someone tries to submit.
+
+Webhook setup checklist:
+
+1. In n8n, create a `Webhook` trigger that accepts `POST` requests.
+2. Copy the production webhook URL, not the temporary test URL.
+3. In GitHub, add a repository secret named `N8N_FEEDBACK_WEBHOOK_URL` with that production URL.
+4. Re-run the GitHub Pages deployment, or push a new commit to trigger it.
+5. In n8n, map the incoming JSON fields to the Google Sheets append-row step.
+
+If the secret exists and the form still fails, check the browser console and n8n execution log for a CORS/preflight error or a non-2xx webhook response.
 
 ## Next Steps
 
@@ -176,5 +186,5 @@ To send feedback responses to Google Sheets, create an n8n workflow with a Webho
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.
-- Configure the n8n feedback webhook as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` and redeploy if Michelle wants `#/feedback` submissions to append directly into Google Sheets.
+- Configure the n8n feedback webhook as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` and redeploy; `gh secret list` currently shows only the Discogs and Firebase secrets, so the feedback webhook secret still needs to be added.
 - Collect at least three real tester responses, synthesize recurring patterns, classify them into incorporate-now / long-term / ignore, and revise the prototype based on the chosen incorporate-now change.

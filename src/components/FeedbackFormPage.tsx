@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { CheckCircle2, Info, Send } from "lucide-react";
-import { FeedbackPayload, hasFeedbackWebhook, submitFeedbackToWebhook } from "../feedbackSubmission";
+import { FeedbackPayload, submitFeedbackToWebhook } from "../feedbackSubmission";
 
 type FeedbackFormState = {
   name: string;
@@ -74,8 +74,6 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
   const [form, setForm] = useState<FeedbackFormState>(initialForm);
   const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState("");
-
-  const webhookReady = hasFeedbackWebhook();
 
   const payload = useMemo<FeedbackPayload>(() => ({
     submittedAt: new Date().toISOString(),
@@ -225,9 +223,9 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
           </div>
           <button
             type="submit"
-            disabled={status === "submitting" || !webhookReady}
+            disabled={status === "submitting"}
             className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded text-xs font-bold uppercase shadow ${
-              status === "submitting" || !webhookReady
+              status === "submitting"
                 ? "bg-stone-300 text-stone-500 cursor-not-allowed"
                 : "bg-curate-red text-white hover:bg-vinyl-black"
             }`}
