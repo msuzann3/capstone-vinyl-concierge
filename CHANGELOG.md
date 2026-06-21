@@ -4,7 +4,8 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-21
 
-- Hardened `firestore.rules` so signed-in customers can create their own profile as `role: customer` and update normal profile fields, but cannot change their own `role` field to gain owner access; the updated rules still need to be published to Firebase before the live project enforces this fix.
+- Published the hardened `firestore.rules` to Firebase with `lentz.michelles@gmail.com`, after switching from the ASU account that lacked Firebase Rules permissions.
+- Hardened `firestore.rules` so signed-in customers can create their own profile as `role: customer` and update normal profile fields, but cannot change their own `role` field to gain owner access.
 - Added Firestore validation for signed-in `demandSignals` creates so clients can only write the expected recommendation signal fields, bounded text values, `signalType: rec_request`, weight values from 0 to 1, and server timestamps; this reduces owner-signal poisoning risk while the prototype backend is still minimal.
 - Added signed-in persistence for the prototype recommendation-card `Save Interest`, thumbs-up, and thumbs-down controls under `users/{uid}/recommendationActions`, with screen-local fallback messaging for signed-out users or failed saves.
 - Tightened the recommendation ranker to cap Firestore catalog reads, score structured genre/context fields instead of a broad text haystack, require a minimum personalized score before treating records as matched, and label weak catalog fills as staff fallbacks.
