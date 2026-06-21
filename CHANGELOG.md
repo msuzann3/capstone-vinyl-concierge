@@ -2,6 +2,19 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-21
+
+- Added Week 5 tester hash routes inside the app: `#/intro` for the temporary explainer-video entry page, `#/app` for the customer prototype, and `#/feedback` for the feedback questionnaire.
+- Built a non-technical tester intro page with a video placeholder, clear tester path, and buttons to try the app or open the feedback form.
+- Replaced the short intro-page placeholder copy with Michelle's full Prototype Evaluation Guide text, organized into project background, what it is, current prototype status, known limitations, and feedback prompts.
+- Embedded Michelle's Week 5 explainer video on the intro page from `src/assets/vinyl-concierge-explainer.mp4`, replacing the video placeholder with a native controlled MP4 player.
+- Built a feedback form for Google Sheets collection through n8n, using `VITE_N8N_FEEDBACK_WEBHOOK_URL` for a public webhook POST and copy/download JSON fallbacks when the webhook is not configured.
+- Added optional GitHub Pages build wiring for repository secret `N8N_FEEDBACK_WEBHOOK_URL`, passed through as `VITE_N8N_FEEDBACK_WEBHOOK_URL`.
+- Expanded the feedback questions to cover prior recommendation-engine experience, past likes/frustrations, prototype usability, UI clarity without color questions, recommendation trust, exploration interest, and step-by-step vs one-page preference.
+- Renamed the final open-ended feedback form prompt to `Other comments?` with a blank free-text response field.
+- Improved customer questionnaire header readability by changing the `Quick Demo Fill` button to white text, and removed the `Curate Brand Active` badge from the top-right header.
+- Verified `npm run lint`, `npm run build:pages`, local preview routes, desktop feedback-form rendering, intro-to-app navigation, disabled send state without a webhook, copy/download fallback surface, and mobile intro/feedback rendering.
+
 ## 2026-06-19
 
 - Began customer feedback-week prep for three non-technical music/record buyers, with next work focused on an intro video script and a tester feedback form.

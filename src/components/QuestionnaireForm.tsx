@@ -79,7 +79,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
         <button
           type="button"
           onClick={handlePresetFill}
-          className="text-[11px] text-sleeve-mustard font-mono hover:text-white border border-sleeve-mustard/30 hover:border-white px-2.5 py-1 rounded transition-all bg-curate-red animate-pulse"
+          className="text-[11px] text-white font-mono font-bold hover:text-vinyl-black border border-white/70 hover:border-sleeve-mustard px-2.5 py-1 rounded transition-all bg-curate-red hover:bg-sleeve-mustard shadow-sm"
         >
           Quick Demo Fill
         </button>

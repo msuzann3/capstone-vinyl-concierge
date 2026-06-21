@@ -25,7 +25,8 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
 - Module 4 Firebase backend pack: source handoff is in local folder `Firebase Build Pack/`; active integrated files now include `src/firebase.ts`, `src/auth.ts`, `src/sessions.ts`, `src/ownerSignals.ts`, `firestore.rules`, `scripts/seedAlbums.mjs`, and `schema_diagram.html`.
 - Module 4 backend state: the `Seed Firestore Catalog` GitHub Action seeds a diverse 211-title Discogs-backed store catalog into Firestore, `config/system` has been set with recommendations and Discogs enabled, and the repo `firestore.rules` file is published to Firebase.
-- Customer feedback prep: next working focus is an intro video for non-technical music/record buyers and a short feedback form. A draft tester form lives at `docs/customer-feedback-questionnaire.md`. The customer questionnaire now tells testers the prototype searches a limited 200-ish random Discogs seed catalog, so exact favorite-artist matches may not appear yet.
+- Week 5 feedback prep: the app now has shareable tester routes for the intro page, live prototype, and feedback form: `#/intro`, `#/app`, and `#/feedback`. The intro page contains Michelle's Prototype Evaluation Guide text covering project background, current prototype status, known limitations, and the feedback questions testers should keep in mind, plus an embedded explainer video from `src/assets/vinyl-concierge-explainer.mp4`. The feedback form is designed for non-technical music/record buyers, avoids color-preference questions, asks Mom Test-style prior-experience and usability questions, and can post JSON responses to an n8n webhook for Google Sheets when `VITE_N8N_FEEDBACK_WEBHOOK_URL` is configured.
+- Customer feedback prep: a draft/reference tester form lives at `docs/customer-feedback-questionnaire.md`. The customer questionnaire now tells testers the prototype searches a limited 200-ish random Discogs seed catalog, so exact favorite-artist matches may not appear yet.
 - Module 4 Firebase evidence: `docs/class-context/firebase-evidence/firebase-data-snapshot-2026-06-18.png` is a redacted live Firestore data screenshot showing `albums`, `config`, `demandSignals`, and masked `users`; regenerate the HTML/SVG/JSON source files with `npm run firebase:evidence`.
 - Firebase Auth state: Google sign-in and email/password sign-in are enabled, and the authorized domains include `localhost`, `vinyl-concierge.firebaseapp.com`, `vinyl-concierge.web.app`, and `msuzann3.github.io`.
 - Firebase browser API key state: GitHub secret scanning alert `#1` was reviewed on 2026-06-18; the key is the Firebase web client config key, now restricted in Google Cloud Console to HTTP referrers for GitHub Pages, Firebase Hosting, `localhost`, and `127.0.0.1`, while retaining the Firebase-related API allowlist.
@@ -143,6 +144,22 @@ npm run build:pages
 
 The published artifact is `dist/`.
 
+## Week 5 Tester Links
+
+Use these hash routes on the local preview or GitHub Pages build:
+
+- Tester intro page: `#/intro`
+- Customer prototype: `#/app`
+- Feedback form: `#/feedback`
+
+For GitHub Pages, the shareable links will be:
+
+- `https://msuzann3.github.io/capstone-vinyl-concierge/#/intro`
+- `https://msuzann3.github.io/capstone-vinyl-concierge/#/app`
+- `https://msuzann3.github.io/capstone-vinyl-concierge/#/feedback`
+
+To send feedback responses to Google Sheets, create an n8n workflow with a Webhook trigger and a Google Sheets append-row step, then set the public webhook URL as `VITE_N8N_FEEDBACK_WEBHOOK_URL` before building locally or as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` before deploying Pages. If no webhook is configured, the feedback page keeps the send button disabled and offers copy/download JSON fallbacks.
+
 ## Next Steps
 
 - Replace the default synthetic inventory with real Curate Records & Books inventory data when available.
@@ -159,4 +176,5 @@ The published artifact is `dist/`.
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.
-- Draft the customer-side intro video script and tester feedback form for three non-technical music/record buyers.
+- Configure the n8n feedback webhook as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` and redeploy if Michelle wants `#/feedback` submissions to append directly into Google Sheets.
+- Collect at least three real tester responses, synthesize recurring patterns, classify them into incorporate-now / long-term / ignore, and revise the prototype based on the chosen incorporate-now change.

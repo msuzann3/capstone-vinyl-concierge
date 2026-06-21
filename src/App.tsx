@@ -11,7 +11,8 @@ import {
   Ticket,
   MapPinned,
   LogIn,
-  LogOut
+  LogOut,
+  MessageSquareText
 } from "lucide-react";
 import type { User } from "firebase/auth";
 import QuestionnaireForm from "./components/QuestionnaireForm";
@@ -19,6 +20,8 @@ import VinylDisc from "./components/VinylDisc";
 import OwnerInsightsView from "./components/OwnerInsightsView";
 import OwnerIntelligenceDashboard from "./components/OwnerIntelligenceDashboard";
 import AuthScreen from "./components/AuthScreen";
+import FeedbackFormPage from "./components/FeedbackFormPage";
+import TesterIntroPage from "./components/TesterIntroPage";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
@@ -26,6 +29,16 @@ import { logOut, signInWithEmail, signInWithGoogle, signUpWithEmail, watchAuth }
 import { saveSessionAndSignals } from "./sessions";
 
 const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
+
+type AppRoute = "intro" | "app" | "feedback";
+
+function getRouteFromHash(): AppRoute {
+  const route = window.location.hash.replace(/^#\/?/, "");
+  if (route === "intro" || route === "feedback" || route === "app") {
+    return route;
+  }
+  return "app";
+}
 
 // Illustrative starting list for initial load when no recommendation is fetched yet
 const DEFAULT_STORE_DISPLAY: Recommendation[] = [
@@ -63,6 +76,7 @@ const DEFAULT_STORE_DISPLAY: Recommendation[] = [
 
 export default function App() {
   const [activeExperience, setActiveExperience] = useState<"customer" | "owner">("customer");
+  const [activeRoute, setActiveRoute] = useState<AppRoute>(getRouteFromHash);
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>(DEFAULT_STORE_DISPLAY);
   const [collectionInsights, setCollectionInsights] = useState<CollectionInsights | null>(null);
@@ -107,6 +121,18 @@ export default function App() {
       setAuthNotice(null);
     }
   }), []);
+
+  useEffect(() => {
+    const handleHashChange = () => setActiveRoute(getRouteFromHash());
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  const navigateTo = (route: AppRoute) => {
+    window.location.hash = `/${route}`;
+    setActiveRoute(route);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleAuthClick = async () => {
     setAuthNotice(null);
@@ -267,6 +293,17 @@ export default function App() {
                     : "Sign In"}
               </span>
             </button>
+            <button
+              onClick={() => navigateTo("feedback")}
+              className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-mono font-bold tracking-wider uppercase transition-all ${
+                activeRoute === "feedback"
+                  ? "bg-sleeve-mustard text-vinyl-black border-sleeve-mustard"
+                  : "bg-stone-900 text-stone-300 border-sleeve-mustard/30 hover:text-bone-cream hover:border-sleeve-mustard/60"
+              }`}
+            >
+              <MessageSquareText className="w-3.5 h-3.5" />
+              Feedback
+            </button>
             <div className="flex rounded-full border border-sleeve-mustard/30 bg-stone-950 p-1">
               {[
                 { id: "customer", label: "Customer" },
@@ -274,9 +311,12 @@ export default function App() {
               ].map((option) => (
                 <button
                   key={option.id}
-                  onClick={() => setActiveExperience(option.id as "customer" | "owner")}
+                  onClick={() => {
+                    setActiveExperience(option.id as "customer" | "owner");
+                    navigateTo("app");
+                  }}
                   className={`rounded-full px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider transition-all ${
-                    activeExperience === option.id
+                    activeRoute === "app" && activeExperience === option.id
                       ? "bg-sleeve-mustard text-vinyl-black"
                       : "text-stone-400 hover:text-bone-cream"
                   }`}
@@ -285,20 +325,29 @@ export default function App() {
                 </button>
               ))}
             </div>
-            {/* Curate Active Badge */}
-            <div className="flex items-center gap-2 bg-stone-900 px-3 py-1.5 rounded-full border border-curate-red/40 shadow-inner">
-              <span className="w-2.5 h-2.5 rounded-full bg-curate-red animate-pulse"></span>
-              <span className="text-[10px] text-stone-300 font-mono font-bold tracking-wider uppercase">
-                Curate Brand Active
-              </span>
-            </div>
           </div>
         </div>
       </header>
 
       {/* Main Container Area */}
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
-        {activeExperience === "owner" ? (
+        {activeRoute === "intro" ? (
+          <TesterIntroPage
+            onStartApp={() => {
+              setActiveExperience("customer");
+              navigateTo("app");
+            }}
+            onOpenFeedback={() => navigateTo("feedback")}
+          />
+        ) : activeRoute === "feedback" ? (
+          <FeedbackFormPage
+            onBackToIntro={() => navigateTo("intro")}
+            onTryApp={() => {
+              setActiveExperience("customer");
+              navigateTo("app");
+            }}
+          />
+        ) : activeExperience === "owner" ? (
           <OwnerIntelligenceDashboard />
         ) : (
           <>

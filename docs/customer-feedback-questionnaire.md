@@ -4,10 +4,27 @@ Use this for the three non-technical music/record-buyer testers after they watch
 
 ## Setup
 
-- Recommended tool: Google Forms, Microsoft Forms, or Typeform.
+- Recommended tool: the in-app `#/feedback` form, posting to an n8n webhook that appends responses to Google Sheets. Google Forms, Microsoft Forms, or Typeform remain acceptable backups.
 - Estimated time: 5-8 minutes.
 - Best timing: send the form link immediately after they use the prototype.
 - Tester framing: this is a school prototype with a limited test catalog of about 200 random Discogs albums, so exact favorite artists may not appear yet.
+- Shareable Pages links after deployment:
+  - Intro page: `https://msuzann3.github.io/capstone-vinyl-concierge/#/intro`
+  - Customer prototype: `https://msuzann3.github.io/capstone-vinyl-concierge/#/app`
+  - Feedback form: `https://msuzann3.github.io/capstone-vinyl-concierge/#/feedback`
+
+## n8n / Google Sheets Capture
+
+The feedback form sends one JSON payload to `VITE_N8N_FEEDBACK_WEBHOOK_URL` when that environment variable is configured at build time. For GitHub Pages, add the n8n production webhook URL as repository secret `N8N_FEEDBACK_WEBHOOK_URL`; the Pages workflow passes it into the build.
+
+Recommended n8n workflow:
+
+1. Webhook trigger receives a `POST` request.
+2. Optional Set/Edit Fields step maps nested JSON fields into flat sheet columns.
+3. Google Sheets node appends a row to Michelle's Week 5 feedback sheet.
+4. Respond to Webhook returns a simple success response.
+
+If the webhook is not configured, the form disables the send button and offers copy/download JSON fallbacks.
 
 ## Intro Text
 
@@ -69,6 +86,18 @@ Thank you for testing The Vinyl Concierge. This is a student prototype for a rec
 11. What is one record, artist, or genre you expected it to understand better?
 
 12. Any other comments?
+
+## Current In-App Question Areas
+
+The in-app form expands this draft into five sections:
+
+- About you.
+- Similar tools you have used.
+- Using this prototype.
+- The recommendations.
+- What should change.
+
+It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability and scanning friction in The Vinyl Concierge, recommendation trust, and whether testers would prefer a guided step-by-step flow. It intentionally asks testers not to focus on colors.
 
 ## Michelle's Review Notes
 
