@@ -28,7 +28,7 @@ import TesterIntroPage from "./components/TesterIntroPage";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
-import { logOut, signInWithEmail, signInWithGoogle, signUpWithEmail, watchAuth } from "./auth";
+import { logOut, signInWithGoogle, watchAuth } from "./auth";
 import { saveRecommendationAction, saveSessionAndSignals, type RecommendationAction } from "./sessions";
 
 const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
@@ -283,8 +283,6 @@ export default function App() {
               notice={authNotice}
               onClose={() => setShowAuthScreen(false)}
               onGoogle={() => finishAuthRequest(signInWithGoogle)}
-              onEmailSignIn={(email, password) => finishAuthRequest(() => signInWithEmail(email, password))}
-              onEmailSignUp={(email, password) => finishAuthRequest(() => signUpWithEmail(email, password))}
             />
           </motion.div>
         )}
