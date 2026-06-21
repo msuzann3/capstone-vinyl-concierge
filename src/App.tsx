@@ -12,7 +12,10 @@ import {
   MapPinned,
   LogIn,
   LogOut,
-  MessageSquareText
+  MessageSquareText,
+  ShoppingCart,
+  ThumbsDown,
+  ThumbsUp
 } from "lucide-react";
 import type { User } from "firebase/auth";
 import QuestionnaireForm from "./components/QuestionnaireForm";
@@ -479,23 +482,45 @@ export default function App() {
                         <Layers className="w-3.5 h-3.5 text-curate-red animate-pulse" />
                         YOUR CUSTOM SHELF RECOMMENDATIONS ({recommendations.length})
                       </h3>
-                      <span className="text-[11px] text-stone-500 font-mono tracking-tighter">
-                        PROTOTYPE PREVIEW
-                      </span>
                     </div>
 
                     {/* Horizontal Scroller list of vinyl records */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {recommendations.map((rec, i) => (
-                        <VinylDisc
-                          key={i}
-                          index={i}
-                          album={rec}
-                          isSelected={selectedAlbumIdx === i}
-                          onClick={() => {
-                            setSelectedAlbumIdx(i);
-                          }}
-                        />
+                        <div key={`${rec.artist}-${rec.title}`} className="space-y-2">
+                          <VinylDisc
+                            index={i}
+                            album={rec}
+                            isSelected={selectedAlbumIdx === i}
+                            onClick={() => {
+                              setSelectedAlbumIdx(i);
+                            }}
+                          />
+                          <div className="grid grid-cols-[1fr_auto_auto] gap-2">
+                            <button
+                              type="button"
+                              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded border border-curate-red bg-curate-red px-3 py-2 text-[11px] font-bold uppercase text-white shadow-sm transition-colors hover:bg-vinyl-black"
+                              aria-label={`Add ${rec.title} by ${rec.artist} to cart`}
+                            >
+                              <ShoppingCart className="h-4 w-4" />
+                              <span>Add to Cart</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="inline-flex h-10 w-10 items-center justify-center rounded border border-stone-300 bg-white text-stone-700 shadow-sm transition-colors hover:border-curate-red hover:text-curate-red"
+                              aria-label={`Like ${rec.title} by ${rec.artist}`}
+                            >
+                              <ThumbsUp className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              className="inline-flex h-10 w-10 items-center justify-center rounded border border-stone-300 bg-white text-stone-700 shadow-sm transition-colors hover:border-curate-red hover:text-curate-red"
+                              aria-label={`Dislike ${rec.title} by ${rec.artist}`}
+                            >
+                              <ThumbsDown className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>

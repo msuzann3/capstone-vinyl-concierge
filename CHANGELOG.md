@@ -4,6 +4,11 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-21
 
+- Removed the app intake-page prototype note so testers land directly on the customer questionnaire.
+- Added tester-facing Add to Cart, thumbs-up, and thumbs-down buttons to each recommendation card; these are CTA/feedback affordances only and do not route to a cart.
+- Made the feedback form's limited-catalog/usability reminder more prominent and easier to read.
+- Removed feedback form wording that told testers to ignore colors, and removed the questions about why recommendations appeared, one-page vs guided flow preference, and other comments.
+- Updated `docs/customer-feedback-questionnaire.md` to match the simplified in-app feedback form.
 - Added Week 5 tester hash routes inside the app: `#/intro` for the temporary explainer-video entry page, `#/app` for the customer prototype, and `#/feedback` for the feedback questionnaire.
 - Built a non-technical tester intro page with a video placeholder, clear tester path, and buttons to try the app or open the feedback form.
 - Replaced the short intro-page placeholder copy with Michelle's full Prototype Evaluation Guide text, organized into project background, what it is, current prototype status, known limitations, and feedback prompts.

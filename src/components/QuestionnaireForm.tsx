@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UserPreferences } from "../types";
-import { Disc, Sparkles, SlidersHorizontal, ArrowRight, HelpCircle } from "lucide-react";
+import { Disc, Sparkles, SlidersHorizontal, ArrowRight } from "lucide-react";
 import { Brandmark } from "./BrandLogo";
 
 interface QuestionnaireFormProps {
@@ -86,16 +86,6 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
       </div>
 
       <div className="p-6 space-y-6">
-        <div className="rounded-md border border-kraft/60 bg-bone-cream px-4 py-3 flex gap-3">
-          <HelpCircle className="w-4 h-4 text-curate-red mt-0.5 shrink-0" />
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-stone-900">Prototype note</p>
-            <p className="text-xs text-stone-600 leading-relaxed mt-1">
-              This test catalog is limited to about 200 random albums pulled from Discogs. It may not include your favorite artists yet, so judge whether the shelf suggestions feel useful, clear, and worth exploring.
-            </p>
-          </div>
-        </div>
-
         {/* Step 1: Favorite Artists */}
         <div>
           <label className="block text-stone-900 font-bold text-sm tracking-tight mb-1">

@@ -15,16 +15,13 @@ type FeedbackFormState = {
   recommendationClarity: string;
   uiEase: string;
   uiFriction: string;
-  notColors: string;
-  feltConnected: string;
+  wordingConfusion: string;
   notesHelpful: string;
   trustSignal: string;
   wantedToExplore: string;
   expectedBetterUnderstanding: string;
   mostUsefulChange: string;
   wouldUseAtStore: string;
-  guidedVsAllAtOnce: string;
-  finalComment: string;
 };
 
 const initialForm: FeedbackFormState = {
@@ -40,16 +37,13 @@ const initialForm: FeedbackFormState = {
   recommendationClarity: "",
   uiEase: "",
   uiFriction: "",
-  notColors: "",
-  feltConnected: "",
+  wordingConfusion: "",
   notesHelpful: "",
   trustSignal: "",
   wantedToExplore: "",
   expectedBetterUnderstanding: "",
   mostUsefulChange: "",
   wouldUseAtStore: "",
-  guidedVsAllAtOnce: "",
-  finalComment: "",
 };
 
 const buyerTypes = [
@@ -63,7 +57,6 @@ const similarUse = ["Yes, recently", "Yes, but not recently", "No", "Not sure"];
 const clarityScale = ["Very clear", "Mostly clear", "A little confusing", "Very confusing"];
 const helpfulScale = ["Helpful", "Somewhat helpful", "Too technical", "Too vague", "Not useful"];
 const useScale = ["Yes", "Maybe", "Probably not", "No"];
-const guidedScale = ["One page was fine", "I would prefer step-by-step", "I am not sure"];
 
 interface FeedbackFormPageProps {
   onBackToIntro: () => void;
@@ -95,10 +88,9 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
       recommendationClarity: form.recommendationClarity,
       uiEase: form.uiEase,
       uiFriction: form.uiFriction,
-      notColors: form.notColors,
+      wordingConfusion: form.wordingConfusion,
     },
     recommendationQuality: {
-      feltConnected: form.feltConnected,
       notesHelpful: form.notesHelpful,
       trustSignal: form.trustSignal,
       wantedToExplore: form.wantedToExplore,
@@ -107,8 +99,6 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
     decisionSignals: {
       mostUsefulChange: form.mostUsefulChange,
       wouldUseAtStore: form.wouldUseAtStore,
-      guidedVsAllAtOnce: form.guidedVsAllAtOnce,
-      finalComment: form.finalComment,
     },
     metadata: {
       pageUrl: window.location.href,
@@ -145,19 +135,19 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
         <p className="font-editorial text-stone-700 italic text-lg mt-2 max-w-3xl">
           Please answer from your real experience using the prototype. Short, honest answers are more useful than compliments.
         </p>
-        <p className="text-sm text-stone-700 leading-relaxed mt-3 max-w-3xl">
+        <p className="text-base font-bold text-vinyl-black leading-relaxed mt-4 max-w-3xl bg-sleeve-mustard/30 border border-sleeve-mustard rounded-md px-4 py-3">
           Since we are working with a limited database, this is not about the recommendations you received. It is about the ease of using the app. Although if the recommendations are correct, that is cool too!
         </p>
       </div>
 
-      <div className="bg-sleeve-white rounded-lg border border-stone-300 p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="bg-sleeve-white rounded-lg border-2 border-curate-red p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-md">
         <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-curate-red mt-0.5 shrink-0" />
+          <Info className="w-6 h-6 text-curate-red mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-bold text-vinyl-black">
+            <p className="text-base font-black text-vinyl-black">
               Please answer these questions about the app itself.
             </p>
-            <p className="text-xs text-stone-600 mt-1">
+            <p className="text-sm font-bold text-stone-800 leading-relaxed mt-1 max-w-3xl">
               The intro page is just background. The catalog is small, so please do not judge the app by whether it finds the perfect record. Focus on whether the app is clear, easy to use, and understandable.
             </p>
           </div>
@@ -191,13 +181,12 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
             <ChoiceField label="How clear was the first step in The Vinyl Concierge?" value={form.firstStepClarity} options={clarityScale} onChange={(value) => setField("firstStepClarity", value)} required />
             <TextArea label="Where, if anywhere, did you pause, reread, or wonder what to do next?" value={form.confusingMoment} onChange={(value) => setField("confusingMoment", value)} />
             <ChoiceField label="Once recommendations appeared, how clear was the results page?" value={form.recommendationClarity} options={clarityScale} onChange={(value) => setField("recommendationClarity", value)} required />
-            <ChoiceField label="How easy was the interface to use? Please ignore color preferences." value={form.uiEase} options={clarityScale} onChange={(value) => setField("uiEase", value)} required />
-            <TextArea label="What felt too long, too small, too hidden, or hard to scan? Please do not focus on colors." value={form.uiFriction} onChange={(value) => setField("uiFriction", value)} />
-            <TextArea label="Was there any button, label, section, or wording that did not make sense?" value={form.notColors} onChange={(value) => setField("notColors", value)} />
+            <ChoiceField label="How easy was the interface to use?" value={form.uiEase} options={clarityScale} onChange={(value) => setField("uiEase", value)} required />
+            <TextArea label="What felt too long, too small, too hidden, or hard to scan?" value={form.uiFriction} onChange={(value) => setField("uiFriction", value)} />
+            <TextArea label="Was there any button, label, section, or wording that did not make sense?" value={form.wordingConfusion} onChange={(value) => setField("wordingConfusion", value)} />
           </QuestionGroup>
 
           <QuestionGroup title="Understanding the results">
-            <ChoiceField label="Was it clear why the app showed you a set of record recommendations?" value={form.feltConnected} options={clarityScale} onChange={(value) => setField("feltConnected", value)} required />
             <ChoiceField label="Were the shelf notes easy to understand?" value={form.notesHelpful} options={helpfulScale} onChange={(value) => setField("notesHelpful", value)} required />
             <TextArea label="What helped or hurt your confidence while using the results page?" value={form.trustSignal} onChange={(value) => setField("trustSignal", value)} />
             <ChoiceField label="After seeing the results, did you know what you were supposed to do next?" value={form.wantedToExplore} options={clarityScale} onChange={(value) => setField("wantedToExplore", value)} required />
@@ -207,8 +196,6 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
           <QuestionGroup title="What should change">
             <TextArea label="If Michelle could improve one thing this week, what should it be?" value={form.mostUsefulChange} onChange={(value) => setField("mostUsefulChange", value)} required />
             <ChoiceField label="If this were on a record store website, would you use it?" value={form.wouldUseAtStore} options={useScale} onChange={(value) => setField("wouldUseAtStore", value)} required />
-            <ChoiceField label="Would you rather answer everything on one page, or be guided one step at a time?" value={form.guidedVsAllAtOnce} options={guidedScale} onChange={(value) => setField("guidedVsAllAtOnce", value)} required />
-            <TextArea label="Other comments?" value={form.finalComment} onChange={(value) => setField("finalComment", value)} />
           </QuestionGroup>
         </div>
 

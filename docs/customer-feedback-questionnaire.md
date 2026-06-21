@@ -24,7 +24,7 @@ Recommended n8n workflow:
 3. Google Sheets node appends a row to Michelle's Week 5 feedback sheet.
 4. Respond to Webhook returns a simple success response.
 
-If the webhook is not configured, the form disables the send button.
+If the webhook is not configured, the form shows a setup error after submit.
 
 ## Intro Text
 
@@ -85,8 +85,6 @@ Thank you for testing The Vinyl Concierge. This is a student prototype for a rec
 
 11. What part of the app flow, wording, or layout should be improved?
 
-12. Any other comments?
-
 ## Current In-App Question Areas
 
 The in-app form expands this draft into five sections:
@@ -97,7 +95,7 @@ The in-app form expands this draft into five sections:
 - Understanding the results.
 - What should change.
 
-It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability and scanning friction in The Vinyl Concierge, results-page clarity, and whether testers would prefer a guided step-by-step flow. It intentionally asks testers not to focus on colors or exact recommendation quality from the limited prototype catalog.
+It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability and scanning friction in The Vinyl Concierge, and results-page clarity. It intentionally directs testers toward usability, clarity, and ease of use rather than exact recommendation quality from the limited prototype catalog.
 
 ## Michelle's Review Notes
 

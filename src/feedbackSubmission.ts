@@ -18,10 +18,9 @@ export interface FeedbackPayload {
     recommendationClarity: string;
     uiEase: string;
     uiFriction: string;
-    notColors: string;
+    wordingConfusion: string;
   };
   recommendationQuality: {
-    feltConnected: string;
     notesHelpful: string;
     trustSignal: string;
     wantedToExplore: string;
@@ -30,8 +29,6 @@ export interface FeedbackPayload {
   decisionSignals: {
     mostUsefulChange: string;
     wouldUseAtStore: string;
-    guidedVsAllAtOnce: string;
-    finalComment: string;
   };
   metadata: {
     pageUrl: string;
