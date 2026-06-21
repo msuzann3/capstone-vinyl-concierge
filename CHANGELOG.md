@@ -5,6 +5,7 @@ All notable project changes should be recorded here so Michelle can move between
 ## 2026-06-21
 
 - Published the hardened `firestore.rules` to Firebase with `lentz.michelles@gmail.com`, after switching from the ASU account that lacked Firebase Rules permissions.
+- Verified the GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` is present for the Pages feedback-form build, replacing stale notes that said the n8n feedback connection was still missing.
 - Hardened `firestore.rules` so signed-in customers can create their own profile as `role: customer` and update normal profile fields, but cannot change their own `role` field to gain owner access.
 - Added Firestore validation for signed-in `demandSignals` creates so clients can only write the expected recommendation signal fields, bounded text values, `signalType: rec_request`, weight values from 0 to 1, and server timestamps; this reduces owner-signal poisoning risk while the prototype backend is still minimal.
 - Added signed-in persistence for the prototype recommendation-card `Save Interest`, thumbs-up, and thumbs-down controls under `users/{uid}/recommendationActions`, with screen-local fallback messaging for signed-out users or failed saves.
@@ -35,7 +36,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Reframed the intro caveats and feedback questions so testers focus on app usability and clarity rather than judging the exact prototype recommendations from the small test catalog.
 - Added Michelle's limited-database reminder under the feedback form heading so testers know the feedback is about ease of use, not recommendation accuracy.
 - Verified `npm run lint`, `npm run build:pages`, local preview routes, desktop feedback-form rendering, intro-to-app navigation, disabled send state without a webhook, and mobile intro/feedback rendering.
-- Confirmed the GitHub repository does not yet have the `N8N_FEEDBACK_WEBHOOK_URL` secret, which explains why the deployed feedback form cannot submit to n8n yet.
+- Earlier in the day, confirmed the GitHub repository did not yet have the `N8N_FEEDBACK_WEBHOOK_URL` secret; later verification showed the secret had been added.
 - Changed the feedback form so a missing webhook shows a clear setup error after submit instead of silently disabling the send button.
 
 ## 2026-06-19

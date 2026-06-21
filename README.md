@@ -158,7 +158,7 @@ For GitHub Pages, the shareable links will be:
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/app`
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/feedback`
 
-To send feedback responses to Google Sheets, create an n8n workflow with a Webhook trigger and a Google Sheets append-row step, then set the public production webhook URL as `VITE_N8N_FEEDBACK_WEBHOOK_URL` before building locally or as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` before deploying Pages. If no webhook is configured, the feedback page shows a setup error when someone tries to submit.
+Feedback responses are wired to n8n through the GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL`, verified present on 2026-06-21. The GitHub Pages workflow passes that secret through as `VITE_N8N_FEEDBACK_WEBHOOK_URL` at build time. If the webhook is removed or unavailable, the feedback page shows a setup error and offers a JSON download fallback.
 
 Webhook setup checklist:
 
@@ -186,5 +186,4 @@ If the secret exists and the form still fails, check the browser console and n8n
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
 - Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.
-- Configure the n8n feedback webhook as GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` and redeploy; `gh secret list` currently shows only the Discogs and Firebase secrets, so the feedback webhook secret still needs to be added.
 - Collect at least three real tester responses, synthesize recurring patterns, classify them into incorporate-now / long-term / ignore, and revise the prototype based on the chosen incorporate-now change.
