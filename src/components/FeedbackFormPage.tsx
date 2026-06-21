@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { CheckCircle2, Download, Info, Send } from "lucide-react";
+import { CheckCircle2, Download, Send } from "lucide-react";
 import { downloadFeedbackPayload, FeedbackPayload, submitFeedbackToWebhook } from "../feedbackSubmission";
 
 type FeedbackFormState = {
@@ -142,21 +142,7 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
         <p className="text-base font-bold text-vinyl-black leading-relaxed mt-4 max-w-3xl bg-sleeve-mustard/30 border border-sleeve-mustard rounded-md px-4 py-3">
           Since we are working with a limited database, this is not about the recommendations you received. It is about the ease of using the app. Although if the recommendations are correct, that is cool too!
         </p>
-      </div>
-
-      <div className="bg-sleeve-white rounded-lg border-2 border-curate-red p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-md">
-        <div className="flex items-start gap-3">
-          <Info className="w-6 h-6 text-curate-red mt-0.5 shrink-0" />
-          <div>
-            <p className="text-base font-black text-vinyl-black">
-              Please answer these questions about the app itself.
-            </p>
-            <p className="text-sm font-bold text-stone-800 leading-relaxed mt-1 max-w-3xl">
-              The intro page is just background. The catalog is small, so please do not judge the app by whether it finds the perfect record. Focus on whether the app is clear, easy to use, and understandable.
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           <button onClick={onBackToIntro} className="border border-stone-300 bg-bone-cream hover:bg-white px-3 py-2 rounded text-xs font-bold uppercase">
             Intro
           </button>
@@ -171,35 +157,33 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
           <QuestionGroup title="About you">
             <TextField label="Name or initials (optional)" value={form.name} onChange={(value) => setField("name", value)} />
             <TextField label="Email (optional, only if Michelle may follow up)" value={form.email} onChange={(value) => setField("email", value)} type="email" />
-            <ChoiceField label="How would you describe yourself as a music or record buyer?" value={form.musicBuyerType} options={buyerTypes} onChange={(value) => setField("musicBuyerType", value)} required />
+            <ChoiceField label="How would you describe yourself as a music or record buyer?" value={form.musicBuyerType} options={buyerTypes} onChange={(value) => setField("musicBuyerType", value)} />
           </QuestionGroup>
 
           <QuestionGroup title="Similar tools you have used">
-            <ChoiceField label="Have you used a similar recommendation engine before?" value={form.usedSimilarBefore} options={similarUse} onChange={(value) => setField("usedSimilarBefore", value)} required />
+            <ChoiceField label="Have you used a similar recommendation engine before?" value={form.usedSimilarBefore} options={similarUse} onChange={(value) => setField("usedSimilarBefore", value)} />
             <TextArea label="Which one did you use, and what were you trying to find?" value={form.similarToolsUsed} onChange={(value) => setField("similarToolsUsed", value)} />
             <TextArea label="What did you like about that past experience?" value={form.likedBefore} onChange={(value) => setField("likedBefore", value)} />
             <TextArea label="What was frustrating or unhelpful about it?" value={form.frustratingBefore} onChange={(value) => setField("frustratingBefore", value)} />
           </QuestionGroup>
 
           <QuestionGroup title="Using this prototype">
-            <ChoiceField label="How clear was the first step in The Vinyl Concierge?" value={form.firstStepClarity} options={clarityScale} onChange={(value) => setField("firstStepClarity", value)} required />
+            <ChoiceField label="How clear was the first step in The Vinyl Concierge?" value={form.firstStepClarity} options={clarityScale} onChange={(value) => setField("firstStepClarity", value)} />
             <TextArea label="Where, if anywhere, did you pause, reread, or wonder what to do next?" value={form.confusingMoment} onChange={(value) => setField("confusingMoment", value)} />
-            <ChoiceField label="Once recommendations appeared, how clear was the results page?" value={form.recommendationClarity} options={clarityScale} onChange={(value) => setField("recommendationClarity", value)} required />
-            <ChoiceField label="How easy was the interface to use?" value={form.uiEase} options={clarityScale} onChange={(value) => setField("uiEase", value)} required />
-            <TextArea label="What felt too long, too small, too hidden, or hard to scan?" value={form.uiFriction} onChange={(value) => setField("uiFriction", value)} />
+            <ChoiceField label="Once recommendations appeared, how clear was the results page?" value={form.recommendationClarity} options={clarityScale} onChange={(value) => setField("recommendationClarity", value)} />
+            <ChoiceField label="How easy was the interface to use?" value={form.uiEase} options={clarityScale} onChange={(value) => setField("uiEase", value)} />
             <TextArea label="Was there any button, label, section, or wording that did not make sense?" value={form.wordingConfusion} onChange={(value) => setField("wordingConfusion", value)} />
           </QuestionGroup>
 
           <QuestionGroup title="Understanding the results">
-            <ChoiceField label="Were the shelf notes easy to understand?" value={form.notesHelpful} options={helpfulScale} onChange={(value) => setField("notesHelpful", value)} required />
-            <TextArea label="What helped or hurt your confidence while using the results page?" value={form.trustSignal} onChange={(value) => setField("trustSignal", value)} />
-            <ChoiceField label="After seeing the results, did you know what you were supposed to do next?" value={form.wantedToExplore} options={clarityScale} onChange={(value) => setField("wantedToExplore", value)} required />
+            <ChoiceField label="Were the shelf notes easy to understand?" value={form.notesHelpful} options={helpfulScale} onChange={(value) => setField("notesHelpful", value)} />
+            <ChoiceField label="After seeing the results, did you know what you were supposed to do next?" value={form.wantedToExplore} options={clarityScale} onChange={(value) => setField("wantedToExplore", value)} />
             <TextArea label="What would make the results page easier to understand or use?" value={form.expectedBetterUnderstanding} onChange={(value) => setField("expectedBetterUnderstanding", value)} />
           </QuestionGroup>
 
           <QuestionGroup title="What should change">
-            <TextArea label="If Michelle could improve one thing this week, what should it be?" value={form.mostUsefulChange} onChange={(value) => setField("mostUsefulChange", value)} required />
-            <ChoiceField label="If this were on a record store website, would you use it?" value={form.wouldUseAtStore} options={useScale} onChange={(value) => setField("wouldUseAtStore", value)} required />
+            <TextArea label="If Michelle could improve one thing this week, what should it be?" value={form.mostUsefulChange} onChange={(value) => setField("mostUsefulChange", value)} />
+            <ChoiceField label="If this were on a record store website, would you use it?" value={form.wouldUseAtStore} options={useScale} onChange={(value) => setField("wouldUseAtStore", value)} />
           </QuestionGroup>
         </div>
 
@@ -269,14 +253,13 @@ function TextField({ label, value, onChange, type = "text" }: { label: string; v
   );
 }
 
-function TextArea({ label, value, onChange, required = false }: { label: string; value: string; onChange: (value: string) => void; required?: boolean }) {
+function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <label className="block md:col-span-2">
       <span className="block text-sm font-bold text-stone-900 mb-1">{label}</span>
       <textarea
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        required={required}
         rows={3}
         className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-sm"
       />
@@ -289,13 +272,11 @@ function ChoiceField({
   value,
   options,
   onChange,
-  required = false,
 }: {
   label: string;
   value: string;
   options: string[];
   onChange: (value: string) => void;
-  required?: boolean;
 }) {
   return (
     <div className="block">
@@ -308,7 +289,6 @@ function ChoiceField({
               name={label}
               value={option}
               checked={value === option}
-              required={required}
               onChange={() => onChange(option)}
               className="mt-1 accent-curate-red"
             />

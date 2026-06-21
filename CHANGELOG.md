@@ -4,6 +4,7 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-21
 
+- Simplified the feedback form header by removing the extra reminder panel, moving the Intro/Try app buttons under the limited-database note, making all visible feedback fields optional, and removing two results-page open-ended questions.
 - Simplified the visible sign-in screen to Google sign-in only and removed the Module 4 explanatory authentication panel plus email/password form from the customer UI.
 - Published the hardened `firestore.rules` to Firebase with `lentz.michelles@gmail.com`, after switching from the ASU account that lacked Firebase Rules permissions.
 - Verified the GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL` is present for the Pages feedback-form build, replacing stale notes that said the n8n feedback connection was still missing.

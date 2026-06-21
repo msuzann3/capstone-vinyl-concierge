@@ -5,7 +5,7 @@ Use this for the three non-technical music/record-buyer testers after they watch
 ## Setup
 
 - Recommended tool: the in-app `#/feedback` form, posting to an n8n webhook that appends responses to Google Sheets. Google Forms, Microsoft Forms, or Typeform remain acceptable backups.
-- Estimated time: 5-8 minutes.
+- Estimated time: 4-6 minutes.
 - Best timing: send the form link immediately after they use the prototype.
 - Tester framing: this is a school prototype with a limited test catalog of about 200 random Discogs albums, so exact favorite artists may not appear yet. Feedback should focus on usability, clarity, and whether the app flow makes sense, not whether the prototype finds the perfect record.
 - Shareable Pages links after deployment:
@@ -73,17 +73,15 @@ Thank you for testing The Vinyl Concierge. This is a student prototype for a rec
    - Somewhat
    - No
 
-8. What helped or hurt your confidence while using the results page?
+8. What would make the app easier to use or understand?
 
-9. What would make the app easier to use or understand?
-
-10. If this were available on a record store website, would you use it?
+9. If this were available on a record store website, would you use it?
     - Yes
     - Maybe
     - Probably not
     - No
 
-11. What part of the app flow, wording, or layout should be improved?
+10. What part of the app flow, wording, or layout should be improved?
 
 ## Current In-App Question Areas
 
@@ -95,7 +93,7 @@ The in-app form expands this draft into five sections:
 - Understanding the results.
 - What should change.
 
-It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability and scanning friction in The Vinyl Concierge, and results-page clarity. It intentionally directs testers toward usability, clarity, and ease of use rather than exact recommendation quality from the limited prototype catalog.
+It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability in The Vinyl Concierge, and results-page clarity. All visible fields are optional so testers can submit partial feedback. It intentionally directs testers toward usability, clarity, and ease of use rather than exact recommendation quality from the limited prototype catalog.
 
 ## Michelle's Review Notes
 
