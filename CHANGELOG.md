@@ -4,8 +4,13 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-21
 
+- Reframed the customer results CTAs from nonfunctional commerce language to prototype-only `Save Interest`, thumbs-up, and thumbs-down controls with visible on-screen response states.
+- Added match-confidence labels to recommendation cards so testers can distinguish exact artist hits, adjacent fits, and loose limited-catalog suggestions.
+- Added a results-page prototype note clarifying that recommendations are matched against a limited 200-ish title test catalog.
+- Renamed the customer-facing `Collection Insights` UI to `Shelf Expansion Ideas` and changed `Coverage score` language to `Starting point` so the prototype does not imply it has verified the customer's real collection.
+- Relabeled the owner dashboard as an `Owner Demo`, changed demand wording to interest-signal wording, and marked low-stock alerts, request cards, and buy plans as demo/prototype data until real inventory, purchase history, and backend workflows are connected.
 - Removed the app intake-page prototype note so testers land directly on the customer questionnaire.
-- Added tester-facing Add to Cart, thumbs-up, and thumbs-down buttons to each recommendation card; these are CTA/feedback affordances only and do not route to a cart.
+- Initially added tester-facing Add to Cart, thumbs-up, and thumbs-down buttons to each recommendation card as CTA/feedback affordances; these were later reframed as prototype-only interest/feedback controls with visible response states.
 - Made the feedback form's limited-catalog/usability reminder more prominent and easier to read.
 - Removed feedback form wording that told testers to ignore colors, and removed the questions about why recommendations appeared, one-page vs guided flow preference, and other comments.
 - Updated `docs/customer-feedback-questionnaire.md` to match the simplified in-app feedback form.

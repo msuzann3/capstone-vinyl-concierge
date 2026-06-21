@@ -37,14 +37,14 @@ const steps: Array<{
   {
     id: "demand",
     eyebrow: "Step 02",
-    title: "Validate Demand Signals",
-    description: "Compare in-store slips and Web Concierge requests against likely purchase intent.",
+    title: "Validate Interest Signals",
+    description: "Compare in-store slips and Web Concierge requests before treating them as purchase intent.",
   },
   {
     id: "recommendations",
     eyebrow: "Step 03",
     title: "Review AI Recommendations",
-    description: "Use local synthetic signals to draft a cautious owner buy plan.",
+    description: "Use demo signals to draft a cautious owner buy plan for human review.",
   },
   {
     id: "outcomes",
@@ -87,8 +87,8 @@ export default function OwnerIntelligenceDashboard() {
       .catch((error) => {
         if (!ignore) {
           const message = error instanceof Error && error.message.includes("permissions")
-            ? "Sign in as owner to read live demand signals."
-            : "Live demand signals are unavailable right now.";
+            ? "Sign in as owner to read live interest signals."
+            : "Live interest signals are unavailable right now.";
           setLiveDemandError(message);
         }
       });
@@ -149,20 +149,20 @@ export default function OwnerIntelligenceDashboard() {
         <header className="flex flex-col gap-4 border-b border-vinyl-black/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <span className="font-mono text-[10px] text-curate-red uppercase tracking-widest font-bold">
-              Business-facing side
+              Owner demo
             </span>
             <h2 className="font-display text-2xl sm:text-3xl text-vinyl-black uppercase leading-none mt-2">
               Owner Intelligence Dashboard
             </h2>
             <p className="font-editorial text-stone-600 italic text-base sm:text-lg mt-2 max-w-3xl">
-              A Week 3 owner workflow for shelf gaps, demand validation, cautious AI buy plans, and outcomes.
+              A Week 3 owner workflow showing how shelf gaps, interest validation, cautious buy plans, and outcomes could work once live systems are connected.
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
             <Metric label="Revenue" value={`$${ownerDashboardStats.totalRevenue.toLocaleString()}`} />
             <Metric label="Patrons" value={ownerDashboardStats.activePatrons.toLocaleString()} />
             <Metric label="Low Stock" value={lowStock.length.toString()} danger={lowStock.length > 0} />
-            <Metric label="Live Signals" value={(liveDemand?.sampleSize ?? totalDemandUnits).toString()} />
+            <Metric label="Demo Signals" value={(liveDemand?.sampleSize ?? totalDemandUnits).toString()} />
           </div>
         </header>
 
@@ -193,7 +193,7 @@ export default function OwnerIntelligenceDashboard() {
         {activeStep === "inventory" && (
           <Panel
             icon={<AlertTriangle className="w-5 h-5" />}
-            title="Urgent Low Stock Alerts"
+            title="Demo Low Stock Alerts"
             actionLabel="Add Demo Request"
             onAction={addDemoRequest}
           >
@@ -222,7 +222,7 @@ export default function OwnerIntelligenceDashboard() {
                 ))}
               </div>
               <div className="rounded border border-vinyl-black/10 bg-paper-white p-5">
-                <h3 className="font-display text-sm uppercase text-vinyl-black">Active Shelf Gaps</h3>
+                <h3 className="font-display text-sm uppercase text-vinyl-black">Demo Shelf Gaps</h3>
                 <Gap label="Post-Bop / Modal Jazz" value={14} />
                 <Gap label="Post-War Fiction" value={22} />
                 <Gap label="Ambient / Drone" value={38} />
@@ -232,11 +232,11 @@ export default function OwnerIntelligenceDashboard() {
         )}
 
         {activeStep === "demand" && (
-          <Panel icon={<ClipboardList className="w-5 h-5" />} title="Active Patron Demand Cards">
+          <Panel icon={<ClipboardList className="w-5 h-5" />} title="Prototype Interest Cards">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="rounded border border-vinyl-black/10 bg-sleeve-white p-5 lg:col-span-1">
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-display text-sm uppercase text-vinyl-black">Live Firestore Demand</h3>
+                  <h3 className="font-display text-sm uppercase text-vinyl-black">Live Firestore Interest Signals</h3>
                   <span className="rounded bg-vinyl-black px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-bone-cream">
                     {liveDemand?.sampleSize ?? 0} signals
                   </span>
@@ -295,7 +295,7 @@ export default function OwnerIntelligenceDashboard() {
         {activeStep === "recommendations" && (
           <Panel
             icon={<ShoppingBag className="w-5 h-5" />}
-            title="AI Owner Buy Plan"
+            title="Prototype Owner Buy Plan"
             actionLabel={isRefreshing ? "Refreshing..." : "Refresh Plan"}
             onAction={refreshRecommendations}
           >
@@ -342,8 +342,8 @@ export default function OwnerIntelligenceDashboard() {
         )}
 
         <div className="rounded border border-dashed border-vinyl-black/20 bg-paper-white p-4 text-xs text-stone-500">
-          Module 4 note: live Firestore demand signals are now available for signed-in owner review.
-          Synthetic request cards remain as demonstration data until the seeded catalog and customer sessions mature.
+          Module 4 note: live Firestore interest signals are available for signed-in owner review.
+          Synthetic inventory, request cards, and buy plans remain demonstration data until real inventory, purchase history, and backend workflows are connected.
         </div>
       </div>
     </section>

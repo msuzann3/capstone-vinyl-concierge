@@ -899,17 +899,38 @@ function buildRecommendationsFromCatalog(
       .filter((word) => word.length > 4 && haystack.includes(word))
       .length;
 
-    return { record, score: genreScore + directArtistScore + artistAnchorScore + moodScore + falseArtistTitlePenalty + (activeCatalog.length - index) / 100 };
+    const confidence: "exact" | "adjacent" | "low" = directArtistScore > 0
+      ? "exact"
+      : genreScore >= 5 || artistAnchorScore > 0
+        ? "adjacent"
+        : "low";
+    const matchLabel = confidence === "exact"
+      ? "Exact artist match in prototype catalog"
+      : confidence === "adjacent"
+        ? "Adjacent match from genre and listening context"
+        : "Loose prototype match from limited catalog";
+
+    return {
+      record,
+      score: genreScore + directArtistScore + artistAnchorScore + moodScore + falseArtistTitlePenalty + (activeCatalog.length - index) / 100,
+      confidence,
+      matchLabel,
+    };
   }).sort((a, b) => b.score - a.score);
 
-  const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({ record, score: STAFF_PICK_LIMIT - index }));
+  const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({
+    record,
+    score: STAFF_PICK_LIMIT - index,
+    confidence: "adjacent" as const,
+    matchLabel: "Staff pick while personalized ranking is paused",
+  }));
   const rankedSelection = recommendationsEnabled ? ranked : staffPicks;
   const shelfPhrase = requestedGenres.slice(0, 2).join(" and ") || "the late-night listening stack";
 
   const selectedRecords = rankedSelection.slice(0, RECOMMENDATION_LIMIT);
 
   return {
-    recommendations: selectedRecords.map(({ record, score }) => ({
+    recommendations: selectedRecords.map(({ record, score, confidence, matchLabel }) => ({
       albumId: record.albumId ?? `${record.artist}-${record.title}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       title: record.title,
       artist: record.artist,
@@ -920,6 +941,8 @@ function buildRecommendationsFromCatalog(
       aestheticVibe: record.vibe.split(",").slice(0, 2).join(","),
       tracksToListenTo: record.tracksToListenTo,
       reviewType: record.reviewType || "staff",
+      matchConfidence: confidence,
+      matchLabel,
       whyThisMatches: recommendationsEnabled
         ? `${record.shelfNote}\n\n${buildFitContext(preferences, shelfPhrase)}`
         : `${record.shelfNote}\n\nThe recommendation kill switch is off, so this is a staff-pick shelf pull rather than a personalized ranking.`

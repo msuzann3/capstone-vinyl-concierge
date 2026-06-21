@@ -97,6 +97,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
   const [showAuthScreen, setShowAuthScreen] = useState(false);
+  const [prototypeActions, setPrototypeActions] = useState<Record<string, "interest" | "like" | "dislike">>({});
 
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
@@ -228,9 +229,17 @@ export default function App() {
     setSelectedAlbumIdx(0);
     setError(null);
     setAuthNotice(null);
+    setPrototypeActions({});
   };
 
   const activeAlbum = recommendations[selectedAlbumIdx] || DEFAULT_STORE_DISPLAY[0];
+  const getRecommendationKey = (rec: Recommendation) => rec.albumId ?? `${rec.artist}-${rec.title}`;
+  const setPrototypeAction = (rec: Recommendation, action: "interest" | "like" | "dislike") => {
+    setPrototypeActions((current) => ({
+      ...current,
+      [getRecommendationKey(rec)]: action,
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-bone-cream flex flex-col selection:bg-sleeve-mustard selection:text-curate-red">
@@ -464,6 +473,9 @@ export default function App() {
                         <span className="text-stone-400 font-serif">·</span>
                         <span className="bg-white px-2 py-1 rounded border border-stone-200 italic font-normal tracking-wide">"{preferences.mood}"</span>
                       </div>
+                      <p className="mt-3 max-w-2xl text-xs text-stone-600 leading-relaxed">
+                        Prototype note: this is a limited 200-ish title test catalog. Match labels show whether the result is an exact artist hit, an adjacent fit, or a looser suggestion.
+                      </p>
                     </div>
 
                     <button
@@ -496,30 +508,61 @@ export default function App() {
                               setSelectedAlbumIdx(i);
                             }}
                           />
+                          <div className={`rounded border px-2.5 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wide ${
+                            rec.matchConfidence === "exact"
+                              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                              : rec.matchConfidence === "low"
+                                ? "border-amber-200 bg-amber-50 text-amber-800"
+                                : "border-stone-200 bg-white text-stone-600"
+                          }`}>
+                            {rec.matchLabel ?? "Prototype catalog match"}
+                          </div>
                           <div className="grid grid-cols-[1fr_auto_auto] gap-2">
                             <button
                               type="button"
-                              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded border border-curate-red bg-curate-red px-3 py-2 text-[11px] font-bold uppercase text-white shadow-sm transition-colors hover:bg-vinyl-black"
-                              aria-label={`Add ${rec.title} by ${rec.artist} to cart`}
+                              onClick={() => setPrototypeAction(rec, "interest")}
+                              className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded border px-3 py-2 text-[11px] font-bold uppercase shadow-sm transition-colors ${
+                                prototypeActions[getRecommendationKey(rec)] === "interest"
+                                  ? "border-sleeve-mustard bg-sleeve-mustard text-vinyl-black"
+                                  : "border-curate-red bg-curate-red text-white hover:bg-vinyl-black"
+                              }`}
+                              aria-label={`Save interest in ${rec.title} by ${rec.artist}`}
                             >
                               <ShoppingCart className="h-4 w-4" />
-                              <span>Add to Cart</span>
+                              <span>
+                                {prototypeActions[getRecommendationKey(rec)] === "interest" ? "Interest Saved" : "Save Interest"}
+                              </span>
                             </button>
                             <button
                               type="button"
-                              className="inline-flex h-10 w-10 items-center justify-center rounded border border-stone-300 bg-white text-stone-700 shadow-sm transition-colors hover:border-curate-red hover:text-curate-red"
+                              onClick={() => setPrototypeAction(rec, "like")}
+                              className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
+                                prototypeActions[getRecommendationKey(rec)] === "like"
+                                  ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                                  : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
+                              }`}
                               aria-label={`Like ${rec.title} by ${rec.artist}`}
                             >
                               <ThumbsUp className="h-4 w-4" />
                             </button>
                             <button
                               type="button"
-                              className="inline-flex h-10 w-10 items-center justify-center rounded border border-stone-300 bg-white text-stone-700 shadow-sm transition-colors hover:border-curate-red hover:text-curate-red"
+                              onClick={() => setPrototypeAction(rec, "dislike")}
+                              className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
+                                prototypeActions[getRecommendationKey(rec)] === "dislike"
+                                  ? "border-curate-red bg-red-50 text-curate-red"
+                                  : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
+                              }`}
                               aria-label={`Dislike ${rec.title} by ${rec.artist}`}
                             >
                               <ThumbsDown className="h-4 w-4" />
                             </button>
                           </div>
+                          {prototypeActions[getRecommendationKey(rec)] && (
+                            <p className="rounded border border-stone-200 bg-bone-cream px-2.5 py-1.5 text-[11px] text-stone-600">
+                              Prototype response saved on this screen only. Future backend work will connect this to customer signals.
+                            </p>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -619,14 +662,14 @@ export default function App() {
                           </span>
                           <h3 className="font-display text-lg text-white uppercase tracking-tight flex items-center gap-2">
                             <LibraryBig className="w-5 h-5 text-curate-red" />
-                            Collection Insights
+                            Shelf Expansion Ideas
                           </h3>
                         </div>
                         <div className="bg-stone-950 border border-stone-800 rounded-md px-3 py-2 flex items-center gap-2">
                           <Gauge className="w-4 h-4 text-sleeve-mustard" />
                           <div>
                             <span className="block text-[9px] text-stone-500 font-mono uppercase tracking-widest">
-                              Coverage score
+                              Starting point
                             </span>
                             <span className="block font-display text-xl text-bone-cream leading-none">
                               {collectionInsights.coverageScore}/100
@@ -639,14 +682,14 @@ export default function App() {
                         <div className="bg-bone-cream border border-stone-200 rounded-md p-4 flex items-start gap-3">
                           <Ticket className="w-5 h-5 text-curate-red mt-0.5 shrink-0" />
                           <p className="text-sm text-stone-700 font-editorial italic leading-relaxed">
-                            {collectionInsights.scoreNote}
+                            These are prototype expansion suggestions based on the preference form, not a verified score of the customer's real record shelf. {collectionInsights.scoreNote}
                           </p>
                         </div>
 
                         <div>
                           <div className="flex items-center justify-between gap-3 mb-3">
                             <span className="text-[10px] font-mono tracking-widest uppercase text-stone-500">
-                              Worth pulling from the next bin
+                              Worth considering from the next bin
                             </span>
                             <span className="text-[10px] font-mono uppercase text-curate-red font-bold">
                               {collectionInsights.opportunities.length} shelf notes

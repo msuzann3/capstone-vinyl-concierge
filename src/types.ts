@@ -10,6 +10,8 @@ export interface Recommendation {
   tracksToListenTo: string[];
   reviewType?: "staff" | "fit";
   matchScore?: number;
+  matchConfidence?: "exact" | "adjacent" | "low";
+  matchLabel?: string;
 }
 
 export interface OwnerInsights {
