@@ -1,5 +1,5 @@
 import { CollectionInsights, RecommendationResponse, UserPreferences } from "./types";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, limit, query } from "firebase/firestore";
 import { db } from "./firebase";
 
 type Classification = "Familiar Classic" | "Discovery Gem";
@@ -604,11 +604,20 @@ type FirestoreAlbum = {
 
 const STAFF_PICK_LIMIT = 5;
 const RECOMMENDATION_LIMIT = 5;
+const FIRESTORE_CATALOG_READ_LIMIT = 300;
+const MIN_PERSONALIZED_SCORE = 4;
 const BROAD_ANCHOR_TERMS = new Set(["rock", "pop", "electronic", "jazz", "folk, world, & country", "folk"]);
 const BROAD_DISPLAY_GENRES = new Set(["rock", "pop", "electronic", "folk, world, & country"]);
 
 function normalizeTerm(value: string): string {
   return value.trim().toLowerCase();
+}
+
+function normalizeTokens(value: string): string[] {
+  return normalizeTerm(value)
+    .split(/[^a-z0-9&/]+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length > 3);
 }
 
 function parseArtistList(value: string): string[] {
@@ -677,6 +686,18 @@ function normalizeList(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
     : [];
+}
+
+function fieldMatchesTerm(fields: string[], term: string): boolean {
+  const normalizedTerm = normalizeTerm(term);
+  if (!normalizedTerm) return false;
+
+  return fields.some((field) => {
+    const normalizedField = normalizeTerm(field);
+    return normalizedField === normalizedTerm ||
+      normalizedField.includes(normalizedTerm) ||
+      normalizedTerm.includes(normalizedField);
+  });
 }
 
 function inferClassification(index: number): Classification {
@@ -778,7 +799,7 @@ async function getRecommendationsEnabled(): Promise<boolean> {
 
 async function getFirestoreCatalog(): Promise<CatalogRecord[]> {
   try {
-    const snap = await getDocs(collection(db, "albums"));
+    const snap = await getDocs(query(collection(db, "albums"), limit(FIRESTORE_CATALOG_READ_LIMIT)));
     return snap.docs
       .map((albumDoc, index) => toCatalogRecord(albumDoc.id, albumDoc.data() as FirestoreAlbum, index))
       .filter((record): record is CatalogRecord => Boolean(record));
@@ -870,20 +891,14 @@ function buildRecommendationsFromCatalog(
   const ranked = activeCatalog.map((record, index) => {
     const recordArtist = record.artist.toLowerCase();
     const recordTitle = record.title.toLowerCase();
-    const haystack = [
-      record.artist,
-      record.genre,
-      record.genreTags.join(" "),
-      record.moodTags.join(" "),
-      record.contextTags.join(" "),
-      record.vibe,
-      record.shelfNote,
-      record.title
-    ].join(" ").toLowerCase();
+    const genreFields = [record.genre, ...record.genreTags];
+    const contextFields = [...record.moodTags, ...record.contextTags, record.vibe];
     const genreScore = requestedGenres.reduce((score, genre) => {
       const terms = expandGenreTerms(genre);
-      const directHit = terms.some((term) => haystack.includes(term));
-      const adjacentHits = terms.filter((term) => term !== normalizeTerm(genre) && haystack.includes(term)).length;
+      const directHit = fieldMatchesTerm(genreFields, genre);
+      const adjacentHits = terms
+        .filter((term) => term !== normalizeTerm(genre) && fieldMatchesTerm(genreFields, term))
+        .length;
       return score + (directHit ? 5 : 0) + Math.min(adjacentHits * 2, 4);
     }, 0);
     const directArtistScore = requestedArtists.some((artist) => recordArtist.includes(artist)) ? 12 : 0;
@@ -891,17 +906,17 @@ function buildRecommendationsFromCatalog(
       recordTitle.includes(artist) && !recordArtist.includes(artist)
     ) ? -10 : 0;
     const artistAnchorScore = Array.from(artistAnchorTerms)
-      .filter((term) => haystack.includes(term))
+      .filter((term) => fieldMatchesTerm(genreFields, term))
       .slice(0, 4)
       .length * 2;
-    const moodScore = contextQuery
-      .split(/\s+/)
-      .filter((word) => word.length > 4 && haystack.includes(word))
+    const moodScore = normalizeTokens(contextQuery)
+      .filter((word) => fieldMatchesTerm(contextFields, word))
       .length;
+    const score = genreScore + directArtistScore + artistAnchorScore + moodScore + falseArtistTitlePenalty + (activeCatalog.length - index) / 100;
 
     const confidence: "exact" | "adjacent" | "low" = directArtistScore > 0
       ? "exact"
-      : genreScore >= 5 || artistAnchorScore > 0
+      : score >= MIN_PERSONALIZED_SCORE && (genreScore >= 5 || artistAnchorScore > 0 || moodScore >= 2)
         ? "adjacent"
         : "low";
     const matchLabel = confidence === "exact"
@@ -912,25 +927,40 @@ function buildRecommendationsFromCatalog(
 
     return {
       record,
-      score: genreScore + directArtistScore + artistAnchorScore + moodScore + falseArtistTitlePenalty + (activeCatalog.length - index) / 100,
+      score,
       confidence,
       matchLabel,
+      isPersonalized: score >= MIN_PERSONALIZED_SCORE,
     };
   }).sort((a, b) => b.score - a.score);
 
   const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({
     record,
     score: STAFF_PICK_LIMIT - index,
-    confidence: "adjacent" as const,
-    matchLabel: "Staff pick while personalized ranking is paused",
+    confidence: "low" as const,
+    matchLabel: recommendationsEnabled
+      ? "Staff fallback from limited prototype catalog"
+      : "Staff pick while personalized ranking is paused",
+    isPersonalized: false,
   }));
-  const rankedSelection = recommendationsEnabled ? ranked : staffPicks;
+  const personalizedMatches = ranked.filter((item) => item.isPersonalized);
+  const rankedSelection = recommendationsEnabled && personalizedMatches.length > 0
+    ? [
+      ...personalizedMatches,
+      ...staffPicks.filter((staffPick) =>
+        !personalizedMatches.some((match) =>
+          match.record.title === staffPick.record.title &&
+          match.record.artist === staffPick.record.artist
+        )
+      )
+    ]
+    : staffPicks;
   const shelfPhrase = requestedGenres.slice(0, 2).join(" and ") || "the late-night listening stack";
 
   const selectedRecords = rankedSelection.slice(0, RECOMMENDATION_LIMIT);
 
   return {
-    recommendations: selectedRecords.map(({ record, score, confidence, matchLabel }) => ({
+    recommendations: selectedRecords.map(({ record, score, confidence, matchLabel, isPersonalized }) => ({
       albumId: record.albumId ?? `${record.artist}-${record.title}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       title: record.title,
       artist: record.artist,
@@ -944,7 +974,7 @@ function buildRecommendationsFromCatalog(
       matchConfidence: confidence,
       matchLabel,
       whyThisMatches: recommendationsEnabled
-        ? `${record.shelfNote}\n\n${buildFitContext(preferences, shelfPhrase)}`
+        ? `${record.shelfNote}\n\n${isPersonalized ? buildFitContext(preferences, shelfPhrase) : "The prototype catalog did not find a strong structured match here, so treat this as a staff fallback rather than a personalized ranking."}`
         : `${record.shelfNote}\n\nThe recommendation kill switch is off, so this is a staff-pick shelf pull rather than a personalized ranking.`
     })),
     ownerInsights: {

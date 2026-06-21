@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
-import { CheckCircle2, Info, Send } from "lucide-react";
-import { FeedbackPayload, submitFeedbackToWebhook } from "../feedbackSubmission";
+import { CheckCircle2, Download, Info, Send } from "lucide-react";
+import { downloadFeedbackPayload, FeedbackPayload, submitFeedbackToWebhook } from "../feedbackSubmission";
 
 type FeedbackFormState = {
   name: string;
@@ -122,8 +122,12 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
       setForm(initialForm);
     } catch (error: any) {
       setStatus("error");
-      setStatusMessage(error.message || "The response could not be sent yet. Please let Michelle know.");
+      setStatusMessage(`${error.message || "The response could not be sent yet."} Download the response file and send it to Michelle so this feedback is not lost.`);
     }
+  };
+
+  const handleDownload = () => {
+    downloadFeedbackPayload(payload);
   };
 
   return (
@@ -208,18 +212,30 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
               </p>
             )}
           </div>
-          <button
-            type="submit"
-            disabled={status === "submitting"}
-            className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded text-xs font-bold uppercase shadow ${
-              status === "submitting"
-                ? "bg-stone-300 text-stone-500 cursor-not-allowed"
-                : "bg-curate-red text-white hover:bg-vinyl-black"
-            }`}
-          >
-            <Send className="w-4 h-4" />
-            {status === "submitting" ? "Sending" : "Send feedback"}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            {status === "error" && (
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="inline-flex items-center justify-center gap-2 rounded border border-stone-300 bg-bone-cream px-5 py-3 text-xs font-bold uppercase text-vinyl-black shadow hover:bg-white"
+              >
+                <Download className="w-4 h-4" />
+                Download response
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={status === "submitting"}
+              className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded text-xs font-bold uppercase shadow ${
+                status === "submitting"
+                  ? "bg-stone-300 text-stone-500 cursor-not-allowed"
+                  : "bg-curate-red text-white hover:bg-vinyl-black"
+              }`}
+            >
+              <Send className="w-4 h-4" />
+              {status === "submitting" ? "Sending" : "Send feedback"}
+            </button>
+          </div>
         </div>
       </form>
     </section>

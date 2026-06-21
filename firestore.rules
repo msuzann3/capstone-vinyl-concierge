@@ -11,11 +11,115 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'owner';
     }
 
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function hasOnlyProfileFields() {
+      return request.resource.data.keys().hasOnly([
+        'email',
+        'displayName',
+        'photoURL',
+        'role',
+        'createdAt',
+        'lastActiveAt'
+      ]);
+    }
+
+    function isCustomerProfileCreate(uid) {
+      return isSelf(uid) &&
+        hasOnlyProfileFields() &&
+        request.resource.data.role == 'customer';
+    }
+
+    function isSafeProfileUpdate(uid) {
+      return isSelf(uid) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'email',
+          'displayName',
+          'photoURL',
+          'lastActiveAt'
+        ]);
+    }
+
+    function isStringWithin(field, maxLength) {
+      return field is string &&
+        field.size() > 0 &&
+        field.size() <= maxLength;
+    }
+
+    function isNullableStringWithin(field, maxLength) {
+      return field == null ||
+        (field is string &&
+        field.size() > 0 &&
+        field.size() <= maxLength);
+    }
+
+    function isValidDemandSignalCreate() {
+      return isSignedIn() &&
+        request.resource.data.keys().hasOnly([
+          'albumId',
+          'artist',
+          'genre',
+          'signalType',
+          'weight',
+          'createdAt'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'albumId',
+          'artist',
+          'genre',
+          'signalType',
+          'weight',
+          'createdAt'
+        ]) &&
+        isStringWithin(request.resource.data.albumId, 160) &&
+        isStringWithin(request.resource.data.artist, 120) &&
+        isNullableStringWithin(request.resource.data.genre, 80) &&
+        request.resource.data.signalType == 'rec_request' &&
+        request.resource.data.weight is number &&
+        request.resource.data.weight >= 0 &&
+        request.resource.data.weight <= 1 &&
+        request.resource.data.createdAt == request.time;
+    }
+
+    function isValidRecommendationActionCreate(uid) {
+      return isSelf(uid) &&
+        request.resource.data.keys().hasOnly([
+          'albumId',
+          'title',
+          'artist',
+          'action',
+          'createdAt'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'albumId',
+          'title',
+          'artist',
+          'action',
+          'createdAt'
+        ]) &&
+        isStringWithin(request.resource.data.albumId, 160) &&
+        isStringWithin(request.resource.data.title, 160) &&
+        isStringWithin(request.resource.data.artist, 120) &&
+        request.resource.data.action in ['interest', 'like', 'dislike'] &&
+        request.resource.data.createdAt == request.time;
+    }
+
     match /users/{uid} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
+      allow read: if isSelf(uid);
+      allow create: if isCustomerProfileCreate(uid);
+      allow update: if isSafeProfileUpdate(uid);
+      allow delete: if false;
 
       match /sessions/{sessionId} {
-        allow read, write: if isSignedIn() && request.auth.uid == uid;
+        allow read, write: if isSelf(uid);
+      }
+
+      match /recommendationActions/{actionId} {
+        allow read: if isSelf(uid);
+        allow create: if isValidRecommendationActionCreate(uid);
+        allow update, delete: if false;
       }
     }
 
@@ -25,7 +129,7 @@ service cloud.firestore {
     }
 
     match /demandSignals/{signalId} {
-      allow create: if isSignedIn();
+      allow create: if isValidDemandSignalCreate();
       allow read: if isOwner();
       allow update, delete: if false;
     }

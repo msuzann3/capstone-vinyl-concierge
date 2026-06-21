@@ -29,11 +29,15 @@ import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
 import { CollectionInsights, UserPreferences, Recommendation } from "./types";
 import { logOut, signInWithEmail, signInWithGoogle, signUpWithEmail, watchAuth } from "./auth";
-import { saveSessionAndSignals } from "./sessions";
+import { saveRecommendationAction, saveSessionAndSignals, type RecommendationAction } from "./sessions";
 
 const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
 
 type AppRoute = "intro" | "app" | "feedback";
+type RecommendationActionState = {
+  action: RecommendationAction;
+  persistence: "local" | "saving" | "saved" | "error";
+};
 
 function getRouteFromHash(): AppRoute {
   const route = window.location.hash.replace(/^#\/?/, "");
@@ -97,7 +101,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
   const [showAuthScreen, setShowAuthScreen] = useState(false);
-  const [prototypeActions, setPrototypeActions] = useState<Record<string, "interest" | "like" | "dislike">>({});
+  const [prototypeActions, setPrototypeActions] = useState<Record<string, RecommendationActionState>>({});
 
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
@@ -234,10 +238,33 @@ export default function App() {
 
   const activeAlbum = recommendations[selectedAlbumIdx] || DEFAULT_STORE_DISPLAY[0];
   const getRecommendationKey = (rec: Recommendation) => rec.albumId ?? `${rec.artist}-${rec.title}`;
-  const setPrototypeAction = (rec: Recommendation, action: "interest" | "like" | "dislike") => {
+  const setPrototypeAction = async (rec: Recommendation, action: RecommendationAction) => {
+    const key = getRecommendationKey(rec);
+    const albumId = rec.albumId ?? `${rec.artist}-${rec.title}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
     setPrototypeActions((current) => ({
       ...current,
-      [getRecommendationKey(rec)]: action,
+      [key]: {
+        action,
+        persistence: currentUser ? "saving" : "local",
+      },
+    }));
+
+    if (!currentUser) return;
+
+    const savedId = await saveRecommendationAction({
+      albumId,
+      title: rec.title,
+      artist: rec.artist,
+      action,
+    });
+
+    setPrototypeActions((current) => ({
+      ...current,
+      [key]: {
+        action,
+        persistence: savedId ? "saved" : "error",
+      },
     }));
   };
 
@@ -496,76 +523,86 @@ export default function App() {
                       </h3>
                     </div>
 
-                    {/* Horizontal Scroller list of vinyl records */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {recommendations.map((rec, i) => (
-                        <div key={`${rec.artist}-${rec.title}`} className="space-y-2">
-                          <VinylDisc
-                            index={i}
-                            album={rec}
-                            isSelected={selectedAlbumIdx === i}
-                            onClick={() => {
-                              setSelectedAlbumIdx(i);
-                            }}
-                          />
-                          <div className={`rounded border px-2.5 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wide ${
-                            rec.matchConfidence === "exact"
-                              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                              : rec.matchConfidence === "low"
-                                ? "border-amber-200 bg-amber-50 text-amber-800"
-                                : "border-stone-200 bg-white text-stone-600"
-                          }`}>
-                            {rec.matchLabel ?? "Prototype catalog match"}
-                          </div>
-                          <div className="grid grid-cols-[1fr_auto_auto] gap-2">
-                            <button
-                              type="button"
-                              onClick={() => setPrototypeAction(rec, "interest")}
-                              className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded border px-3 py-2 text-[11px] font-bold uppercase shadow-sm transition-colors ${
-                                prototypeActions[getRecommendationKey(rec)] === "interest"
-                                  ? "border-sleeve-mustard bg-sleeve-mustard text-vinyl-black"
-                                  : "border-curate-red bg-curate-red text-white hover:bg-vinyl-black"
-                              }`}
-                              aria-label={`Save interest in ${rec.title} by ${rec.artist}`}
-                            >
-                              <ShoppingCart className="h-4 w-4" />
-                              <span>
-                                {prototypeActions[getRecommendationKey(rec)] === "interest" ? "Interest Saved" : "Save Interest"}
-                              </span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setPrototypeAction(rec, "like")}
-                              className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
-                                prototypeActions[getRecommendationKey(rec)] === "like"
-                                  ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                                  : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
-                              }`}
-                              aria-label={`Like ${rec.title} by ${rec.artist}`}
-                            >
-                              <ThumbsUp className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setPrototypeAction(rec, "dislike")}
-                              className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
-                                prototypeActions[getRecommendationKey(rec)] === "dislike"
-                                  ? "border-curate-red bg-red-50 text-curate-red"
-                                  : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
-                              }`}
-                              aria-label={`Dislike ${rec.title} by ${rec.artist}`}
-                            >
-                              <ThumbsDown className="h-4 w-4" />
-                            </button>
-                          </div>
-                          {prototypeActions[getRecommendationKey(rec)] && (
-                            <p className="rounded border border-stone-200 bg-bone-cream px-2.5 py-1.5 text-[11px] text-stone-600">
-                              Prototype response saved on this screen only. Future backend work will connect this to customer signals.
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+	                    {/* Horizontal Scroller list of vinyl records */}
+	                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+	                      {recommendations.map((rec, i) => {
+	                        const actionState = prototypeActions[getRecommendationKey(rec)];
+
+	                        return (
+	                          <div key={`${rec.artist}-${rec.title}`} className="space-y-2">
+	                            <VinylDisc
+	                              index={i}
+	                              album={rec}
+	                              isSelected={selectedAlbumIdx === i}
+	                              onClick={() => {
+	                                setSelectedAlbumIdx(i);
+	                              }}
+	                            />
+	                            <div className={`rounded border px-2.5 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wide ${
+	                              rec.matchConfidence === "exact"
+	                                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+	                                : rec.matchConfidence === "low"
+	                                  ? "border-amber-200 bg-amber-50 text-amber-800"
+	                                  : "border-stone-200 bg-white text-stone-600"
+	                            }`}>
+	                              {rec.matchLabel ?? "Prototype catalog match"}
+	                            </div>
+	                            <div className="grid grid-cols-[1fr_auto_auto] gap-2">
+	                              <button
+	                                type="button"
+	                                onClick={() => setPrototypeAction(rec, "interest")}
+	                                className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded border px-3 py-2 text-[11px] font-bold uppercase shadow-sm transition-colors ${
+	                                  actionState?.action === "interest"
+	                                    ? "border-sleeve-mustard bg-sleeve-mustard text-vinyl-black"
+	                                    : "border-curate-red bg-curate-red text-white hover:bg-vinyl-black"
+	                                }`}
+	                                aria-label={`Save interest in ${rec.title} by ${rec.artist}`}
+	                              >
+	                                <ShoppingCart className="h-4 w-4" />
+	                                <span>
+	                                  {actionState?.action === "interest" ? "Interest Saved" : "Save Interest"}
+	                                </span>
+	                              </button>
+	                              <button
+	                                type="button"
+	                                onClick={() => setPrototypeAction(rec, "like")}
+	                                className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
+	                                  actionState?.action === "like"
+	                                    ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+	                                    : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
+	                                }`}
+	                                aria-label={`Like ${rec.title} by ${rec.artist}`}
+	                              >
+	                                <ThumbsUp className="h-4 w-4" />
+	                              </button>
+	                              <button
+	                                type="button"
+	                                onClick={() => setPrototypeAction(rec, "dislike")}
+	                                className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
+	                                  actionState?.action === "dislike"
+	                                    ? "border-curate-red bg-red-50 text-curate-red"
+	                                    : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
+	                                }`}
+	                                aria-label={`Dislike ${rec.title} by ${rec.artist}`}
+	                              >
+	                                <ThumbsDown className="h-4 w-4" />
+	                              </button>
+	                            </div>
+	                            {actionState && (
+	                              <p className="rounded border border-stone-200 bg-bone-cream px-2.5 py-1.5 text-[11px] text-stone-600">
+	                                {actionState.persistence === "saved"
+	                                  ? "Response saved to your signed-in prototype account."
+	                                  : actionState.persistence === "saving"
+	                                    ? "Saving this response to your signed-in prototype account..."
+	                                    : actionState.persistence === "error"
+	                                      ? "Response is shown here, but the prototype could not save it to your account yet."
+	                                      : "Response saved on this screen only. Sign in first to keep it with your prototype account."}
+	                              </p>
+	                            )}
+	                          </div>
+	                        );
+	                      })}
+	                    </div>
                   </div>
 
                   {/* Active Selected Record Custom Liner notes detailed page */}

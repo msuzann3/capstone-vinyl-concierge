@@ -59,3 +59,19 @@ export async function submitFeedbackToWebhook(payload: FeedbackPayload) {
     throw new Error(`The feedback webhook returned ${response.status}.`);
   }
 }
+
+export function downloadFeedbackPayload(payload: FeedbackPayload) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const timestamp = payload.submittedAt.replace(/[:.]/g, "-");
+
+  link.href = url;
+  link.download = `vinyl-concierge-feedback-${timestamp}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}

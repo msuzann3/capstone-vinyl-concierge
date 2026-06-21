@@ -27,12 +27,25 @@ const LISTENING_HABITS = [
   { value: "vintage_crank", label: "Loud physical session (vintage amps humming, crackling warmth)" }
 ];
 
+const MAX_ARTISTS_LENGTH = 180;
+const MAX_CUSTOM_PROMPT_LENGTH = 500;
+
+function normalizeArtistsInput(value: string): string {
+  return Array.from(new Set(
+    value
+      .split(",")
+      .map((artist) => artist.trim())
+      .filter(Boolean)
+  )).join(", ");
+}
+
 export default function QuestionnaireForm({ onSubmit, isLoading }: QuestionnaireFormProps) {
   const [artists, setArtists] = useState("");
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [mood, setMood] = useState("late_night");
   const [listeningHabit, setListeningHabit] = useState("deep_listening");
   const [customPrompt, setCustomPrompt] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
 
   const handleGenreToggle = (genre: string) => {
     if (selectedGenres.includes(genre)) {
@@ -52,14 +65,46 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const normalizedArtists = normalizeArtistsInput(artists);
+    const trimmedPrompt = customPrompt.trim();
+
+    if (!normalizedArtists) {
+      setValidationMessage("Add at least one artist or band before curating the rack.");
+      return;
+    }
+
+    if (normalizedArtists.length > MAX_ARTISTS_LENGTH) {
+      setValidationMessage("Shorten the artist list so the prototype can read it clearly.");
+      return;
+    }
+
+    if (selectedGenres.length === 0) {
+      setValidationMessage("Choose at least one genre before curating the rack.");
+      return;
+    }
+
+    if (trimmedPrompt.length > MAX_CUSTOM_PROMPT_LENGTH) {
+      setValidationMessage("Shorten the note before curating the rack.");
+      return;
+    }
+
+    setArtists(normalizedArtists);
+    setCustomPrompt(trimmedPrompt);
+    setValidationMessage("");
     onSubmit({
-      artists,
+      artists: normalizedArtists,
       genres: selectedGenres,
       mood: PRESET_MOODS.find((m) => m.value === mood)?.label || mood,
       listeningHabit: LISTENING_HABITS.find((h) => h.value === listeningHabit)?.label || listeningHabit,
-      customPrompt
+      customPrompt: trimmedPrompt
     });
   };
+
+  const canSubmit = !isLoading &&
+    artists.trim().length > 0 &&
+    artists.trim().length <= MAX_ARTISTS_LENGTH &&
+    customPrompt.trim().length <= MAX_CUSTOM_PROMPT_LENGTH &&
+    selectedGenres.length > 0;
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-stone-200 shadow-xl overflow-hidden">
@@ -97,8 +142,12 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
           <input
             type="text"
             value={artists}
-            onChange={(e) => setArtists(e.target.value)}
+            onChange={(e) => {
+              setArtists(e.target.value);
+              setValidationMessage("");
+            }}
             placeholder="Radiohead, John Coltrane, Phoebe Bridgers..."
+            maxLength={MAX_ARTISTS_LENGTH}
             className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-sm"
             required
           />
@@ -218,26 +267,40 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
           </span>
           <textarea
             value={customPrompt}
-            onChange={(e) => setCustomPrompt(e.target.value)}
+            onChange={(e) => {
+              setCustomPrompt(e.target.value);
+              setValidationMessage("");
+            }}
             placeholder="Explain any subtle specifics you are searching for..."
             rows={3}
+            maxLength={MAX_CUSTOM_PROMPT_LENGTH}
             className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-sm"
           />
+          <div className="mt-1 flex justify-end text-[10px] font-mono text-stone-500">
+            {customPrompt.length}/{MAX_CUSTOM_PROMPT_LENGTH}
+          </div>
         </div>
       </div>
 
       {/* Footer Submission Panel */}
       <div className="bg-stone-50 p-6 border-t border-stone-200 flex justify-between items-center flex-wrap gap-4">
-        <div className="flex items-center gap-2 text-stone-500 font-mono text-xs">
-          <SlidersHorizontal className="w-4 h-4 text-curate-red" />
-          <span>Searching a 200-ish Discogs seed catalog</span>
+        <div>
+          <div className="flex items-center gap-2 text-stone-500 font-mono text-xs">
+            <SlidersHorizontal className="w-4 h-4 text-curate-red" />
+            <span>Searching a 200-ish Discogs seed catalog</span>
+          </div>
+          {validationMessage && (
+            <p className="mt-2 text-xs font-bold text-curate-red">
+              {validationMessage}
+            </p>
+          )}
         </div>
 
         <button
           type="submit"
-          disabled={isLoading || !artists || selectedGenres.length === 0}
+          disabled={!canSubmit}
           className={`flex items-center gap-2 px-6 py-3 rounded-md font-bold text-sm tracking-wide uppercase shadow transition-all cursor-pointer ${
-            isLoading || !artists || selectedGenres.length === 0
+            !canSubmit
               ? "bg-stone-300 text-stone-500 cursor-not-allowed shadow-none"
               : "bg-curate-red hover:bg-stone-900 text-white hover:shadow-lg active:scale-95"
           }`}

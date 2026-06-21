@@ -4,6 +4,12 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-21
 
+- Hardened `firestore.rules` so signed-in customers can create their own profile as `role: customer` and update normal profile fields, but cannot change their own `role` field to gain owner access; the updated rules still need to be published to Firebase before the live project enforces this fix.
+- Added Firestore validation for signed-in `demandSignals` creates so clients can only write the expected recommendation signal fields, bounded text values, `signalType: rec_request`, weight values from 0 to 1, and server timestamps; this reduces owner-signal poisoning risk while the prototype backend is still minimal.
+- Added signed-in persistence for the prototype recommendation-card `Save Interest`, thumbs-up, and thumbs-down controls under `users/{uid}/recommendationActions`, with screen-local fallback messaging for signed-out users or failed saves.
+- Tightened the recommendation ranker to cap Firestore catalog reads, score structured genre/context fields instead of a broad text haystack, require a minimum personalized score before treating records as matched, and label weak catalog fills as staff fallbacks.
+- Added customer-questionnaire validation for trimmed/deduped artist input, required non-whitespace artists, selected genres, and bounded custom notes.
+- Added a temporary feedback-form recovery path that lets testers download their response JSON if the n8n webhook is not configured or returns an error.
 - Reframed the customer results CTAs from nonfunctional commerce language to prototype-only `Save Interest`, thumbs-up, and thumbs-down controls with visible on-screen response states.
 - Added match-confidence labels to recommendation cards so testers can distinguish exact artist hits, adjacent fits, and loose limited-catalog suggestions.
 - Added a results-page prototype note clarifying that recommendations are matched against a limited 200-ish title test catalog.
