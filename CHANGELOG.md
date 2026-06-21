@@ -8,12 +8,16 @@ All notable project changes should be recorded here so Michelle can move between
 - Built a non-technical tester intro page with a video placeholder, clear tester path, and buttons to try the app or open the feedback form.
 - Replaced the short intro-page placeholder copy with Michelle's full Prototype Evaluation Guide text, organized into project background, what it is, current prototype status, known limitations, and feedback prompts.
 - Embedded Michelle's Week 5 explainer video on the intro page from `src/assets/vinyl-concierge-explainer.mp4`, replacing the video placeholder with a native controlled MP4 player.
-- Built a feedback form for Google Sheets collection through n8n, using `VITE_N8N_FEEDBACK_WEBHOOK_URL` for a public webhook POST and copy/download JSON fallbacks when the webhook is not configured.
+- Built a feedback form for Google Sheets collection through n8n, using `VITE_N8N_FEEDBACK_WEBHOOK_URL` for a public webhook POST.
 - Added optional GitHub Pages build wiring for repository secret `N8N_FEEDBACK_WEBHOOK_URL`, passed through as `VITE_N8N_FEEDBACK_WEBHOOK_URL`.
-- Expanded the feedback questions to cover prior recommendation-engine experience, past likes/frustrations, prototype usability, UI clarity without color questions, recommendation trust, exploration interest, and step-by-step vs one-page preference.
+- Expanded the feedback questions to cover prior recommendation-engine experience, past likes/frustrations, prototype usability, UI clarity without color questions, results-page clarity, and step-by-step vs one-page preference.
 - Renamed the final open-ended feedback form prompt to `Other comments?` with a blank free-text response field.
 - Improved customer questionnaire header readability by changing the `Quick Demo Fill` button to white text, and removed the `Curate Brand Active` badge from the top-right header.
-- Verified `npm run lint`, `npm run build:pages`, local preview routes, desktop feedback-form rendering, intro-to-app navigation, disabled send state without a webhook, copy/download fallback surface, and mobile intro/feedback rendering.
+- Updated the intro page so `Try the app` and `Open feedback form` open in new tabs, and simplified the feedback form by removing visible n8n/copy/download controls while adding a reminder to evaluate the app itself rather than the intro page.
+- Simplified the intro page to only the explainer video, how-to testing instructions, prototype caveats, helpful-feedback guidance, and buttons for the app and feedback form.
+- Reframed the intro caveats and feedback questions so testers focus on app usability and clarity rather than judging the exact prototype recommendations from the small test catalog.
+- Added Michelle's limited-database reminder under the feedback form heading so testers know the feedback is about ease of use, not recommendation accuracy.
+- Verified `npm run lint`, `npm run build:pages`, local preview routes, desktop feedback-form rendering, intro-to-app navigation, disabled send state without a webhook, and mobile intro/feedback rendering.
 
 ## 2026-06-19
 

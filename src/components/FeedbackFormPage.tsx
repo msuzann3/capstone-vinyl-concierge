@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { CheckCircle2, ClipboardCopy, Download, Send, TableProperties } from "lucide-react";
+import { CheckCircle2, Info, Send } from "lucide-react";
 import { FeedbackPayload, hasFeedbackWebhook, submitFeedbackToWebhook } from "../feedbackSubmission";
 
 type FeedbackFormState = {
@@ -61,7 +61,6 @@ const buyerTypes = [
 
 const similarUse = ["Yes, recently", "Yes, but not recently", "No", "Not sure"];
 const clarityScale = ["Very clear", "Mostly clear", "A little confusing", "Very confusing"];
-const qualityScale = ["Very connected", "Somewhat connected", "Only a little connected", "Not connected"];
 const helpfulScale = ["Helpful", "Somewhat helpful", "Too technical", "Too vague", "Not useful"];
 const useScale = ["Yes", "Maybe", "Probably not", "No"];
 const guidedScale = ["One page was fine", "I would prefer step-by-step", "I am not sure"];
@@ -73,7 +72,7 @@ interface FeedbackFormPageProps {
 
 export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFormPageProps) {
   const [form, setForm] = useState<FeedbackFormState>(initialForm);
-  const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "copied" | "downloaded" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState("");
 
   const webhookReady = hasFeedbackWebhook();
@@ -135,31 +134,8 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
       setForm(initialForm);
     } catch (error: any) {
       setStatus("error");
-      setStatusMessage(error.message || "The response could not be sent yet. Please copy or download it instead.");
+      setStatusMessage(error.message || "The response could not be sent yet. Please let Michelle know.");
     }
-  };
-
-  const copyPayload = async () => {
-    try {
-      await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-      setStatus("copied");
-      setStatusMessage("Feedback copied. Michelle can paste it into the Week 5 response notes.");
-    } catch {
-      setStatus("error");
-      setStatusMessage("The browser blocked clipboard access. Please use Download instead.");
-    }
-  };
-
-  const downloadPayload = () => {
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `vinyl-concierge-feedback-${Date.now()}.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-    setStatus("downloaded");
-    setStatusMessage("Feedback downloaded as a JSON file.");
   };
 
   return (
@@ -171,17 +147,20 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
         <p className="font-editorial text-stone-700 italic text-lg mt-2 max-w-3xl">
           Please answer from your real experience using the prototype. Short, honest answers are more useful than compliments.
         </p>
+        <p className="text-sm text-stone-700 leading-relaxed mt-3 max-w-3xl">
+          Since we are working with a limited database, this is not about the recommendations you received. It is about the ease of using the app. Although if the recommendations are correct, that is cool too!
+        </p>
       </div>
 
       <div className="bg-sleeve-white rounded-lg border border-stone-300 p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-start gap-3">
-          <TableProperties className="w-5 h-5 text-curate-red mt-0.5 shrink-0" />
+          <Info className="w-5 h-5 text-curate-red mt-0.5 shrink-0" />
           <div>
             <p className="text-sm font-bold text-vinyl-black">
-              {webhookReady ? "Responses will be sent to Michelle's n8n workflow." : "Michelle has not connected the n8n sheet workflow yet."}
+              Please answer these questions about the app itself.
             </p>
             <p className="text-xs text-stone-600 mt-1">
-              When connected, n8n can append each response to Google Sheets. Until then, copy or download the response after filling it out.
+              The intro page is just background. The catalog is small, so please do not judge the app by whether it finds the perfect record. Focus on whether the app is clear, easy to use, and understandable.
             </p>
           </div>
         </div>
@@ -219,12 +198,12 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
             <TextArea label="Was there any button, label, section, or wording that did not make sense?" value={form.notColors} onChange={(value) => setField("notColors", value)} />
           </QuestionGroup>
 
-          <QuestionGroup title="The recommendations">
-            <ChoiceField label="Did the recommendations feel connected to what you entered?" value={form.feltConnected} options={qualityScale} onChange={(value) => setField("feltConnected", value)} required />
-            <ChoiceField label="How helpful were the shelf notes?" value={form.notesHelpful} options={helpfulScale} onChange={(value) => setField("notesHelpful", value)} required />
-            <TextArea label="What made you trust or not trust the recommendations?" value={form.trustSignal} onChange={(value) => setField("trustSignal", value)} />
-            <ChoiceField label="Did any recommendation make you want to listen, explore, or buy the record?" value={form.wantedToExplore} options={useScale} onChange={(value) => setField("wantedToExplore", value)} required />
-            <TextArea label="What is one artist, record, genre, or listening mood you expected it to understand better?" value={form.expectedBetterUnderstanding} onChange={(value) => setField("expectedBetterUnderstanding", value)} />
+          <QuestionGroup title="Understanding the results">
+            <ChoiceField label="Was it clear why the app showed you a set of record recommendations?" value={form.feltConnected} options={clarityScale} onChange={(value) => setField("feltConnected", value)} required />
+            <ChoiceField label="Were the shelf notes easy to understand?" value={form.notesHelpful} options={helpfulScale} onChange={(value) => setField("notesHelpful", value)} required />
+            <TextArea label="What helped or hurt your confidence while using the results page?" value={form.trustSignal} onChange={(value) => setField("trustSignal", value)} />
+            <ChoiceField label="After seeing the results, did you know what you were supposed to do next?" value={form.wantedToExplore} options={clarityScale} onChange={(value) => setField("wantedToExplore", value)} required />
+            <TextArea label="What would make the results page easier to understand or use?" value={form.expectedBetterUnderstanding} onChange={(value) => setField("expectedBetterUnderstanding", value)} />
           </QuestionGroup>
 
           <QuestionGroup title="What should change">
@@ -235,7 +214,7 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
           </QuestionGroup>
         </div>
 
-        <div className="bg-stone-50 border-t border-stone-200 p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="bg-stone-50 border-t border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="min-h-6">
             {statusMessage && (
               <p className={`text-sm ${status === "error" ? "text-deep-rust" : "text-stone-700"} flex items-center gap-2`}>
@@ -244,28 +223,18 @@ export default function FeedbackFormPage({ onBackToIntro, onTryApp }: FeedbackFo
               </p>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={copyPayload} className="inline-flex items-center gap-2 border border-stone-300 bg-white hover:bg-bone-cream px-4 py-2 rounded text-xs font-bold uppercase">
-              <ClipboardCopy className="w-4 h-4 text-curate-red" />
-              Copy JSON
-            </button>
-            <button type="button" onClick={downloadPayload} className="inline-flex items-center gap-2 border border-stone-300 bg-white hover:bg-bone-cream px-4 py-2 rounded text-xs font-bold uppercase">
-              <Download className="w-4 h-4 text-curate-red" />
-              Download
-            </button>
-            <button
-              type="submit"
-              disabled={status === "submitting" || !webhookReady}
-              className={`inline-flex items-center gap-2 px-5 py-2 rounded text-xs font-bold uppercase shadow ${
-                status === "submitting" || !webhookReady
-                  ? "bg-stone-300 text-stone-500 cursor-not-allowed"
-                  : "bg-curate-red text-white hover:bg-vinyl-black"
-              }`}
-            >
-              <Send className="w-4 h-4" />
-              {status === "submitting" ? "Sending" : "Send feedback"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={status === "submitting" || !webhookReady}
+            className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded text-xs font-bold uppercase shadow ${
+              status === "submitting" || !webhookReady
+                ? "bg-stone-300 text-stone-500 cursor-not-allowed"
+                : "bg-curate-red text-white hover:bg-vinyl-black"
+            }`}
+          >
+            <Send className="w-4 h-4" />
+            {status === "submitting" ? "Sending" : "Send feedback"}
+          </button>
         </div>
       </form>
     </section>

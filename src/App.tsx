@@ -134,6 +134,10 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const getRouteUrl = (route: AppRoute) => {
+    return `${window.location.origin}${window.location.pathname}#/${route}`;
+  };
+
   const handleAuthClick = async () => {
     setAuthNotice(null);
 
@@ -333,11 +337,8 @@ export default function App() {
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
         {activeRoute === "intro" ? (
           <TesterIntroPage
-            onStartApp={() => {
-              setActiveExperience("customer");
-              navigateTo("app");
-            }}
-            onOpenFeedback={() => navigateTo("feedback")}
+            appHref={getRouteUrl("app")}
+            feedbackHref={getRouteUrl("feedback")}
           />
         ) : activeRoute === "feedback" ? (
           <FeedbackFormPage

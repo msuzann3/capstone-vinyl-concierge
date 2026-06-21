@@ -7,7 +7,7 @@ Use this for the three non-technical music/record-buyer testers after they watch
 - Recommended tool: the in-app `#/feedback` form, posting to an n8n webhook that appends responses to Google Sheets. Google Forms, Microsoft Forms, or Typeform remain acceptable backups.
 - Estimated time: 5-8 minutes.
 - Best timing: send the form link immediately after they use the prototype.
-- Tester framing: this is a school prototype with a limited test catalog of about 200 random Discogs albums, so exact favorite artists may not appear yet.
+- Tester framing: this is a school prototype with a limited test catalog of about 200 random Discogs albums, so exact favorite artists may not appear yet. Feedback should focus on usability, clarity, and whether the app flow makes sense, not whether the prototype finds the perfect record.
 - Shareable Pages links after deployment:
   - Intro page: `https://msuzann3.github.io/capstone-vinyl-concierge/#/intro`
   - Customer prototype: `https://msuzann3.github.io/capstone-vinyl-concierge/#/app`
@@ -24,11 +24,11 @@ Recommended n8n workflow:
 3. Google Sheets node appends a row to Michelle's Week 5 feedback sheet.
 4. Respond to Webhook returns a simple success response.
 
-If the webhook is not configured, the form disables the send button and offers copy/download JSON fallbacks.
+If the webhook is not configured, the form disables the send button.
 
 ## Intro Text
 
-Thank you for testing The Vinyl Concierge. This is a student prototype for a record-store recommendation tool. The catalog is limited to about 200 random albums pulled from Discogs, so it may not include your favorite artists yet. Please focus on whether the experience is clear, useful, and interesting as a way to help someone find records they might like.
+Thank you for testing The Vinyl Concierge. This is a student prototype for a record-store recommendation tool. Since we are working with a limited database, this is not about the recommendations you received. It is about the ease of using the app. Although if the recommendations are correct, that is cool too!
 
 ## Questions
 
@@ -49,21 +49,21 @@ Thank you for testing The Vinyl Concierge. This is a student prototype for a rec
    - Yes
    - If yes, what felt unclear?
 
-4. Did the recommendations feel connected to the artists, genres, or listening mood you entered?
-   - Very connected
-   - Somewhat connected
-   - Only a little connected
-   - Not connected
+4. Once recommendations appeared, was the results page easy to understand?
+   - Very clear
+   - Mostly clear
+   - A little confusing
+   - Very confusing
 
-5. Did any recommendation make you want to listen, explore, or buy the record?
-   - Yes, more than one
-   - Yes, one
-   - Maybe
-   - No
+5. After seeing the results, did you know what you were supposed to do next?
+   - Very clear
+   - Mostly clear
+   - A little confusing
+   - Very confusing
 
-6. How did the recommendation notes feel?
-   - Like a helpful record-store staff pick
-   - Mostly helpful, but a little generic
+6. Were the shelf notes easy to understand?
+   - Helpful
+   - Somewhat helpful
    - Too technical
    - Too vague
    - Not useful
@@ -73,9 +73,9 @@ Thank you for testing The Vinyl Concierge. This is a student prototype for a rec
    - Somewhat
    - No
 
-8. What, if anything, made you trust or not trust the recommendations?
+8. What helped or hurt your confidence while using the results page?
 
-9. What would you change to make this more useful for someone shopping for records?
+9. What would make the app easier to use or understand?
 
 10. If this were available on a record store website, would you use it?
     - Yes
@@ -83,7 +83,7 @@ Thank you for testing The Vinyl Concierge. This is a student prototype for a rec
     - Probably not
     - No
 
-11. What is one record, artist, or genre you expected it to understand better?
+11. What part of the app flow, wording, or layout should be improved?
 
 12. Any other comments?
 
@@ -94,17 +94,17 @@ The in-app form expands this draft into five sections:
 - About you.
 - Similar tools you have used.
 - Using this prototype.
-- The recommendations.
+- Understanding the results.
 - What should change.
 
-It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability and scanning friction in The Vinyl Concierge, recommendation trust, and whether testers would prefer a guided step-by-step flow. It intentionally asks testers not to focus on colors.
+It asks specifically about prior recommendation engines, what testers liked or disliked about those experiences, usability and scanning friction in The Vinyl Concierge, results-page clarity, and whether testers would prefer a guided step-by-step flow. It intentionally asks testers not to focus on colors or exact recommendation quality from the limited prototype catalog.
 
 ## Michelle's Review Notes
 
 After all three testers respond, look for:
 
 - Repeated confusion about the same question or label.
-- Whether testers judge recommendations by exact artist matches or by adjacent discovery.
+- Whether testers understand that this feedback round is about usability rather than exact artist matches.
 - Whether the limited-catalog note worked.
-- Whether the notes sound human enough for a record-store context.
-- Any missing genres or artists that multiple testers expect.
+- Whether the results page helps testers understand what happened and what to do next.
+- Any repeated wording, layout, or flow confusion.
