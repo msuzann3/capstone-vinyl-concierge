@@ -2,6 +2,16 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-24
+
+- Integrated Bianca's actionable UX feedback: increased customer questionnaire and recommendation-results font sizes, allowed album titles and artist names to wrap across additional lines, and widened recommendation-card grid spacing so the selected vinyl animation has room without overlapping the neighboring card.
+- Removed the questionnaire's preselected mood and listening-habit values, changed the minimum input to either one artist or one genre, added clear controls for optional selections, and removed fallback copy that silently treated blank choices as late-night or reflective listening.
+- Fixed the recurring Phoebe Bridgers recommendation bias by removing the catalog-position score bonus and replacing the fixed first-five-record fallback with a stable query-specific fallback order; `Punisher` can still appear when the selected artist, genre, mood, or context makes it relevant.
+- Tempered customer-facing personalization claims and simplified comprehension-blocking terminology: replaced the expert-clerk promise with a limited-catalog prototype description, changed `Your AI Curator` to `AI-Assisted Recommendations`, renamed `Refill Filter` to `Start Over`, changed `Selected shelf pull from the display bins` to `Selected Recommendation`, renamed `Needle-Drop Cues` to `Tracks to Start With` with an explicit no-audio explanation, and made questionnaire prompts more plain-language.
+- Replaced the shopping-cart icon on `Save Interest` with a heart that fills when selected, avoiding the false expectation of a working checkout flow.
+- Removed the customer-facing `Live Display Bins` panel, including its synthetic inventory count and stock list, and widened the primary questionnaire/results column from seven to eight grid columns while keeping the smaller Curate Community card in a four-column sidebar.
+- Refined the recommendation shelf's mobile spacing after responsive QA: reduced the phone column gap from 48px to 24px so album cards and controls have more usable width while retaining safe clearance for the selected-record animation; desktop keeps the wider 48px gap.
+
 ## 2026-06-21
 
 - Simplified the feedback form header by removing the extra reminder panel, moving the Intro/Try app buttons under the limited-database note, making all visible feedback fields optional, and removing two results-page open-ended questions.

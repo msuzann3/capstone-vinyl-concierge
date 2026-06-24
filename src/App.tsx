@@ -13,7 +13,7 @@ import {
   LogIn,
   LogOut,
   MessageSquareText,
-  ShoppingCart,
+  Heart,
   ThumbsDown,
   ThumbsUp
 } from "lucide-react";
@@ -305,7 +305,7 @@ export default function App() {
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="font-display text-white text-lg tracking-tight uppercase">THE VINYL CONCIERGE</span>
                 <span className="text-[10px] bg-curate-red text-sleeve-mustard font-mono uppercase px-1.5 py-0.5 rounded border border-sleeve-mustard/20 font-bold">
-                  Your AI Curator
+                  AI-Assisted Recommendations
                 </span>
               </div>
               <p className="text-xs text-stone-400 font-mono tracking-wider mt-0.5">
@@ -393,10 +393,10 @@ export default function App() {
         {/* Welcome Intro Hero Panel */}
         <div className="mb-8 border-l-4 border-curate-red pl-5 py-2">
           <h1 className="font-display text-2xl sm:text-3.5xl text-vinyl-black tracking-tight leading-tight uppercase">
-            The Vinyl Concierge: Your AI Curator
+            The Vinyl Concierge
           </h1>
           <p className="font-editorial text-stone-700 italic text-base sm:text-lg mt-1 max-w-3xl">
-            Pull up a stool. Share your favorite albums, rotating genres, and the specific atmosphere you are chasing. Our experienced shop clerk recommendation engine will hand-pick custom shelf items for your listening stack.
+            Pull up a stool. Share an artist, a genre, or a listening mood, and the prototype will suggest five records from its limited test catalog.
           </p>
         </div>
 
@@ -410,10 +410,10 @@ export default function App() {
         )}
 
         {/* Core Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
-          {/* LEFT SIDE COLUMN (7 GRID): Interactive Form OR Recommendation Display Panel */}
-          <div className="lg:col-span-7 space-y-8">
+          {/* MAIN CUSTOMER FLOW */}
+          <div className="lg:col-span-8 space-y-8">
             <AnimatePresence mode="wait">
               {loading ? (
                 /* Interactive Loading turntable state */
@@ -437,7 +437,7 @@ export default function App() {
                       "{loadingPhrases[loadingPhraseIndex]}"
                     </h3>
                     <p className="text-xs text-stone-500 leading-relaxed font-sans pt-2">
-                      Our clerk is drafting personalized liner notes tailored to your listening habits, blending familiar legends with underrepresented underground pressings.
+                      The prototype is comparing your choices with its test catalog and preparing a mix of familiar records and possible discoveries.
                     </p>
                   </div>
                 </motion.div>
@@ -488,17 +488,32 @@ export default function App() {
                   {/* Preferences Summary Banner */}
                   <div className="bg-stone-100 border border-stone-200 rounded-lg p-5 flex flex-wrap justify-between items-center gap-4">
                     <div>
-                      <span className="text-[10px] font-mono tracking-widest uppercase text-stone-500 block">
+                      <span className="text-xs font-mono tracking-widest uppercase text-stone-500 block">
                         Showing results for custom query:
                       </span>
-                      <div className="text-xs text-stone-800 font-sans font-bold flex flex-wrap gap-2 mt-1 items-center">
-                        <span className="bg-white px-2 py-1 rounded border border-stone-200">{preferences.artists.split(',')[0]}</span>
-                        <span className="text-stone-400 font-serif">·</span>
-                        <span className="bg-white px-2 py-1 rounded border border-stone-200">{preferences.genres.slice(0, 2).join(", ")}</span>
-                        <span className="text-stone-400 font-serif">·</span>
-                        <span className="bg-white px-2 py-1 rounded border border-stone-200 italic font-normal tracking-wide">"{preferences.mood}"</span>
+                      <div className="text-sm text-stone-800 font-sans font-bold flex flex-wrap gap-2 mt-1 items-center">
+                        {preferences.artists && (
+                          <span className="bg-white px-2 py-1 rounded border border-stone-200">
+                            {preferences.artists.split(",")[0]}
+                          </span>
+                        )}
+                        {preferences.genres.length > 0 && (
+                          <span className="bg-white px-2 py-1 rounded border border-stone-200">
+                            {preferences.genres.slice(0, 2).join(", ")}
+                          </span>
+                        )}
+                        {preferences.mood && (
+                          <span className="bg-white px-2 py-1 rounded border border-stone-200 italic font-normal tracking-wide">
+                            "{preferences.mood}"
+                          </span>
+                        )}
+                        {preferences.listeningHabit && (
+                          <span className="bg-white px-2 py-1 rounded border border-stone-200 font-normal">
+                            {preferences.listeningHabit}
+                          </span>
+                        )}
                       </div>
-                      <p className="mt-3 max-w-2xl text-xs text-stone-600 leading-relaxed">
+                      <p className="mt-3 max-w-2xl text-sm text-stone-600 leading-relaxed">
                         Prototype note: this is a limited 200-ish title test catalog. Match labels show whether the result is an exact artist hit, an adjacent fit, or a looser suggestion.
                       </p>
                     </div>
@@ -508,21 +523,21 @@ export default function App() {
                       className="flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 px-3.5 py-1.5 rounded text-xs font-mono font-bold transition-all shadow-sm cursor-pointer"
                     >
                       <RotateCcw className="w-3.5 h-3.5 text-curate-red" />
-                      Refill Filter
+                      Start Over
                     </button>
                   </div>
 
                   {/* Horizontal Vinyl Display rack selector */}
                   <div>
                     <div className="flex justify-between items-center mb-3">
-                      <h3 className="font-display font-bold text-xs uppercase tracking-wider text-stone-800 flex items-center gap-1.5 align-middle">
+                      <h3 className="font-display font-bold text-sm uppercase tracking-wider text-stone-800 flex items-center gap-1.5 align-middle">
                         <Layers className="w-3.5 h-3.5 text-curate-red animate-pulse" />
                         YOUR CUSTOM SHELF RECOMMENDATIONS ({recommendations.length})
                       </h3>
                     </div>
 
 	                    {/* Horizontal Scroller list of vinyl records */}
-	                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+	                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 md:gap-x-12 gap-y-7">
 	                      {recommendations.map((rec, i) => {
 	                        const actionState = prototypeActions[getRecommendationKey(rec)];
 
@@ -536,7 +551,7 @@ export default function App() {
 	                                setSelectedAlbumIdx(i);
 	                              }}
 	                            />
-	                            <div className={`rounded border px-2.5 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wide ${
+	                            <div className={`rounded border px-2.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wide ${
 	                              rec.matchConfidence === "exact"
 	                                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
 	                                : rec.matchConfidence === "low"
@@ -545,18 +560,22 @@ export default function App() {
 	                            }`}>
 	                              {rec.matchLabel ?? "Prototype catalog match"}
 	                            </div>
-	                            <div className="grid grid-cols-[1fr_auto_auto] gap-2">
+	                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_auto_auto]">
 	                              <button
 	                                type="button"
 	                                onClick={() => setPrototypeAction(rec, "interest")}
-	                                className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded border px-3 py-2 text-[11px] font-bold uppercase shadow-sm transition-colors ${
+	                                className={`col-span-2 inline-flex min-h-11 items-center justify-center gap-1.5 rounded border px-3 py-2 text-xs font-bold uppercase shadow-sm transition-colors sm:col-span-1 ${
 	                                  actionState?.action === "interest"
 	                                    ? "border-sleeve-mustard bg-sleeve-mustard text-vinyl-black"
 	                                    : "border-curate-red bg-curate-red text-white hover:bg-vinyl-black"
 	                                }`}
 	                                aria-label={`Save interest in ${rec.title} by ${rec.artist}`}
 	                              >
-	                                <ShoppingCart className="h-4 w-4" />
+	                                <Heart
+	                                  className={`h-4 w-4 ${
+	                                    actionState?.action === "interest" ? "fill-current" : ""
+	                                  }`}
+	                                />
 	                                <span>
 	                                  {actionState?.action === "interest" ? "Interest Saved" : "Save Interest"}
 	                                </span>
@@ -564,7 +583,7 @@ export default function App() {
 	                              <button
 	                                type="button"
 	                                onClick={() => setPrototypeAction(rec, "like")}
-	                                className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
+	                                className={`inline-flex h-11 w-full items-center justify-center rounded border shadow-sm transition-colors sm:w-11 ${
 	                                  actionState?.action === "like"
 	                                    ? "border-emerald-300 bg-emerald-50 text-emerald-700"
 	                                    : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
@@ -576,7 +595,7 @@ export default function App() {
 	                              <button
 	                                type="button"
 	                                onClick={() => setPrototypeAction(rec, "dislike")}
-	                                className={`inline-flex h-10 w-10 items-center justify-center rounded border shadow-sm transition-colors ${
+	                                className={`inline-flex h-11 w-full items-center justify-center rounded border shadow-sm transition-colors sm:w-11 ${
 	                                  actionState?.action === "dislike"
 	                                    ? "border-curate-red bg-red-50 text-curate-red"
 	                                    : "border-stone-300 bg-white text-stone-700 hover:border-curate-red hover:text-curate-red"
@@ -587,7 +606,7 @@ export default function App() {
 	                              </button>
 	                            </div>
 	                            {actionState && (
-	                              <p className="rounded border border-stone-200 bg-bone-cream px-2.5 py-1.5 text-[11px] text-stone-600">
+	                              <p className="rounded border border-stone-200 bg-bone-cream px-2.5 py-1.5 text-xs leading-relaxed text-stone-600">
 	                                {actionState.persistence === "saved"
 	                                  ? "Response saved to your signed-in prototype account."
 	                                  : actionState.persistence === "saving"
@@ -611,7 +630,7 @@ export default function App() {
                       <div className="flex items-center gap-3">
                         <span className="w-2 h-2 rounded-full bg-sleeve-mustard"></span>
                         <span className="text-[10px] font-mono tracking-widest uppercase text-stone-400">
-                          Selected shelf pull from the display bins
+                          Selected Recommendation
                         </span>
                       </div>
                       <div className="flex items-center gap-1 text-[11px] text-sleeve-mustard font-mono uppercase">
@@ -662,11 +681,14 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Track cues */}
+                      {/* Suggested starting tracks */}
                       <div className="border-t border-stone-100 pt-5 space-y-3">
                         <span className="text-[10px] font-mono tracking-wider uppercase text-stone-500 block">
-                          NEEDLE-DROP CUES
+                          TRACKS TO START WITH
                         </span>
+                        <p className="text-sm text-stone-600">
+                          This prototype recommends tracks but does not play audio.
+                        </p>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                           {activeAlbum.tracksToListenTo.map((track, i) => (
@@ -788,63 +810,8 @@ export default function App() {
             </AnimatePresence>
           </div>
 
-          {/* RIGHT SIDE COLUMN (5 GRID): Curate Records & Books Shop Ambience */}
-          <div className="lg:col-span-5 space-y-6">
-            
-            {/* Live Shop Visualizer widget */}
-            <div className="bg-vinyl-black rounded-lg border border-stone-800 shadow-xl overflow-hidden text-bone-cream">
-              <div className="bg-stone-950 px-5 py-3 border-b border-stone-900 flex justify-between items-center">
-                <span className="text-[10px] font-mono tracking-widest uppercase text-sleeve-mustard">
-                  Curate Records · Live Display Bins
-                </span>
-                <span className="flex items-center gap-1 text-[10px] uppercase font-mono bg-emerald-950 text-emerald-300 border border-emerald-800 px-1.5 py-0.5 rounded">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  Active
-                </span>
-              </div>
-
-              <div className="p-5 space-y-4 text-xs font-sans">
-                <p className="text-xs text-stone-400 font-editorial italic text-stone-300">
-                  This prototype holds a curated list of our current synthetic floor inventory that we use to match client interests. See outstanding titles below:
-                </p>
-
-                {/* Preformatted list of standard stock items matching user request */}
-                <div className="space-y-2 h-76 overflow-y-auto pr-1">
-                  {[
-                    { title: "Kind of Blue", artist: "Miles Davis", genre: "Jazz" },
-                    { title: "Blue Train", artist: "John Coltrane", genre: "Jazz" },
-                    { title: "Heaven or Las Vegas", artist: "Cocteau Twins", genre: "Dream Pop" },
-                    { title: "In Rainbows", artist: "Radiohead", genre: "Alternative" },
-                    { title: "Punisher", artist: "Phoebe Bridgers", genre: "Indie Folk" },
-                    { title: "Pink Moon", artist: "Nick Drake", genre: "Folk" },
-                    { title: "A Love Supreme", artist: "John Coltrane", genre: "Jazz" },
-                    { title: "Jolene", artist: "Dolly Parton", genre: "Country" },
-                    { title: "Rumours", artist: "Fleetwood Mac", genre: "Classic Rock" },
-                    { title: "The Queen Is Dead", artist: "The Smiths", genre: "Indie Rock" },
-                    { title: "Illinois", artist: "Sufjan Stevens", genre: "Indie Folk" }
-                  ].map((inv, idx) => (
-                    <div 
-                      key={idx}
-                      className="bg-stone-900/40 p-2 border border-stone-800 rounded flex justify-between items-center hover:bg-stone-800/60 transition"
-                    >
-                      <div>
-                        <span className="block font-bold text-stone-100">{inv.title}</span>
-                        <span className="block text-[10px] text-stone-400 font-editorial italic">{inv.artist}</span>
-                      </div>
-                      <span className="text-[9px] font-mono uppercase bg-stone-800 border border-stone-700 px-1.5 py-0.5 rounded text-stone-300">
-                        {inv.genre}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="text-[10px] text-stone-400 text-center font-mono pt-2 border-t border-stone-900">
-                  Total available: 1,421 physical copies inside display slots
-                </div>
-              </div>
-            </div>
-
-            {/* Vintage style bulletin board notice */}
+          {/* CURATE COMMUNITY SIDEBAR */}
+          <aside className="lg:col-span-4">
             <div className="bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-lg border border-amber-200 p-6 shadow-md relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 bg-sleeve-mustard rotate-45 translate-x-8 -translate-y-8 border-l border-b border-sleeve-mustard"></div>
               
@@ -895,8 +862,7 @@ export default function App() {
                 <div aria-hidden="true"></div>
               </div>
             </div>
-
-          </div>
+          </aside>
 
         </div>
 

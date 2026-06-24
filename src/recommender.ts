@@ -602,7 +602,6 @@ type FirestoreAlbum = {
   inStock?: boolean;
 };
 
-const STAFF_PICK_LIMIT = 5;
 const RECOMMENDATION_LIMIT = 5;
 const FIRESTORE_CATALOG_READ_LIMIT = 300;
 const MIN_PERSONALIZED_SCORE = 4;
@@ -625,6 +624,28 @@ function parseArtistList(value: string): string[] {
     .split(",")
     .map(normalizeTerm)
     .filter(Boolean);
+}
+
+function stableHash(value: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function getFallbackJitter(preferences: UserPreferences, record: CatalogRecord): number {
+  const preferenceSeed = [
+    preferences.artists,
+    preferences.genres.join("|"),
+    preferences.mood,
+    preferences.listeningHabit,
+    preferences.customPrompt,
+  ].join("::");
+  const recordSeed = `${record.artist}::${record.title}`;
+
+  return (stableHash(`${preferenceSeed}::${recordSeed}`) / 0xffffffff) * 0.25;
 }
 
 function expandGenreTerms(genre: string): string[] {
@@ -742,18 +763,18 @@ function buildLiveShelfNote(album: FirestoreAlbum, primaryGenre: string, tags: s
   return `${album.title} lands in that useful space between a familiar bin pull and a small discovery. ${album.artist} keeps the record close to ${primaryGenre.toLowerCase()}, but there is enough ${vibe} texture around the edges to make it feel like more than the obvious answer.`;
 }
 
-function formatListeningSetting(mood: string): string {
-  if (!mood) return "reflective listening";
-  return mood.charAt(0).toLowerCase() + mood.slice(1);
-}
-
 function buildFitContext(preferences: UserPreferences, shelfPhrase: string): string {
-  const setting = formatListeningSetting(preferences.mood);
-  const genreContext = shelfPhrase === "the late-night listening stack"
-    ? "the mood you described"
-    : `${shelfPhrase} shelves`;
+  const placement = shelfPhrase
+    ? `near the ${shelfPhrase} shelves`
+    : preferences.artists
+      ? "alongside records connected to the artists you named"
+      : "with the nearby staff picks";
 
-  return `For this listener, I would place it near the ${genreContext} and try it during ${setting}.`;
+  if (!preferences.mood) {
+    return `For this listener, I would place it ${placement}.`;
+  }
+
+  return `For this listener, I would place it ${placement} and try it during ${preferences.mood.charAt(0).toLowerCase() + preferences.mood.slice(1)}.`;
 }
 
 function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): CatalogRecord | null {
@@ -888,7 +909,7 @@ function buildRecommendationsFromCatalog(
       .filter((term) => term && !BROAD_ANCHOR_TERMS.has(term))
   );
 
-  const ranked = activeCatalog.map((record, index) => {
+  const ranked = activeCatalog.map((record) => {
     const recordArtist = record.artist.toLowerCase();
     const recordTitle = record.title.toLowerCase();
     const genreFields = [record.genre, ...record.genreTags];
@@ -912,7 +933,12 @@ function buildRecommendationsFromCatalog(
     const moodScore = normalizeTokens(contextQuery)
       .filter((word) => fieldMatchesTerm(contextFields, word))
       .length;
-    const score = genreScore + directArtistScore + artistAnchorScore + moodScore + falseArtistTitlePenalty + (activeCatalog.length - index) / 100;
+    const score = genreScore +
+      directArtistScore +
+      artistAnchorScore +
+      moodScore +
+      falseArtistTitlePenalty +
+      getFallbackJitter(preferences, record);
 
     const confidence: "exact" | "adjacent" | "low" = directArtistScore > 0
       ? "exact"
@@ -934,28 +960,19 @@ function buildRecommendationsFromCatalog(
     };
   }).sort((a, b) => b.score - a.score);
 
-  const staffPicks = activeCatalog.slice(0, STAFF_PICK_LIMIT).map((record, index) => ({
-    record,
-    score: STAFF_PICK_LIMIT - index,
-    confidence: "low" as const,
-    matchLabel: recommendationsEnabled
-      ? "Staff fallback from limited prototype catalog"
-      : "Staff pick while personalized ranking is paused",
-    isPersonalized: false,
-  }));
   const personalizedMatches = ranked.filter((item) => item.isPersonalized);
-  const rankedSelection = recommendationsEnabled && personalizedMatches.length > 0
-    ? [
-      ...personalizedMatches,
-      ...staffPicks.filter((staffPick) =>
-        !personalizedMatches.some((match) =>
-          match.record.title === staffPick.record.title &&
-          match.record.artist === staffPick.record.artist
-        )
-      )
-    ]
-    : staffPicks;
-  const shelfPhrase = requestedGenres.slice(0, 2).join(" and ") || "the late-night listening stack";
+  const fallbackMatches = ranked
+    .filter((item) => !item.isPersonalized)
+    .map((item) => ({
+      ...item,
+      matchLabel: recommendationsEnabled
+        ? "Staff fallback from limited prototype catalog"
+        : "Staff pick while personalized ranking is paused",
+    }));
+  const rankedSelection = recommendationsEnabled
+    ? [...personalizedMatches, ...fallbackMatches]
+    : fallbackMatches;
+  const shelfPhrase = requestedGenres.slice(0, 2).join(" and ");
 
   const selectedRecords = rankedSelection.slice(0, RECOMMENDATION_LIMIT);
 

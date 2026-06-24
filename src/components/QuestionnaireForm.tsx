@@ -42,12 +42,13 @@ function normalizeArtistsInput(value: string): string {
 export default function QuestionnaireForm({ onSubmit, isLoading }: QuestionnaireFormProps) {
   const [artists, setArtists] = useState("");
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [mood, setMood] = useState("late_night");
-  const [listeningHabit, setListeningHabit] = useState("deep_listening");
+  const [mood, setMood] = useState("");
+  const [listeningHabit, setListeningHabit] = useState("");
   const [customPrompt, setCustomPrompt] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
 
   const handleGenreToggle = (genre: string) => {
+    setValidationMessage("");
     if (selectedGenres.includes(genre)) {
       setSelectedGenres(selectedGenres.filter((g) => g !== genre));
     } else {
@@ -68,18 +69,13 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
     const normalizedArtists = normalizeArtistsInput(artists);
     const trimmedPrompt = customPrompt.trim();
 
-    if (!normalizedArtists) {
-      setValidationMessage("Add at least one artist or band before curating the rack.");
-      return;
-    }
-
     if (normalizedArtists.length > MAX_ARTISTS_LENGTH) {
       setValidationMessage("Shorten the artist list so the prototype can read it clearly.");
       return;
     }
 
-    if (selectedGenres.length === 0) {
-      setValidationMessage("Choose at least one genre before curating the rack.");
+    if (!normalizedArtists && selectedGenres.length === 0) {
+      setValidationMessage("Add at least one artist or choose at least one genre before curating the rack.");
       return;
     }
 
@@ -101,10 +97,9 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
   };
 
   const canSubmit = !isLoading &&
-    artists.trim().length > 0 &&
     artists.trim().length <= MAX_ARTISTS_LENGTH &&
     customPrompt.trim().length <= MAX_CUSTOM_PROMPT_LENGTH &&
-    selectedGenres.length > 0;
+    (normalizeArtistsInput(artists).length > 0 || selectedGenres.length > 0);
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-stone-200 shadow-xl overflow-hidden">
@@ -133,11 +128,11 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
       <div className="p-6 space-y-6">
         {/* Step 1: Favorite Artists */}
         <div>
-          <label className="block text-stone-900 font-bold text-sm tracking-tight mb-1">
-            1. Who are your favorite artists or bands?
+          <label className="block text-stone-900 font-bold text-base tracking-tight mb-1">
+            1. Who are your favorite artists or bands? (Optional)
           </label>
-          <span className="text-xs text-stone-500 block mb-2 font-editorial italic">
-            List a few names that represent your core rotation (e.g., Miles Davis, Cocteau Twins, Nick Drake).
+          <span className="text-sm text-stone-600 block mb-2 font-editorial italic">
+            Add artists, choose genres below, or do both. At least one artist or genre is needed.
           </span>
           <input
             type="text"
@@ -148,18 +143,17 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
             }}
             placeholder="Radiohead, John Coltrane, Phoebe Bridgers..."
             maxLength={MAX_ARTISTS_LENGTH}
-            className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-sm"
-            required
+            className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2.5 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-base"
           />
         </div>
 
         {/* Step 2: Genres */}
         <div>
-          <label className="block text-stone-900 font-bold text-sm tracking-tight mb-1">
-            2. Which genres are you currently hunting in?
+          <label className="block text-stone-900 font-bold text-base tracking-tight mb-1">
+            2. Which genres are you interested in? (Optional)
           </label>
-          <span className="text-xs text-stone-500 block mb-3 font-editorial italic">
-            Select all that apply for your custom shelf recommendation.
+          <span className="text-sm text-stone-600 block mb-3 font-editorial italic">
+            Select any that apply, or leave this blank if you entered an artist above.
           </span>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {PRESET_GENRES.map((genre) => {
@@ -169,7 +163,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
                   key={genre}
                   type="button"
                   onClick={() => handleGenreToggle(genre)}
-                  className={`text-xs py-2 px-2.5 rounded border text-center transition-all cursor-pointer ${
+                  className={`text-sm py-2.5 px-2.5 rounded border text-center transition-all cursor-pointer ${
                     isChecked
                       ? "bg-curate-red border-curate-red text-white font-bold shadow-sm"
                       : "bg-bone-cream border-stone-200 text-stone-700 hover:bg-stone-100"
@@ -184,11 +178,22 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
 
         {/* Step 3: Moods */}
         <div>
-          <label className="block text-stone-900 font-bold text-sm tracking-tight mb-1">
-            3. What mood or listening environment are you pursuing?
-          </label>
-          <span className="text-xs text-stone-500 block mb-3 font-editorial italic">
-            We curate specific releases matching physical listening settings.
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <label className="block text-stone-900 font-bold text-base tracking-tight">
+              3. What mood or listening environment are you pursuing? (Optional)
+            </label>
+            {mood && (
+              <button
+                type="button"
+                onClick={() => setMood("")}
+                className="shrink-0 text-xs font-bold text-curate-red underline underline-offset-2"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <span className="text-sm text-stone-600 block mb-3 font-editorial italic">
+            No mood is assumed unless you select one.
           </span>
           <div className="space-y-2">
             {PRESET_MOODS.map((m) => {
@@ -212,8 +217,8 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
                     className="mt-1 h-4 w-4 text-curate-red focus:ring-curate-red border-stone-300 accent-curate-red"
                   />
                   <div>
-                    <span className="block text-xs font-bold text-stone-900">{m.label}</span>
-                    <span className="block text-[11px] text-stone-500 italic mt-0.5">{m.description}</span>
+                    <span className="block text-sm font-bold text-stone-900">{m.label}</span>
+                    <span className="block text-xs text-stone-600 italic mt-0.5">{m.description}</span>
                   </div>
                 </label>
               );
@@ -223,11 +228,22 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
 
         {/* Step 4: Listening Habits */}
         <div>
-          <label className="block text-stone-900 font-bold text-sm tracking-tight mb-1">
-            4. What are your vinyl spinning habits?
-          </label>
-          <span className="text-xs text-stone-500 block mb-3 font-editorial italic text-stone-500">
-            Tell us how the needle drops into your home routine.
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <label className="block text-stone-900 font-bold text-base tracking-tight">
+              4. How do you usually listen to records? (Optional)
+            </label>
+            {listeningHabit && (
+              <button
+                type="button"
+                onClick={() => setListeningHabit("")}
+                className="shrink-0 text-xs font-bold text-curate-red underline underline-offset-2"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <span className="text-sm text-stone-600 block mb-3 font-editorial italic">
+            Choose one only if it should influence the recommendations.
           </span>
           <div className="space-y-2">
             {LISTENING_HABITS.map((h) => {
@@ -250,7 +266,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
                     onChange={() => {}}
                     className="h-4 w-4 text-curate-red focus:ring-curate-red border-stone-300 accent-curate-red"
                   />
-                  <span className="text-xs text-stone-800">{h.label}</span>
+                  <span className="text-sm text-stone-800">{h.label}</span>
                 </label>
               );
             })}
@@ -259,11 +275,11 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
 
         {/* Step 5: Custom note */}
         <div>
-          <label className="block text-stone-900 font-bold text-sm tracking-tight mb-1">
-            5. Leave a note or seek specific vintage textures (Optional)
+          <label className="block text-stone-900 font-bold text-base tracking-tight mb-1">
+            5. Add anything else you want us to consider (Optional)
           </label>
-          <span className="text-xs text-stone-500 block mb-2 font-editorial italic text-stone-500">
-            "Looking for high-reverb folk", "dusty piano samples", "pristine analog fidelity master pressings"...
+          <span className="text-sm text-stone-600 block mb-2 font-editorial italic">
+            For example: "high-reverb folk," "dusty piano samples," or "warm, detailed production."
           </span>
           <textarea
             value={customPrompt}
@@ -274,7 +290,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
             placeholder="Explain any subtle specifics you are searching for..."
             rows={3}
             maxLength={MAX_CUSTOM_PROMPT_LENGTH}
-            className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-sm"
+            className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2.5 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-base"
           />
           <div className="mt-1 flex justify-end text-[10px] font-mono text-stone-500">
             {customPrompt.length}/{MAX_CUSTOM_PROMPT_LENGTH}

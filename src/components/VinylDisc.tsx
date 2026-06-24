@@ -42,7 +42,7 @@ export default function VinylDisc({ album, isSelected, onClick, index }: VinylDi
         {/* BLACK VINYL RECORD DISC - SLIDES OUT OF SLEEVE */}
         <motion.div
           animate={{
-            x: isSelected || isHovered ? 45 : 4,
+            x: isSelected || isHovered ? 16 : 4,
             rotate: isSelected ? 360 : isHovered ? 45 : 0,
           }}
           transition={{
@@ -103,22 +103,22 @@ export default function VinylDisc({ album, isSelected, onClick, index }: VinylDi
             </span>
           </div>
 
-          {/* Album Title and Artist in massive gorgeous typography */}
+          {/* Album Title and Artist */}
           <div className="mt-auto">
-            <h3 className="font-display text-white text-base md:text-lg leading-tight tracking-tight uppercase line-clamp-2">
+            <h3 className="font-display text-white text-lg md:text-xl leading-tight tracking-tight uppercase line-clamp-3">
               {album.title}
             </h3>
-            <p className="font-editorial text-stone-200 text-sm md:text-base italic tracking-wide mt-1 line-clamp-1">
+            <p className="font-editorial text-stone-200 text-base md:text-lg italic tracking-wide mt-1 line-clamp-2">
               {album.artist}
             </p>
           </div>
 
           {/* Stylized vinyl groove graphics at bottom card */}
           <div className="border-t border-white/10 pt-3 mt-3 flex justify-between items-center">
-            <span className="text-[10px] text-stone-400 font-mono tracking-wider max-w-[70%] truncate">
+            <span className="text-xs text-stone-300 font-mono tracking-wide max-w-[72%] line-clamp-2">
               {album.aestheticVibe}
             </span>
-            <span className="text-[10px] text-sleeve-mustard font-mono">
+            <span className="text-xs text-sleeve-mustard font-mono">
               {album.releaseYear}
             </span>
           </div>
@@ -127,13 +127,13 @@ export default function VinylDisc({ album, isSelected, onClick, index }: VinylDi
       </div>
 
       {/* Under-album shelf note */}
-      <div className="mt-2 flex items-center justify-between px-1">
-        <div>
-          <h4 className="font-bold text-xs truncate max-w-[200px] text-stone-900">{album.title}</h4>
-          <p className="text-[11px] text-stone-600 font-editorial italic">{album.artist}</p>
+      <div className="mt-3 flex items-start justify-between gap-3 px-1">
+        <div className="min-w-0 flex-1">
+          <h4 className="font-bold text-sm leading-snug text-stone-900 line-clamp-3">{album.title}</h4>
+          <p className="mt-0.5 text-sm leading-snug text-stone-600 font-editorial italic line-clamp-2">{album.artist}</p>
         </div>
         <span
-          className={`inline-flex items-center gap-1.5 rounded-sm border px-2 py-1 text-[9px] font-mono uppercase tracking-wider ${
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-sm border px-2 py-1 text-[10px] font-mono uppercase tracking-wider ${
             isSelected
               ? "bg-sleeve-mustard text-vinyl-black border-sleeve-mustard font-bold"
               : "bg-bone-cream text-stone-600 border-stone-300"
