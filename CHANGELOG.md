@@ -4,6 +4,8 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-25
 
+- Removed the built-in Big Thief bias from `Quick Demo Fill`. The button now rotates among four distinct listening profiles across jazz, country/classic rock, soul/funk, and textured alternative music, so repeated testing produces more varied recommendations and more balanced Owner Intelligence signals.
+- Replaced Big Thief in the artist-field example and removed the artist from the static owner inventory-opportunity copy. Big Thief remains eligible when a customer's actual preferences genuinely match the record.
 - Connected the customer recommendation experience to Owner Intelligence through de-identified Firestore demand signals. Signed-in recommendation sessions now include album titles in `demandSignals`, and signed-in heart, thumbs-up, and thumbs-down responses preserve their private customer action record while also emitting an owner-readable aggregate signal.
 - Expanded the live Firestore rules to validate recommendation-request, saved-interest, like, and dislike signal types, including bounded negative weighting only for thumbs-down signals; compiled and published the updated rules to the `vinyl-concierge` Firebase project.
 - Added album-level demand aggregation with catalog-title resolution for older signals, plus counts for recommendation appearances, saved interest, positive responses, and negative responses.

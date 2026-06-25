@@ -29,6 +29,36 @@ const LISTENING_HABITS = [
 
 const MAX_ARTISTS_LENGTH = 180;
 const MAX_CUSTOM_PROMPT_LENGTH = 500;
+const DEMO_PROFILES = [
+  {
+    artists: "John Coltrane, Alice Coltrane, Miles Davis",
+    genres: ["Jazz"],
+    mood: "late_night",
+    listeningHabit: "deep_listening",
+    customPrompt: "I want spacious, adventurous records with strong musicianship for focused headphone listening after dark.",
+  },
+  {
+    artists: "Dolly Parton, Fleetwood Mac, Lucinda Williams",
+    genres: ["Country", "Classic Rock"],
+    mood: "cozy_morning",
+    listeningHabit: "dynamic_background",
+    customPrompt: "I like vivid storytelling, warm voices, and records that work while cooking or spending a slow morning at home.",
+  },
+  {
+    artists: "Curtis Mayfield, Erykah Badu, Stevie Wonder",
+    genres: ["Soul / Funk"],
+    mood: "high_energy",
+    listeningHabit: "vintage_crank",
+    customPrompt: "I want groove-forward records with memorable vocals, rich arrangements, and enough energy for a weekend gathering.",
+  },
+  {
+    artists: "Cocteau Twins, My Bloody Valentine, Björk",
+    genres: ["Alternative", "Indie Rock"],
+    mood: "melancholic",
+    listeningHabit: "deep_listening",
+    customPrompt: "I want immersive, textured records with unusual production, emotional depth, and a slightly dreamlike atmosphere.",
+  },
+] as const;
 
 function normalizeArtistsInput(value: string): string {
   return Array.from(new Set(
@@ -46,6 +76,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
   const [listeningHabit, setListeningHabit] = useState("");
   const [customPrompt, setCustomPrompt] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
+  const [demoProfileIndex, setDemoProfileIndex] = useState(0);
 
   const handleGenreToggle = (genre: string) => {
     setValidationMessage("");
@@ -57,11 +88,13 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
   };
 
   const handlePresetFill = () => {
-    setArtists("Big Thief, Radiohead, Miles Davis");
-    setSelectedGenres(["Indie Folk", "Jazz", "Alternative"]);
-    setMood("late_night");
-    setListeningHabit("deep_listening");
-    setCustomPrompt("I want records that feel emotionally immersive but not overly polished. Something intimate, warm, slightly haunted, but still beautiful. Headphones after midnight with a glass of wine and low lighting.");
+    const profile = DEMO_PROFILES[demoProfileIndex];
+    setArtists(profile.artists);
+    setSelectedGenres([...profile.genres]);
+    setMood(profile.mood);
+    setListeningHabit(profile.listeningHabit);
+    setCustomPrompt(profile.customPrompt);
+    setDemoProfileIndex((current) => (current + 1) % DEMO_PROFILES.length);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -145,7 +178,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
               setArtists(e.target.value);
               setValidationMessage("");
             }}
-            placeholder="Radiohead, John Coltrane, Big Thief..."
+            placeholder="Radiohead, John Coltrane, Dolly Parton..."
             maxLength={MAX_ARTISTS_LENGTH}
             className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2.5 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-base"
           />

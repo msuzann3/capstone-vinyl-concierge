@@ -987,7 +987,7 @@ function buildRecommendationsFromCatalog(
       trendsSummary: recommendationsEnabled
         ? `This customer is clustering around ${requestedGenres.slice(0, 3).join(", ") || "mood-led discovery"} with a ${preferences.mood || "slow-browse"} listening frame. Treat that as a signal for records that feel personal, tactile, and playable in quiet domestic settings.`
         : "Recommendations are paused by the Firestore config kill switch, so this session should be treated as a staff-pick browse rather than an AI-ranked demand signal.",
-      inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Big Thief, Nick Drake, Dolly Parton, Fleetwood Mac, and Cocteau Twins in view, then deepen the adjacent bins with classic country, country rock, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
+      inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Nick Drake, Dolly Parton, Fleetwood Mac, and Cocteau Twins in view, then deepen the adjacent bins with classic country, country rock, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
       underrepresentedAreas: "The likely gaps are country foundations, classic-rock side-door discoveries, spiritual jazz beyond the obvious classics, and small-label dream pop reissues.",
       merchandisingStrategy: "Chalkcard title: 'Records for Low Light and Good Headphones.' Place one familiar classic beside two discovery records so the table feels welcoming rather than obscure."
     },
