@@ -20,6 +20,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Suggested Exploration Areas: customer-facing local heuristics in `src/recommender.ts` identify broader genres and store sections worth browsing after the five recommendations. The repeated album-level Shelf Expansion cards and unexplained internal tags are no longer shown.
 - Customer-facing side: active recommendation experience in `src/App.tsx`, `src/recommender.ts`, and related components. The header opens a simplified Firebase Google sign-in screen, and signed-in customer recommendation sessions save privately under `users/{uid}/sessions`.
 - Business-facing side: active Owner Intelligence Dashboard in `src/components/OwnerIntelligenceDashboard.tsx`, with local synthetic inventory/sales data retained for demo continuity plus a live Firestore customer-demand watchlist for signed-in owners. Signed-in customer recommendation sessions and heart/thumb responses create de-identified `demandSignals`; Owner Intelligence aggregates those signals by album, artist, and genre and turns them into cautious sourcing recommendations. The header has a Customer / Owner switch; this side is additive and does not replace the customer experience.
+- Professor walkthrough: any tester can sign in with Google as a customer, submit one recommendation request, optionally heart/like/dislike a result, and select `View This Session in Owner Intelligence`. The owner screen then shows those exact five recommendations and customer responses as a de-identified, single-session sourcing review. A green `Saved to Firestore` status confirms the backend connection; the broader cross-customer aggregate remains restricted to accounts whose Firestore role is `owner`.
 - Owner Insights dashboard: the older staff-ledger analytics panel in `src/components/OwnerInsightsView.tsx` still exists on the customer side, using synthetic analytics in `src/syntheticOwnerInsights.ts`.
 - Brand references: source PDFs, implementation notes, and production logo PNGs in `docs/brand/`.
 - Week 3 Google AI Studio owner-intelligence handoff: original zip is kept locally in ignored folder `Handoff from Google/week3-owner-intelligence/`; active source is adapted into the app rather than copied over wholesale.
@@ -161,6 +162,15 @@ For GitHub Pages, the shareable links will be:
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/intro`
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/app`
 - `https://msuzann3.github.io/capstone-vinyl-concierge/#/feedback`
+
+### Professor Connected-Workflow Test
+
+1. Open the customer prototype and sign in with Google.
+2. Complete the questionnaire and generate recommendations.
+3. Optionally choose Save Interest, thumbs up, or thumbs down on one or more records.
+4. Select `View This Session in Owner Intelligence`.
+5. Confirm the owner screen shows the same five records, carries over the customer responses, and displays `Saved to Firestore`.
+6. Use the Customer / Owner switch to move between both sides. The professor does not need an owner role for the same-session walkthrough; owner role is required only for the protected all-customer aggregate.
 
 Feedback responses are wired to n8n through the GitHub repository secret `N8N_FEEDBACK_WEBHOOK_URL`, verified present on 2026-06-21. The GitHub Pages workflow passes that secret through as `VITE_N8N_FEEDBACK_WEBHOOK_URL` at build time. If the webhook is removed or unavailable, the feedback page shows a setup error and offers a JSON download fallback.
 

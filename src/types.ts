@@ -50,6 +50,14 @@ export interface UserPreferences {
   customPrompt: string;
 }
 
+export interface ProfessorSessionHandoff {
+  preferences: UserPreferences;
+  recommendations: Recommendation[];
+  sessionId: string | null;
+  persistence: "saved" | "local" | "error";
+  actions: Record<string, "interest" | "like" | "dislike">;
+}
+
 export interface SyntheticInventoryItem {
   title: string;
   artist: string;

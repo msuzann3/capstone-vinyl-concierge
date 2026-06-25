@@ -9,6 +9,7 @@ import {
   LogIn,
   LogOut,
   Heart,
+  MoveRight,
   Music2,
   Sparkles,
   ThumbsDown,
@@ -24,7 +25,7 @@ import FeedbackFormPage from "./components/FeedbackFormPage";
 import TesterIntroPage from "./components/TesterIntroPage";
 import { Brandmark } from "./components/BrandLogo";
 import { buildRecommendations } from "./recommender";
-import { CollectionInsights, UserPreferences, Recommendation } from "./types";
+import { CollectionInsights, UserPreferences, Recommendation, type ProfessorSessionHandoff } from "./types";
 import { logOut, signInWithGoogle, watchAuth } from "./auth";
 import { saveRecommendationAction, saveSessionAndSignals, type RecommendationAction } from "./sessions";
 
@@ -104,6 +105,10 @@ export default function App() {
   const [authBusy, setAuthBusy] = useState(false);
   const [showAuthScreen, setShowAuthScreen] = useState(false);
   const [prototypeActions, setPrototypeActions] = useState<Record<string, RecommendationActionState>>({});
+  const [sessionPersistence, setSessionPersistence] = useState<{
+    sessionId: string | null;
+    state: "saved" | "local" | "error";
+  } | null>(null);
 
   const loadingPhrases = [
     "Skimming our back racks of original pressings...",
@@ -196,7 +201,7 @@ export default function App() {
         setCollectionInsights(data.collectionInsights);
         setSelectedAlbumIdx(0);
         try {
-          await saveSessionAndSignals(
+          const savedSessionId = await saveSessionAndSignals(
             {
               artists: prefs.artists.split(",").map((artist) => artist.trim()).filter(Boolean),
               genres: prefs.genres,
@@ -212,9 +217,18 @@ export default function App() {
             })),
             data.collectionInsights.coverageScore,
           );
-          setAuthNotice(null);
+          setSessionPersistence({
+            sessionId: savedSessionId,
+            state: currentUser && savedSessionId ? "saved" : currentUser ? "error" : "local",
+          });
+          setAuthNotice(
+            currentUser && !savedSessionId
+              ? "Recommendations are showing, but this session could not be saved to Firestore."
+              : null,
+          );
         } catch (sessionError: any) {
           console.error(sessionError);
+          setSessionPersistence({ sessionId: null, state: currentUser ? "error" : "local" });
           setAuthNotice("Recommendations are showing, but this signed-in session could not be saved yet. Check the Firestore rules if this keeps happening.");
         }
       } else {
@@ -236,10 +250,23 @@ export default function App() {
     setError(null);
     setAuthNotice(null);
     setPrototypeActions({});
+    setSessionPersistence(null);
   };
 
   const activeAlbum = recommendations[selectedAlbumIdx] || DEFAULT_STORE_DISPLAY[0];
   const getRecommendationKey = (rec: Recommendation) => rec.albumId ?? `${rec.artist}-${rec.title}`;
+  const professorSessionHandoff: ProfessorSessionHandoff | null = preferences && sessionPersistence
+    ? {
+        preferences,
+        recommendations,
+        sessionId: sessionPersistence.sessionId,
+        persistence: sessionPersistence.state,
+        actions: Object.fromEntries(
+          (Object.entries(prototypeActions) as Array<[string, RecommendationActionState]>)
+            .map(([key, value]) => [key, value.action]),
+        ),
+      }
+    : null;
   const setPrototypeAction = async (rec: Recommendation, action: RecommendationAction) => {
     const key = getRecommendationKey(rec);
     const albumId = rec.albumId ?? `${rec.artist}-${rec.title}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -378,7 +405,7 @@ export default function App() {
             }}
           />
         ) : activeExperience === "owner" ? (
-          <OwnerIntelligenceDashboard />
+          <OwnerIntelligenceDashboard latestSession={professorSessionHandoff} />
         ) : (
           <>
         
@@ -391,6 +418,17 @@ export default function App() {
             Pull up a stool. Share an artist, a genre, or a listening mood, and the prototype will suggest five records from its limited test catalog.
           </p>
         </div>
+
+        {!preferences && (
+          <div className="mb-6 rounded-lg border border-sleeve-mustard bg-sleeve-white p-4 shadow-sm">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-curate-red">
+              Professor test path
+            </span>
+            <p className="mt-1 text-sm leading-relaxed text-stone-700">
+              Sign in first, submit one customer request, optionally heart or rate a recommendation, then use the results-page button to view that exact session in Owner Intelligence.
+            </p>
+          </div>
+        )}
 
         {authNotice && (
           <div className="mb-6 rounded-md border border-sleeve-mustard bg-sleeve-white px-4 py-3 text-sm text-stone-700 shadow-sm">
@@ -728,6 +766,33 @@ export default function App() {
                       </div>
                     </div>
                   )}
+
+                  <div className="rounded-lg border-2 border-curate-red bg-sleeve-white p-5 shadow-lg">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-curate-red">
+                      Professor walkthrough · customer to owner
+                    </span>
+                    <h3 className="mt-2 font-display text-xl uppercase text-vinyl-black">
+                      See this customer session in Owner Intelligence
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-stone-600">
+                      {sessionPersistence?.state === "saved"
+                        ? "This recommendation session was saved to Firestore. Open the owner view to see how the same records become a cautious sourcing watchlist."
+                        : sessionPersistence?.state === "error"
+                          ? "The recommendations worked, but Firestore did not confirm the save. You can still inspect the handoff, clearly labeled as unsaved."
+                          : "This session is currently browser-only. Sign in before submitting if you want the walkthrough to demonstrate the Firestore connection."}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveExperience("owner");
+                        navigateTo("app");
+                      }}
+                      className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded bg-curate-red px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-vinyl-black"
+                    >
+                      View This Session in Owner Intelligence
+                      <MoveRight className="h-4 w-4" />
+                    </button>
+                  </div>
 
                 </motion.div>
               )}

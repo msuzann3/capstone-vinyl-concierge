@@ -20,6 +20,7 @@ import {
 } from "../ownerIntelligenceData";
 import { PurchaseRecommendation } from "../ownerIntelligenceTypes";
 import { getDemandSummary, type DemandSummary } from "../ownerSignals";
+import type { ProfessorSessionHandoff, Recommendation } from "../types";
 
 type OwnerStep = "inventory" | "demand" | "recommendations" | "outcomes";
 
@@ -55,8 +56,12 @@ const steps: Array<{
   },
 ];
 
-export default function OwnerIntelligenceDashboard() {
-  const [activeStep, setActiveStep] = useState<OwnerStep>("inventory");
+export default function OwnerIntelligenceDashboard({
+  latestSession,
+}: {
+  latestSession?: ProfessorSessionHandoff | null;
+}) {
+  const [activeStep, setActiveStep] = useState<OwnerStep>(latestSession ? "recommendations" : "inventory");
   const [inventory, setInventory] = useState(initialOwnerInventory);
   const [requests, setRequests] = useState(initialCustomerRequests);
   const [recommendations, setRecommendations] = useState(initialOwnerRecommendations);
@@ -67,6 +72,10 @@ export default function OwnerIntelligenceDashboard() {
   const [liveDemandError, setLiveDemandError] = useState<string | null>(null);
 
   const lowStock = useMemo(() => inventory.filter((item) => item.inStock <= 2), [inventory]);
+  const latestSessionRecommendations = useMemo(
+    () => latestSession ? buildSessionRecommendations(latestSession) : [],
+    [latestSession],
+  );
   useEffect(() => {
     let ignore = false;
 
@@ -211,6 +220,56 @@ export default function OwnerIntelligenceDashboard() {
           ))}
         </nav>
 
+        {latestSession && (
+          <section className="rounded-lg border-2 border-curate-red bg-sleeve-white p-5 shadow-lg">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-curate-red">
+                  Same-session handoff
+                </span>
+                <h2 className="mt-2 font-display text-xl uppercase text-vinyl-black">
+                  Customer Recommendations → Owner Review
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-stone-600">
+                  These are the exact records generated in the customer view during this browser session.
+                  Owner Intelligence converts them into cautious sourcing suggestions without exposing a customer name or profile.
+                </p>
+              </div>
+              <span className={`rounded border px-3 py-2 text-[10px] font-bold uppercase tracking-wider ${
+                latestSession.persistence === "saved"
+                  ? "border-green-200 bg-green-50 text-green-800"
+                  : latestSession.persistence === "error"
+                    ? "border-curate-red/20 bg-curate-red/10 text-curate-red"
+                    : "border-sleeve-mustard/50 bg-sleeve-mustard/20 text-amber-900"
+              }`}>
+                {latestSession.persistence === "saved"
+                  ? "Saved to Firestore"
+                  : latestSession.persistence === "error"
+                    ? "Firestore save failed"
+                    : "Browser-only session"}
+              </span>
+            </div>
+            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+              {latestSession.recommendations.map((recommendation) => {
+                const key = getRecommendationKey(recommendation);
+                const action = latestSession.actions[key];
+                return (
+                  <article key={key} className="rounded border border-vinyl-black/10 bg-paper-white p-4">
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-stone-500">
+                      {recommendation.genre}
+                    </span>
+                    <strong className="mt-1 block text-sm text-vinyl-black">{recommendation.title}</strong>
+                    <span className="block text-xs text-stone-500">{recommendation.artist}</span>
+                    <span className="mt-3 inline-block rounded bg-vinyl-black px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-bone-cream">
+                      {action ? `Customer: ${action}` : "Recommendation signal"}
+                    </span>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         {activeStep === "inventory" && (
           <Panel
             icon={<AlertTriangle className="w-5 h-5" />}
@@ -227,7 +286,6 @@ export default function OwnerIntelligenceDashboard() {
                         {item.id} · {item.genre}
                       </span>
                       <h3 className="font-bold text-vinyl-black">{item.title}</h3>
-                      <p className="text-sm text-stone-600">{item.artist} · {item.format}</p>
                       <p className="text-xs text-stone-500 mt-2">{item.notes}</p>
                     </div>
                     <div className="flex sm:flex-col items-center sm:items-end justify-between gap-3">
@@ -328,6 +386,16 @@ export default function OwnerIntelligenceDashboard() {
             actionLabel={isRefreshing ? "Refreshing..." : "Refresh Plan"}
             onAction={refreshRecommendations}
           >
+            {latestSessionRecommendations.length > 0 && (
+              <div className="space-y-3 rounded border border-curate-red/20 bg-curate-red/5 p-4">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-curate-red">
+                  Current professor walkthrough session
+                </span>
+                {latestSessionRecommendations.map((recommendation) => (
+                  <RecommendationCard key={recommendation.id} recommendation={recommendation} />
+                ))}
+              </div>
+            )}
             <div className={`rounded border px-4 py-3 text-xs ${
               recommendationSource === "live"
                 ? "border-green-200 bg-green-50 text-green-900"
@@ -386,6 +454,43 @@ export default function OwnerIntelligenceDashboard() {
       </div>
     </section>
   );
+}
+
+function getRecommendationKey(recommendation: Recommendation) {
+  return recommendation.albumId ?? `${recommendation.artist}-${recommendation.title}`;
+}
+
+function buildSessionRecommendations(session: ProfessorSessionHandoff): PurchaseRecommendation[] {
+  return session.recommendations.map((recommendation) => {
+    const action = session.actions[getRecommendationKey(recommendation)];
+    const actionWeight = action === "interest" ? 1 : action === "like" ? 0.75 : action === "dislike" ? -1 : 0;
+    const confidenceScore = Math.max(30, Math.min(82, 52 + actionWeight * 20));
+    const actionSummary = action
+      ? ` The customer marked this recommendation as ${action}.`
+      : " The customer has not added a response to this record yet.";
+
+    return {
+      id: `SESSION-${getRecommendationKey(recommendation)}`,
+      artist: recommendation.artist,
+      title: recommendation.title,
+      genre: recommendation.genre,
+      format: "LP",
+      action: action === "dislike"
+        ? "Do not source from this session alone"
+        : action === "interest" || action === "like"
+          ? "Add to the owner watchlist for a small test buy"
+          : "Watch for repeat interest before sourcing",
+      reason: `This title appeared in the current customer recommendation session.${actionSummary} Treat it as one de-identified prototype signal, not confirmed purchase demand.`,
+      confidenceScore,
+      sampleSizeWarning: "Single-session evidence: useful for demonstrating the connected workflow, but insufficient for a deep inventory decision.",
+      sampleSizeSignificant: "Low",
+      requestVolume: 1,
+      trendSignalQuality: action === "interest" || action === "like" ? "Moderate" : "Weak",
+      estCost: 16,
+      estRetail: 31.99,
+      isAIResult: true,
+    };
+  });
 }
 
 function DemandList({
