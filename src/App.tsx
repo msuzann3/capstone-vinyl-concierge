@@ -1,19 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
-  BookOpen, 
+  CalendarDays,
   RotateCcw, 
   Compass, 
   Layers, 
   Info,
-  Gauge,
-  LibraryBig,
-  Ticket,
-  MapPinned,
   LogIn,
   LogOut,
-  MessageSquareText,
   Heart,
+  Music2,
+  Sparkles,
   ThumbsDown,
   ThumbsUp
 } from "lucide-react";
@@ -32,6 +29,11 @@ import { logOut, signInWithGoogle, watchAuth } from "./auth";
 import { saveRecommendationAction, saveSessionAndSignals, type RecommendationAction } from "./sessions";
 
 const curateHeaderLogo = new URL("../docs/brand/Logos/01_brandmark_color.png", import.meta.url).href;
+const THIS_WEEKS_NEW_RELEASES = [
+  { artist: "Beth Orton", title: "The Ground Above" },
+  { artist: "Ibeyi", title: "Offering" },
+  { artist: "Gold Panda", title: "Ton Up" },
+];
 
 type AppRoute = "intro" | "app" | "feedback";
 type RecommendationActionState = {
@@ -269,7 +271,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-bone-cream flex flex-col selection:bg-sleeve-mustard selection:text-curate-red">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-bone-cream flex flex-col selection:bg-sleeve-mustard selection:text-curate-red">
       <AnimatePresence>
         {showAuthScreen && !currentUser && (
           <motion.div
@@ -304,12 +306,12 @@ export default function App() {
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="font-display text-white text-lg tracking-tight uppercase">THE VINYL CONCIERGE</span>
-                <span className="text-[10px] bg-curate-red text-sleeve-mustard font-mono uppercase px-1.5 py-0.5 rounded border border-sleeve-mustard/20 font-bold">
+                <span className="text-[10px] bg-curate-red text-white font-mono uppercase px-1.5 py-0.5 rounded border border-white/30 font-bold">
                   AI-Assisted Recommendations
                 </span>
               </div>
               <p className="text-xs text-stone-400 font-mono tracking-wider mt-0.5">
-                Curate Records & Books · Northern New Mexico
+                Curate Records & Books
               </p>
             </div>
           </div>
@@ -333,17 +335,6 @@ export default function App() {
                     ? currentUser.displayName || currentUser.email || "Signed In"
                     : "Sign In"}
               </span>
-            </button>
-            <button
-              onClick={() => navigateTo("feedback")}
-              className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-mono font-bold tracking-wider uppercase transition-all ${
-                activeRoute === "feedback"
-                  ? "bg-sleeve-mustard text-vinyl-black border-sleeve-mustard"
-                  : "bg-stone-900 text-stone-300 border-sleeve-mustard/30 hover:text-bone-cream hover:border-sleeve-mustard/60"
-              }`}
-            >
-              <MessageSquareText className="w-3.5 h-3.5" />
-              Feedback
             </button>
             <div className="flex rounded-full border border-sleeve-mustard/30 bg-stone-950 p-1">
               {[
@@ -371,7 +362,7 @@ export default function App() {
       </header>
 
       {/* Main Container Area */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
+      <main className="box-border flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
         {activeRoute === "intro" ? (
           <TesterIntroPage
             appHref={getRouteUrl("app")}
@@ -413,7 +404,7 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
           {/* MAIN CUSTOMER FLOW */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="min-w-0 lg:col-span-8 space-y-8">
             <AnimatePresence mode="wait">
               {loading ? (
                 /* Interactive Loading turntable state */
@@ -676,7 +667,7 @@ export default function App() {
                         <div className="p-3 bg-bone-cream/60 rounded border border-dashed border-stone-300 text-xs text-stone-600 font-mono mt-4 flex items-center gap-2">
                           <Info className="w-4 h-4 text-curate-red" />
                           <span>
-                            Shelf fit: <strong className="text-stone-800 italic">"{activeAlbum.aestheticVibe}"</strong>
+                            Sound and mood: <strong className="text-stone-800">{activeAlbum.aestheticVibe}</strong>
                           </span>
                         </div>
                       </div>
@@ -691,15 +682,13 @@ export default function App() {
                         </p>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                          {activeAlbum.tracksToListenTo.map((track, i) => (
+                          {activeAlbum.tracksToListenTo.map((track) => (
                             <div
                               key={track}
-                              className="text-left p-2.5 rounded border text-xs bg-bone-cream border-stone-200 text-stone-700 flex items-center gap-2"
+                              className="text-left p-3 rounded border text-sm bg-bone-cream border-stone-200 text-stone-700 flex items-start gap-2"
                             >
-                              <span className="text-[10px] font-mono text-curate-red font-bold">
-                                {String(i + 1).padStart(2, "0")}
-                              </span>
-                              <span className="truncate">
+                              <Music2 className="mt-0.5 h-4 w-4 shrink-0 text-curate-red" />
+                              <span className="leading-snug">
                                 {track}
                               </span>
                             </div>
@@ -711,96 +700,30 @@ export default function App() {
                   </div>
 
                   {collectionInsights && (
-                    <div className="bg-sleeve-white border border-stone-300 rounded-lg shadow-xl overflow-hidden">
-                      <div className="bg-vinyl-black px-5 py-3 border-b-4 border-sleeve-mustard flex flex-wrap items-center justify-between gap-3">
+                    <div className="rounded-lg border border-sleeve-mustard bg-vinyl-black p-6 text-bone-cream shadow-xl">
+                      <div className="flex items-start gap-3">
+                        <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-sleeve-mustard" />
                         <div>
-                          <span className="text-[10px] font-mono tracking-widest uppercase text-sleeve-mustard block">
-                            New customer feature
+                          <span className="text-[10px] font-mono tracking-widest uppercase text-sleeve-mustard">
+                            Explore beyond these recommendations
                           </span>
-                          <h3 className="font-display text-lg text-white uppercase tracking-tight flex items-center gap-2">
-                            <LibraryBig className="w-5 h-5 text-curate-red" />
-                            Shelf Expansion Ideas
+                          <h3 className="mt-1 font-display text-xl uppercase tracking-tight text-white">
+                            Suggested Exploration Areas
                           </h3>
-                        </div>
-                        <div className="bg-stone-950 border border-stone-800 rounded-md px-3 py-2 flex items-center gap-2">
-                          <Gauge className="w-4 h-4 text-sleeve-mustard" />
-                          <div>
-                            <span className="block text-[9px] text-stone-500 font-mono uppercase tracking-widest">
-                              Starting point
-                            </span>
-                            <span className="block font-display text-xl text-bone-cream leading-none">
-                              {collectionInsights.coverageScore}/100
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-6 space-y-6">
-                        <div className="bg-bone-cream border border-stone-200 rounded-md p-4 flex items-start gap-3">
-                          <Ticket className="w-5 h-5 text-curate-red mt-0.5 shrink-0" />
-                          <p className="text-sm text-stone-700 font-editorial italic leading-relaxed">
-                            These are prototype expansion suggestions based on the preference form, not a verified score of the customer's real record shelf. {collectionInsights.scoreNote}
+                          <p className="mt-2 text-sm leading-relaxed text-stone-300">
+                            These broader sections may be worth browsing next based on the artists, genres, and listening choices you shared.
                           </p>
                         </div>
-
-                        <div>
-                          <div className="flex items-center justify-between gap-3 mb-3">
-                            <span className="text-[10px] font-mono tracking-widest uppercase text-stone-500">
-                              Worth considering from the next bin
-                            </span>
-                            <span className="text-[10px] font-mono uppercase text-curate-red font-bold">
-                              {collectionInsights.opportunities.length} shelf notes
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {collectionInsights.opportunities.map((opportunity) => (
-                              <div
-                                key={`${opportunity.artist}-${opportunity.title}`}
-                                className="bg-white border border-stone-200 rounded-md p-4 shadow-sm hover:border-sleeve-mustard transition-colors"
-                              >
-                                <div className="flex items-start justify-between gap-3">
-                                  <div>
-                                    <span className="text-[10px] font-mono uppercase tracking-widest text-curate-red font-bold">
-                                      {opportunity.genre}
-                                    </span>
-                                    <h4 className="font-display text-sm text-stone-900 uppercase leading-tight mt-1">
-                                      {opportunity.title}
-                                    </h4>
-                                    <p className="font-editorial text-stone-600 italic text-sm">
-                                      {opportunity.artist}
-                                    </p>
-                                  </div>
-                                  <span className="text-[9px] font-mono uppercase bg-bone-cream border border-stone-200 text-stone-600 rounded px-2 py-1 whitespace-nowrap">
-                                    {opportunity.shelfTag}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-stone-700 leading-relaxed mt-3">
-                                  {opportunity.reason}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="border-t border-stone-300 pt-5">
-                          <div className="flex items-center gap-2 mb-3">
-                            <MapPinned className="w-4 h-4 text-curate-red" />
-                            <span className="text-[10px] font-mono tracking-widest uppercase text-stone-500">
-                              Suggested exploration areas
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {collectionInsights.explorationAreas.map((area) => (
-                              <span
-                                key={area}
-                                className="bg-vinyl-black text-bone-cream border border-sleeve-mustard/50 rounded-full px-3 py-1.5 text-[11px] font-mono uppercase tracking-wide"
-                              >
-                                {area}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                      </div>
+                      <div className="mt-5 flex flex-wrap gap-3">
+                        {collectionInsights.explorationAreas.map((area) => (
+                          <span
+                            key={area}
+                            className="rounded-full border border-sleeve-mustard/60 bg-stone-950 px-4 py-2 text-sm font-bold text-bone-cream"
+                          >
+                            {area}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -811,7 +734,36 @@ export default function App() {
           </div>
 
           {/* CURATE COMMUNITY SIDEBAR */}
-          <aside className="lg:col-span-4">
+          <aside className="lg:col-span-4 space-y-6">
+            <div className="rounded-lg border border-stone-800 bg-vinyl-black p-6 text-bone-cream shadow-xl">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-5 w-5 text-sleeve-mustard" />
+                <div>
+                  <span className="block text-[10px] font-mono uppercase tracking-widest text-sleeve-mustard">
+                    Sample store board · June 26
+                  </span>
+                  <h2 className="font-display text-lg uppercase text-white">
+                    This Week's New Releases
+                  </h2>
+                </div>
+              </div>
+              <div className="mt-4 space-y-3">
+                {THIS_WEEKS_NEW_RELEASES.map((release) => (
+                  <div key={`${release.artist}-${release.title}`} className="border-b border-stone-800 pb-3 last:border-0 last:pb-0">
+                    <strong className="block text-sm text-white">{release.title}</strong>
+                    <span className="text-sm font-editorial italic text-stone-300">{release.artist}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 rounded border border-sleeve-mustard/40 bg-stone-950 px-3 py-3">
+                <span className="block text-[10px] font-mono uppercase tracking-widest text-sleeve-mustard">
+                  Coming July 10
+                </span>
+                <strong className="mt-1 block text-sm text-white">Foreign Tongues</strong>
+                <span className="text-sm font-editorial italic text-stone-300">The Rolling Stones</span>
+              </div>
+            </div>
+
             <div className="bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-lg border border-amber-200 p-6 shadow-md relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 bg-sleeve-mustard rotate-45 translate-x-8 -translate-y-8 border-l border-b border-sleeve-mustard"></div>
               
@@ -834,14 +786,6 @@ export default function App() {
                   </span>
                   <span className="block font-bold text-stone-800 leading-tight mt-1">
                     Women Who Changed Rock
-                  </span>
-                </div>
-                <div className="bg-bone-cream/70 border border-amber-200 rounded p-3">
-                  <span className="block text-[10px] font-mono uppercase tracking-widest text-stone-500">
-                    New Arrivals This Week
-                  </span>
-                  <span className="block font-display text-2xl text-curate-red leading-none mt-1">
-                    23
                   </span>
                 </div>
                 <div className="bg-bone-cream/70 border border-amber-200 rounded p-3">
@@ -878,7 +822,7 @@ export default function App() {
       <footer className="bg-vinyl-black text-stone-400 py-6 mt-16 border-t-4 border-sleeve-mustard">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-[11px] font-mono">
-            &copy; 2026 Curate Records & Books, USA
+            &copy; 2026 Curate Records & Books
           </p>
         </div>
       </footer>

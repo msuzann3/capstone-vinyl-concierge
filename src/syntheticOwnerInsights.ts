@@ -43,7 +43,7 @@ const PERSONAS = [
     weight: 19,
     primaryGenre: "Indie Folk",
     secondaryGenres: ["Singer-songwriter", "Folk", "Alternative"],
-    artists: ["Phoebe Bridgers", "Sufjan Stevens", "Big Thief", "Bon Iver", "Nick Drake"],
+    artists: ["Big Thief", "Sufjan Stevens", "Adrianne Lenker", "Bon Iver", "Nick Drake"],
     contexts: ["late-night apartment listening", "Sunday morning coffee", "quiet dinner shelf browsing"]
   },
   {
@@ -91,7 +91,7 @@ const PERSONAS = [
     weight: 17,
     primaryGenre: "Singer-songwriter",
     secondaryGenres: ["Indie Folk", "Folk", "Americana"],
-    artists: ["Joni Mitchell", "Nick Drake", "Phoebe Bridgers", "Elliott Smith", "Adrianne Lenker"],
+    artists: ["Joni Mitchell", "Nick Drake", "Big Thief", "Elliott Smith", "Adrianne Lenker"],
     contexts: ["lyric-forward evening", "gift for a reader", "solo morning listen"]
   }
 ] as const;
@@ -180,7 +180,7 @@ function buildMetrics(): OwnerDashboardMetrics {
     artistCounts,
     {
       Radiohead: "Frequent anchor artist for alternative and audiophile sessions",
-      "Phoebe Bridgers": "Bridges indie folk, singer-songwriter, and younger gift requests",
+      "Big Thief": "Bridges indie folk, alternative, and younger discovery requests",
       "Miles Davis": "Top jazz entry point and pressing-quality comparison title",
       "Dolly Parton": "Country anchor artist with strong crossover gift and storytelling appeal",
       "Fleetwood Mac": "Classic Rock anchor that connects familiar hits with deeper country-rock shelves",

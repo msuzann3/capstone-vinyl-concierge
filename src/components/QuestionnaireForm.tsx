@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UserPreferences } from "../types";
-import { Disc, Sparkles, SlidersHorizontal, ArrowRight } from "lucide-react";
+import { Disc, SlidersHorizontal, ArrowRight } from "lucide-react";
 import { Brandmark } from "./BrandLogo";
 
 interface QuestionnaireFormProps {
@@ -57,7 +57,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
   };
 
   const handlePresetFill = () => {
-    setArtists("Phoebe Bridgers, Radiohead, Miles Davis");
+    setArtists("Big Thief, Radiohead, Miles Davis");
     setSelectedGenres(["Indie Folk", "Jazz", "Alternative"]);
     setMood("late_night");
     setListeningHabit("deep_listening");
@@ -102,10 +102,10 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
     (normalizeArtistsInput(artists).length > 0 || selectedGenres.length > 0);
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-stone-200 shadow-xl overflow-hidden">
+    <form onSubmit={handleSubmit} className="min-w-0 bg-white rounded-lg border border-stone-200 shadow-xl overflow-hidden">
       {/* Header Banner */}
-      <div className="bg-curate-red px-6 py-5 border-b border-sleeve-mustard flex justify-between items-center">
-        <div>
+      <div className="bg-curate-red px-5 sm:px-6 py-5 border-b border-sleeve-mustard flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4">
+        <div className="min-w-0">
           <span className="text-sleeve-mustard text-xs font-mono tracking-widest uppercase block mb-1">
             Curate Records Club · Member Questionnaire
           </span>
@@ -119,20 +119,24 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
         <button
           type="button"
           onClick={handlePresetFill}
-          className="text-[11px] text-white font-mono font-bold hover:text-vinyl-black border border-white/70 hover:border-sleeve-mustard px-2.5 py-1 rounded transition-all bg-curate-red hover:bg-sleeve-mustard shadow-sm"
+          className="self-start shrink-0 text-[11px] text-white font-mono font-bold hover:text-vinyl-black border border-white/70 hover:border-sleeve-mustard px-2.5 py-1 rounded transition-all bg-curate-red hover:bg-sleeve-mustard shadow-sm"
         >
           Quick Demo Fill
         </button>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-5 sm:p-6 space-y-6">
+        <div className="rounded-md border border-sleeve-mustard bg-sleeve-mustard/15 px-4 py-3 text-sm text-stone-800">
+          <strong>Start with an artist or a genre.</strong> Complete at least one of the first two questions. You can use both if you want a narrower match.
+        </div>
+
         {/* Step 1: Favorite Artists */}
         <div>
           <label className="block text-stone-900 font-bold text-base tracking-tight mb-1">
-            1. Who are your favorite artists or bands? (Optional)
+            1. Who are your favorite artists or bands?
           </label>
           <span className="text-sm text-stone-600 block mb-2 font-editorial italic">
-            Add artists, choose genres below, or do both. At least one artist or genre is needed.
+            Add one or more artists, or use the genre question below instead.
           </span>
           <input
             type="text"
@@ -141,7 +145,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
               setArtists(e.target.value);
               setValidationMessage("");
             }}
-            placeholder="Radiohead, John Coltrane, Phoebe Bridgers..."
+            placeholder="Radiohead, John Coltrane, Big Thief..."
             maxLength={MAX_ARTISTS_LENGTH}
             className="w-full bg-bone-cream border border-stone-300 rounded px-3.5 py-2.5 text-stone-900 focus:outline-none focus:border-curate-red focus:ring-1 focus:ring-curate-red text-base"
           />
@@ -150,7 +154,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
         {/* Step 2: Genres */}
         <div>
           <label className="block text-stone-900 font-bold text-base tracking-tight mb-1">
-            2. Which genres are you interested in? (Optional)
+            2. Which genres are you interested in?
           </label>
           <span className="text-sm text-stone-600 block mb-3 font-editorial italic">
             Select any that apply, or leave this blank if you entered an artist above.

@@ -48,25 +48,12 @@ const CATALOG: CatalogRecord[] = [
     shelfNote: "This is the Radiohead record with the warmest pulse. The drums feel close, the guitars flicker at the edge of the lampshade, and the whole thing has that beautiful tension between human touch and machine precision."
   },
   {
-    title: "Punisher",
-    artist: "Phoebe Bridgers",
-    genre: "Indie Folk",
-    releaseYear: "2020",
-    classification: "Familiar Classic",
-    vibe: "melancholic, intimate, haunted indie songwriting",
-    genreTags: ["indie folk", "singer-songwriter", "alternative"],
-    moodTags: ["melancholic", "tender", "haunted", "confessional"],
-    contextTags: ["late night", "quiet room", "lyrics-first listening", "solo listening"],
-    tracksToListenTo: ["Garden Song", "Chinese Satellite", "I Know the End"],
-    shelfNote: "Phoebe writes like she is telling the truth from the next room over. It is intimate without turning precious, and it fits listeners who want something tender, sharp, and a little spectral after midnight."
-  },
-  {
     title: "Dragon New Warm Mountain I Believe in You",
     artist: "Big Thief",
     genre: "Indie Folk",
     releaseYear: "2022",
     classification: "Familiar Classic",
-    vibe: "loose campfire indie, earthy experiments, tender folk-rock",
+    vibe: "warm indie folk with a relaxed feel, light experimental touches, gentle folk-rock",
     genreTags: ["indie", "alternative", "indie folk", "folk rock"],
     moodTags: ["earthy", "tender", "wandering", "warm"],
     contextTags: ["Sunday morning", "road trip", "front porch", "slow browse"],
@@ -538,7 +525,7 @@ const COLLECTION_OPPORTUNITIES = [
     genre: "Indie Folk",
     area: "Singer-Songwriter Foundations",
     shelfTag: "winter-cabin-core",
-    keywords: ["indie", "folk", "phoebe", "bridgers", "melancholic", "intimate", "acoustic", "haunted"],
+    keywords: ["indie", "folk", "melancholic", "intimate", "acoustic", "haunted"],
     reason: "This belongs near lyric-forward indie records because it keeps the room small and emotionally plainspoken. A good copy fills the quiet without crowding it."
   },
   {
@@ -605,6 +592,7 @@ type FirestoreAlbum = {
 const RECOMMENDATION_LIMIT = 5;
 const FIRESTORE_CATALOG_READ_LIMIT = 300;
 const MIN_PERSONALIZED_SCORE = 4;
+const EXCLUDED_RECOMMENDATION_ARTISTS = new Set(["phoebe bridgers"]);
 const BROAD_ANCHOR_TERMS = new Set(["rock", "pop", "electronic", "jazz", "folk, world, & country", "folk"]);
 const BROAD_DISPLAY_GENRES = new Set(["rock", "pop", "electronic", "folk, world, & country"]);
 
@@ -779,6 +767,7 @@ function buildFitContext(preferences: UserPreferences, shelfPhrase: string): str
 
 function toCatalogRecord(id: string, album: FirestoreAlbum, index: number): CatalogRecord | null {
   if (!album.title || !album.artist) return null;
+  if (EXCLUDED_RECOMMENDATION_ARTISTS.has(album.artist.trim().toLowerCase())) return null;
 
   const curatedRecord = findCuratedCatalogRecord(album);
   const genres = normalizeList(album.genres);
@@ -946,10 +935,10 @@ function buildRecommendationsFromCatalog(
         ? "adjacent"
         : "low";
     const matchLabel = confidence === "exact"
-      ? "Exact artist match in prototype catalog"
+      ? "You named this artist"
       : confidence === "adjacent"
-        ? "Adjacent match from genre and listening context"
-        : "Loose prototype match from limited catalog";
+        ? "Related to your genres and listening choices"
+        : "Broader pick from the limited catalog";
 
     return {
       record,
@@ -966,7 +955,7 @@ function buildRecommendationsFromCatalog(
     .map((item) => ({
       ...item,
       matchLabel: recommendationsEnabled
-        ? "Staff fallback from limited prototype catalog"
+        ? "Broader pick from the limited catalog"
         : "Staff pick while personalized ranking is paused",
     }));
   const rankedSelection = recommendationsEnabled
@@ -998,7 +987,7 @@ function buildRecommendationsFromCatalog(
       trendsSummary: recommendationsEnabled
         ? `This customer is clustering around ${requestedGenres.slice(0, 3).join(", ") || "mood-led discovery"} with a ${preferences.mood || "slow-browse"} listening frame. Treat that as a signal for records that feel personal, tactile, and playable in quiet domestic settings.`
         : "Recommendations are paused by the Firestore config kill switch, so this session should be treated as a staff-pick browse rather than an AI-ranked demand signal.",
-      inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Phoebe Bridgers, Nick Drake, Dolly Parton, Fleetwood Mac, and Cocteau Twins in view, then deepen the adjacent bins with classic country, country rock, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
+      inventoryOpportunities: "Keep dependable copies of Miles Davis, Radiohead, Big Thief, Nick Drake, Dolly Parton, Fleetwood Mac, and Cocteau Twins in view, then deepen the adjacent bins with classic country, country rock, spiritual jazz, ambient folk, and contemporary psychedelic folk.",
       underrepresentedAreas: "The likely gaps are country foundations, classic-rock side-door discoveries, spiritual jazz beyond the obvious classics, and small-label dream pop reissues.",
       merchandisingStrategy: "Chalkcard title: 'Records for Low Light and Good Headphones.' Place one familiar classic beside two discovery records so the table feels welcoming rather than obscure."
     },

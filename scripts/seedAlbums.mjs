@@ -36,7 +36,6 @@ const SEED = [
   "Sun Ra Space Is The Place",
   "Kamasi Washington The Epic",
   "Radiohead In Rainbows",
-  "Phoebe Bridgers Punisher",
   "Cocteau Twins Heaven or Las Vegas",
   "Nick Drake Pink Moon",
   "Fleetwood Mac Rumours",
