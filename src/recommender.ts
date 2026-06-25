@@ -704,8 +704,7 @@ function fieldMatchesTerm(fields: string[], term: string): boolean {
   return fields.some((field) => {
     const normalizedField = normalizeTerm(field);
     return normalizedField === normalizedTerm ||
-      normalizedField.includes(normalizedTerm) ||
-      normalizedTerm.includes(normalizedField);
+      normalizedField.includes(normalizedTerm);
   });
 }
 
@@ -903,22 +902,26 @@ function buildRecommendationsFromCatalog(
     const recordTitle = record.title.toLowerCase();
     const genreFields = [record.genre, ...record.genreTags];
     const contextFields = [...record.moodTags, ...record.contextTags, record.vibe];
-    const genreScore = requestedGenres.reduce((score, genre) => {
+    const genreScores = requestedGenres.map((genre) => {
       const terms = expandGenreTerms(genre);
       const directHit = fieldMatchesTerm(genreFields, genre);
+      const primaryGenreHit = normalizeTerm(record.genre) === normalizeTerm(genre);
       const adjacentHits = terms
         .filter((term) => term !== normalizeTerm(genre) && fieldMatchesTerm(genreFields, term))
         .length;
-      return score + (directHit ? 5 : 0) + Math.min(adjacentHits * 2, 4);
-    }, 0);
+      return (directHit ? 5 : 0) + (primaryGenreHit ? 5 : 0) + Math.min(adjacentHits * 2, 4);
+    });
+    const genreScore = genreScores.length > 0 ? Math.max(...genreScores) : 0;
     const directArtistScore = requestedArtists.some((artist) => recordArtist.includes(artist)) ? 12 : 0;
     const falseArtistTitlePenalty = requestedArtists.some((artist) =>
       recordTitle.includes(artist) && !recordArtist.includes(artist)
     ) ? -10 : 0;
-    const artistAnchorScore = Array.from(artistAnchorTerms)
-      .filter((term) => fieldMatchesTerm(genreFields, term))
-      .slice(0, 4)
-      .length * 2;
+    const artistAnchorScore = requestedGenres.length > 0
+      ? 0
+      : Array.from(artistAnchorTerms)
+        .filter((term) => fieldMatchesTerm(genreFields, term))
+        .slice(0, 2)
+        .length;
     const moodScore = normalizeTokens(contextQuery)
       .filter((word) => fieldMatchesTerm(contextFields, word))
       .length;

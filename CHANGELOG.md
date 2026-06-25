@@ -4,6 +4,7 @@ All notable project changes should be recorded here so Michelle can move between
 
 ## 2026-06-25
 
+- Corrected the underlying ranking issue that allowed Big Thief to rank second for an unrelated Jimmy Buffett / Eagles / Zac Brown / Luke Bryan / Kenny Chesney request. Specific requests such as Classic Rock no longer accept a broad `Rock` catalog tag as a direct match; multiple genres broaden results instead of stacking scores onto crossover records; artist-derived bridge tags apply only when the customer has not already selected genres; and primary shelf-genre matches outrank records connected only through secondary crossover tags.
 - Removed the built-in Big Thief bias from `Quick Demo Fill`. The button now rotates among four distinct listening profiles across jazz, country/classic rock, soul/funk, and textured alternative music, so repeated testing produces more varied recommendations and more balanced Owner Intelligence signals.
 - Replaced Big Thief in the artist-field example and removed the artist from the static owner inventory-opportunity copy. Big Thief remains eligible when a customer's actual preferences genuinely match the record.
 - Connected the customer recommendation experience to Owner Intelligence through de-identified Firestore demand signals. Signed-in recommendation sessions now include album titles in `demandSignals`, and signed-in heart, thumbs-up, and thumbs-down responses preserve their private customer action record while also emitting an owner-readable aggregate signal.
