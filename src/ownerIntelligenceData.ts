@@ -6,6 +6,7 @@ import {
   SalesTrendPoint,
   StoreLog,
 } from "./ownerIntelligenceTypes";
+import type { AlbumDemand } from "./ownerSignals";
 
 export const initialOwnerInventory: InventoryItem[] = [
   {
@@ -283,4 +284,47 @@ export function buildOwnerRecommendations(
   });
 
   return [...lowStockPlans, ...requestPlans].slice(0, 6);
+}
+
+export function buildLiveDemandRecommendations(albums: AlbumDemand[]): PurchaseRecommendation[] {
+  return albums
+    .filter((album) => album.weight > 0)
+    .slice(0, 6)
+    .map((album) => {
+      const positiveActions = album.interestCount + album.likeCount;
+      const significance = album.count >= 8 ? "High" : album.count >= 3 ? "Medium" : "Low";
+      const units = significance === "High" ? 4 : significance === "Medium" ? 2 : 1;
+      const confidenceScore = Math.max(
+        35,
+        Math.min(90, 42 + album.requestCount * 4 + positiveActions * 8 - album.dislikeCount * 10),
+      );
+      const responseSummary = [
+        `${album.requestCount} recommendation appearance${album.requestCount === 1 ? "" : "s"}`,
+        album.interestCount > 0 ? `${album.interestCount} saved interest` : "",
+        album.likeCount > 0 ? `${album.likeCount} positive response${album.likeCount === 1 ? "" : "s"}` : "",
+        album.dislikeCount > 0 ? `${album.dislikeCount} negative response${album.dislikeCount === 1 ? "" : "s"}` : "",
+      ].filter(Boolean).join(", ");
+
+      return {
+        id: `LIVE-${album.albumId}`,
+        artist: album.artist,
+        title: album.title,
+        genre: album.genre,
+        format: "LP",
+        action: `Consider sourcing ${units} ${units === 1 ? "copy" : "copies"} for staff review`,
+        reason: `Live, de-identified customer activity: ${responseSummary}. This is an interest signal from the recommendation experience, not confirmed purchase demand.`,
+        confidenceScore,
+        sampleSizeWarning: significance === "High"
+          ? "Higher prototype significance: repeated recommendation activity supports a small test buy."
+          : significance === "Medium"
+            ? "Moderate prototype significance: enough activity for a cautious test, not a deep order."
+            : "Low prototype significance: keep this on a watchlist until more customers respond.",
+        sampleSizeSignificant: significance,
+        requestVolume: album.count,
+        trendSignalQuality: significance === "High" ? "Strong" : significance === "Medium" ? "Moderate" : "Weak",
+        estCost: 16,
+        estRetail: 31.99,
+        isAIResult: true,
+      } satisfies PurchaseRecommendation;
+    });
 }

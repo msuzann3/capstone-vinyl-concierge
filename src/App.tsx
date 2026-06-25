@@ -258,6 +258,7 @@ export default function App() {
       albumId,
       title: rec.title,
       artist: rec.artist,
+      genre: rec.genre,
       action,
     });
 

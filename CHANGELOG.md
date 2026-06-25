@@ -2,6 +2,15 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-06-25
+
+- Connected the customer recommendation experience to Owner Intelligence through de-identified Firestore demand signals. Signed-in recommendation sessions now include album titles in `demandSignals`, and signed-in heart, thumbs-up, and thumbs-down responses preserve their private customer action record while also emitting an owner-readable aggregate signal.
+- Expanded the live Firestore rules to validate recommendation-request, saved-interest, like, and dislike signal types, including bounded negative weighting only for thumbs-down signals; compiled and published the updated rules to the `vinyl-concierge` Firebase project.
+- Added album-level demand aggregation with catalog-title resolution for older signals, plus counts for recommendation appearances, saved interest, positive responses, and negative responses.
+- Updated Owner Intelligence so signed-in owners see top recommended albums alongside artist and genre demand, and automatically receive a cautious live sourcing watchlist built from customer recommendation activity. Unsigned or unauthorized viewers continue to see the clearly labeled synthetic demonstration plan.
+- Updated owner-facing copy to distinguish live customer-demand signals from synthetic inventory, revenue, sales, and outcome data.
+- Verified the connection with TypeScript checks, full and GitHub Pages production builds, deployed Firestore rule compilation, a representative live-demand recommendation fixture, and local browser QA with no relevant console warnings or errors.
+
 ## 2026-06-24
 
 - Added a second tester-feedback pass: clarified that either question 1 or question 2 is sufficient, removed both misleading `Optional` labels, removed the header feedback shortcut and location copy, changed the AI-assisted badge to white-on-red, simplified recommendation match and sound-description language, and stacked the questionnaire banner controls on small screens to preserve mobile spacing.

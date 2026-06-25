@@ -9,6 +9,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import {
+  buildLiveDemandRecommendations,
   buildOwnerRecommendations,
   initialCustomerRequests,
   initialOwnerInventory,
@@ -18,7 +19,7 @@ import {
   ownerSalesTrends,
 } from "../ownerIntelligenceData";
 import { PurchaseRecommendation } from "../ownerIntelligenceTypes";
-import { getDemandSummary, type ArtistDemand, type GenreDemand } from "../ownerSignals";
+import { getDemandSummary, type DemandSummary } from "../ownerSignals";
 
 type OwnerStep = "inventory" | "demand" | "recommendations" | "outcomes";
 
@@ -44,7 +45,7 @@ const steps: Array<{
     id: "recommendations",
     eyebrow: "Step 03",
     title: "Review AI Recommendations",
-    description: "Use demo signals to draft a cautious owner buy plan for human review.",
+    description: "Turn live recommendation activity into a cautious sourcing watchlist for human review.",
   },
   {
     id: "outcomes",
@@ -59,21 +60,13 @@ export default function OwnerIntelligenceDashboard() {
   const [inventory, setInventory] = useState(initialOwnerInventory);
   const [requests, setRequests] = useState(initialCustomerRequests);
   const [recommendations, setRecommendations] = useState(initialOwnerRecommendations);
+  const [recommendationSource, setRecommendationSource] = useState<"live" | "demo">("demo");
   const [logs, setLogs] = useState(initialStoreLogs);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [liveDemand, setLiveDemand] = useState<{
-    topGenres: GenreDemand[];
-    topArtists: ArtistDemand[];
-    sampleSize: number;
-  } | null>(null);
+  const [liveDemand, setLiveDemand] = useState<DemandSummary | null>(null);
   const [liveDemandError, setLiveDemandError] = useState<string | null>(null);
 
   const lowStock = useMemo(() => inventory.filter((item) => item.inStock <= 2), [inventory]);
-  const totalDemandUnits = useMemo(
-    () => requests.reduce((sum, request) => sum + request.quantity, 0),
-    [requests],
-  );
-
   useEffect(() => {
     let ignore = false;
 
@@ -82,6 +75,11 @@ export default function OwnerIntelligenceDashboard() {
         if (!ignore) {
           setLiveDemand(summary);
           setLiveDemandError(null);
+          const liveRecommendations = buildLiveDemandRecommendations(summary.topAlbums);
+          if (liveRecommendations.length > 0) {
+            setRecommendations(liveRecommendations);
+            setRecommendationSource("live");
+          }
         }
       })
       .catch((error) => {
@@ -100,20 +98,40 @@ export default function OwnerIntelligenceDashboard() {
 
   const refreshRecommendations = async () => {
     setIsRefreshing(true);
-    await new Promise((resolve) => window.setTimeout(resolve, 500));
-    setRecommendations(buildOwnerRecommendations(inventory, requests, "standard", "conservative"));
-    setLogs((current) => [
-      {
-        id: `LOG-${Math.floor(100 + Math.random() * 900)}`,
-        date: new Date().toISOString().split("T")[0],
-        author: "Kermit",
-        text: "Owner plan refreshed from local synthetic signals. Low sample recommendations still need human review.",
-        color: "cream",
-        category: "Operations",
-      },
-      ...current,
-    ]);
-    setIsRefreshing(false);
+    try {
+      const summary = await getDemandSummary();
+      const liveRecommendations = buildLiveDemandRecommendations(summary.topAlbums);
+      setLiveDemand(summary);
+      setLiveDemandError(null);
+
+      if (liveRecommendations.length > 0) {
+        setRecommendations(liveRecommendations);
+        setRecommendationSource("live");
+        setLogs((current) => [
+          {
+            id: `LOG-${Math.floor(100 + Math.random() * 900)}`,
+            date: new Date().toISOString().split("T")[0],
+            author: "Kermit",
+            text: `Owner plan refreshed from ${summary.sampleSize} de-identified customer recommendation signals. Human review is still required.`,
+            color: "cream",
+            category: "Operations",
+          },
+          ...current,
+        ]);
+      } else {
+        setRecommendations(buildOwnerRecommendations(inventory, requests, "standard", "conservative"));
+        setRecommendationSource("demo");
+      }
+    } catch (error) {
+      const message = error instanceof Error && error.message.includes("permissions")
+        ? "Sign in as owner to refresh live interest signals."
+        : "Live interest signals are unavailable right now.";
+      setLiveDemandError(message);
+      setRecommendations(buildOwnerRecommendations(inventory, requests, "standard", "conservative"));
+      setRecommendationSource("demo");
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   const restockItem = (id: string) => {
@@ -155,14 +173,17 @@ export default function OwnerIntelligenceDashboard() {
               Owner Intelligence Dashboard
             </h2>
             <p className="font-editorial text-stone-600 italic text-base sm:text-lg mt-2 max-w-3xl">
-              A Week 3 owner workflow showing how shelf gaps, interest validation, cautious buy plans, and outcomes could work once live systems are connected.
+              Customer recommendation activity now feeds a live, de-identified sourcing watchlist. Inventory, sales, and outcomes remain demonstration data.
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
             <Metric label="Revenue" value={`$${ownerDashboardStats.totalRevenue.toLocaleString()}`} />
             <Metric label="Patrons" value={ownerDashboardStats.activePatrons.toLocaleString()} />
             <Metric label="Low Stock" value={lowStock.length.toString()} danger={lowStock.length > 0} />
-            <Metric label="Demo Signals" value={(liveDemand?.sampleSize ?? totalDemandUnits).toString()} />
+            <Metric
+              label="Interest Signals"
+              value={liveDemand ? liveDemand.sampleSize.toString() : liveDemandError ? "—" : "0"}
+            />
           </div>
         </header>
 
@@ -246,6 +267,14 @@ export default function OwnerIntelligenceDashboard() {
                 ) : (
                   <div className="mt-4 space-y-5">
                     <DemandList
+                      title="Top Recommended Albums"
+                      emptyLabel="No recommendation activity yet"
+                      items={(liveDemand?.topAlbums ?? []).slice(0, 5).map((item) => ({
+                        label: `${item.artist} — ${item.title}`,
+                        value: `${item.weight.toFixed(1)} score`,
+                      }))}
+                    />
+                    <DemandList
                       title="Top Genres"
                       emptyLabel="No saved sessions yet"
                       items={(liveDemand?.topGenres ?? []).slice(0, 5).map((item) => ({
@@ -295,10 +324,19 @@ export default function OwnerIntelligenceDashboard() {
         {activeStep === "recommendations" && (
           <Panel
             icon={<ShoppingBag className="w-5 h-5" />}
-            title="Prototype Owner Buy Plan"
+            title={recommendationSource === "live" ? "Live Customer-Demand Watchlist" : "Prototype Owner Buy Plan"}
             actionLabel={isRefreshing ? "Refreshing..." : "Refresh Plan"}
             onAction={refreshRecommendations}
           >
+            <div className={`rounded border px-4 py-3 text-xs ${
+              recommendationSource === "live"
+                ? "border-green-200 bg-green-50 text-green-900"
+                : "border-sleeve-mustard/40 bg-sleeve-mustard/10 text-stone-600"
+            }`}>
+              {recommendationSource === "live"
+                ? "Built from de-identified customer recommendation appearances, saved interest, and thumbs responses stored in Firestore. These signals support cautious review; they do not prove a sale."
+                : "No usable live album signals are available yet, so this view is showing the local demonstration plan."}
+            </div>
             <div className="grid grid-cols-1 gap-4">
               {recommendations.map((recommendation) => (
                 <RecommendationCard key={recommendation.id} recommendation={recommendation} />
@@ -342,8 +380,8 @@ export default function OwnerIntelligenceDashboard() {
         )}
 
         <div className="rounded border border-dashed border-vinyl-black/20 bg-paper-white p-4 text-xs text-stone-500">
-          Module 4 note: live Firestore interest signals are available for signed-in owner review.
-          Synthetic inventory, request cards, and buy plans remain demonstration data until real inventory, purchase history, and backend workflows are connected.
+          Backend connection: signed-in customer recommendation sessions and response controls now create de-identified Firestore signals for signed-in owner review.
+          Inventory, revenue, sales trends, and outcomes remain demonstration data until Curate's operating systems are connected.
         </div>
       </div>
     </section>

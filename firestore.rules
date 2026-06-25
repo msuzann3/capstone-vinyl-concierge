@@ -59,6 +59,7 @@ service cloud.firestore {
       return isSignedIn() &&
         request.resource.data.keys().hasOnly([
           'albumId',
+          'title',
           'artist',
           'genre',
           'signalType',
@@ -67,6 +68,7 @@ service cloud.firestore {
         ]) &&
         request.resource.data.keys().hasAll([
           'albumId',
+          'title',
           'artist',
           'genre',
           'signalType',
@@ -74,11 +76,17 @@ service cloud.firestore {
           'createdAt'
         ]) &&
         isStringWithin(request.resource.data.albumId, 160) &&
+        isStringWithin(request.resource.data.title, 160) &&
         isStringWithin(request.resource.data.artist, 120) &&
         isNullableStringWithin(request.resource.data.genre, 80) &&
-        request.resource.data.signalType == 'rec_request' &&
+        request.resource.data.signalType in [
+          'rec_request',
+          'rec_interest',
+          'rec_like',
+          'rec_dislike'
+        ] &&
         request.resource.data.weight is number &&
-        request.resource.data.weight >= 0 &&
+        request.resource.data.weight >= -1 &&
         request.resource.data.weight <= 1 &&
         request.resource.data.createdAt == request.time;
     }
