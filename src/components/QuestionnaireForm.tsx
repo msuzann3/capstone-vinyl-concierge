@@ -340,7 +340,7 @@ export default function QuestionnaireForm({ onSubmit, isLoading }: Questionnaire
         <div>
           <div className="flex items-center gap-2 text-stone-500 font-mono text-xs">
             <SlidersHorizontal className="w-4 h-4 text-curate-red" />
-            <span>Searching a 200-ish Discogs seed catalog</span>
+            <span>Searching a 200-ish title demo catalog</span>
           </div>
           {validationMessage && (
             <p className="mt-2 text-xs font-bold text-curate-red">

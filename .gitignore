@@ -8,3 +8,4 @@ coverage/
 !.env.example
 serviceAccount.json
 Handoff from Google/
+Local Archive/

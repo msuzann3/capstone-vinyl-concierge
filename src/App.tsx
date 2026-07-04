@@ -415,9 +415,25 @@ export default function App() {
             The Vinyl Concierge
           </h1>
           <p className="font-editorial text-stone-700 italic text-base sm:text-lg mt-1 max-w-3xl">
-            Pull up a stool. Share an artist, a genre, or a listening mood, and the prototype will suggest five records from its limited test catalog.
+            Pull up a stool. Share an artist, a genre, or a listening mood, and the prototype will suggest five records from its limited demo catalog.
           </p>
         </div>
+
+        <section className="mb-6 rounded-lg border border-sleeve-mustard bg-sleeve-white p-4 shadow-sm">
+          <div className="flex items-start gap-3">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-curate-red" />
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-curate-red">
+                Prototype Notice
+              </span>
+              <p className="mt-1 text-sm leading-relaxed text-stone-700">
+                This prototype uses a curated demo catalog to show the recommendation logic and Owner Intelligence workflow.
+                Recommendations do not represent live store inventory. A production version would connect directly to
+                inventory and commerce platforms such as Shopify, Square, or Lightspeed.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {!preferences && (
           <div className="mb-6 rounded-lg border border-sleeve-mustard bg-sleeve-white p-4 shadow-sm">
@@ -467,7 +483,7 @@ export default function App() {
                       "{loadingPhrases[loadingPhraseIndex]}"
                     </h3>
                     <p className="text-xs text-stone-500 leading-relaxed font-sans pt-2">
-                      The prototype is comparing your choices with its test catalog and preparing a mix of familiar records and possible discoveries.
+                      The prototype is comparing your choices with its demo catalog and preparing a mix of familiar records and possible discoveries.
                     </p>
                   </div>
                 </motion.div>
@@ -485,7 +501,7 @@ export default function App() {
                   </p>
                   <div className="p-3 bg-white rounded border border-red-100 text-xs text-stone-600 font-mono space-y-1">
                     <div>Please ensure:</div>
-                    <div>1. The recommendation catalog has at least one matching record.</div>
+                    <div>1. The prototype catalog has at least one matching record.</div>
                     <div>2. The local app bundle finished loading successfully.</div>
                   </div>
                   <button
@@ -544,7 +560,7 @@ export default function App() {
                         )}
                       </div>
                       <p className="mt-3 max-w-2xl text-sm text-stone-600 leading-relaxed">
-                        Prototype note: this is a limited 200-ish title test catalog. Match labels show whether the result is an exact artist hit, an adjacent fit, or a looser suggestion.
+                        Prototype note: this is a limited 200-ish title demo catalog, not live store inventory. Match labels show whether the result is an exact artist hit, an adjacent fit, or a looser suggestion.
                       </p>
                     </div>
 

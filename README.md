@@ -1,4 +1,4 @@
-iCloud project path: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive. On the MacBook Pro, use `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`; on the MacBook Air, the same synced project appears under `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
+iCloud project path: `Documents/_AI-Workspace/Codex/Capstone`. Treat this as the main shared project path on both Macs. Full paths such as `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone` on the MacBook Pro and `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone` on the MacBook Air are machine-specific local resolutions of the same iCloud-synced folder.
 
 # The Vinyl Concierge
 
@@ -7,9 +7,9 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 ## Current Status
 
 - Current working Mac for June/July 2026: MacBook Pro.
-- Repository root on the MacBook Pro: `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`.
-- Repository root on the MacBook Air: `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
-- Cross-Mac path to use conceptually: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive.
+- Shared repository root to use across both Macs: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive.
+- MacBook Pro local resolution: `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`.
+- MacBook Air local resolution: `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
@@ -36,6 +36,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Demo-data diversity state on 2026-06-25: `Quick Demo Fill` rotates among jazz, country/classic-rock, soul/funk, and textured alternative profiles instead of repeatedly naming Big Thief, Radiohead, and Miles Davis. This reduces repeated recommendation bias and produces more balanced Owner Intelligence test signals.
 - Ranking correction on 2026-06-25: specific requests such as Classic Rock no longer treat a broad catalog tag such as Rock as a direct match. Multiple selected genres now broaden the candidate pool without stacking every genre score onto crossover records, artist-derived bridge tags are used only when the customer has not supplied genres, and primary shelf-genre matches outrank records connected only through secondary tags. This prevents broadly tagged records such as Big Thief's `Dragon New Warm Mountain I Believe in You` from outranking stronger Country and Classic Rock matches when the customer did not name Big Thief.
 - Second feedback pass on 2026-06-24: the header no longer links directly to the feedback form or displays a location; the AI-assisted label uses white text on red; the first two questions clearly state that either an artist or genre is sufficient; recommendation match labels and sound descriptions use plain language; track-order badges were removed; Phoebe Bridgers was removed from the recommendation catalog and seed list; Shelf Expansion album cards were replaced by a prominent Suggested Exploration Areas panel; and the sidebar now includes a dated new-release board plus the Rolling Stones' `Foreign Tongues` as a July 10 upcoming release.
+- Final capstone positioning polish on 2026-07-04: the customer app now shows a concise Prototype Notice explaining that recommendations use a demo catalog rather than live store inventory, and the Owner Intelligence Dashboard now includes a Commercial Roadmap plus synthetic strategic owner signals to distinguish the validated prototype from a future SaaS product with inventory, POS, ecommerce, checkout, purchase analytics, and forecasting integrations.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
 - Pages source: static front end published from the `main` branch via GitHub Actions.

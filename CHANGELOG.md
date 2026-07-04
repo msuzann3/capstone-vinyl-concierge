@@ -2,6 +2,13 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-07-04
+
+- Added final capstone positioning polish from the iteration brief: a customer-facing Prototype Notice, an Owner Intelligence Commercial Roadmap, synthetic strategic owner signals, and clearer demo-catalog language in place of visible Discogs-source wording.
+- Kept the new roadmap items informational only; live inventory sync, Shopify/Square/Lightspeed integrations, cart, checkout, purchase analytics, demand forecasting, payments, and shipping remain intentionally deferred.
+- Archived Module 6-only localization artifacts under ignored `Local Archive/` and added that folder to `.gitignore`; `.DS_Store` remains ignored as local macOS housekeeping noise.
+- Clarified the README path convention: `Documents/_AI-Workspace/Codex/Capstone` is the shared iCloud project path on both Macs, while `/Users/michelle/...` and `/Users/dolly/...` are only machine-specific local resolutions.
+
 ## 2026-06-25
 
 - Added a professor-ready connected-workflow test that requires no manual role assignment: a tester can sign in as a customer, generate recommendations, add heart/thumb responses, and open the exact same session in Owner Intelligence. The owner view carries over all five records and response states, converts them into cautious single-session sourcing suggestions, and labels whether the session was saved to Firestore, browser-only, or failed to save.

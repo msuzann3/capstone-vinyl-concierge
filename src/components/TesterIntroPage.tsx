@@ -64,7 +64,7 @@ export default function TesterIntroPage({ appHref, feedbackHref }: TesterIntroPa
             <h2 className="font-display text-lg uppercase text-vinyl-black">Caveats</h2>
             <ul className="mt-3 space-y-3 text-sm text-stone-700">
               <li>
-                <strong className="text-vinyl-black">Limited catalog:</strong> about 200 albums from Discogs, so please do not judge the prototype by whether it finds the perfect record for you.
+                <strong className="text-vinyl-black">Limited catalog:</strong> about 200 albums in a demo catalog, so please do not judge the prototype by whether it finds the perfect record for you.
               </li>
               <li>
                 <strong className="text-vinyl-black">Sample data:</strong> if you prefer not to complete the questionnaire, sample user data is available.

@@ -56,6 +56,31 @@ const steps: Array<{
   },
 ];
 
+const commercialRoadmap = [
+  { label: "Recommendation Engine", status: "ready" },
+  { label: "Customer Profiles", status: "ready" },
+  { label: "Owner Intelligence Dashboard", status: "ready" },
+  { label: "Recommendation History", status: "ready" },
+  { label: "Live Inventory Integration", status: "future" },
+  { label: "Shopify / Square / Lightspeed Integration", status: "future" },
+  { label: "Shopping Cart & Checkout", status: "future" },
+  { label: "Purchase Analytics", status: "future" },
+  { label: "Demand Forecasting", status: "future" },
+];
+
+const syntheticBusinessInsights = [
+  {
+    label: "Potential Lost Sales",
+    value: "12",
+    detail: "Recommendation requests did not match available demo inventory.",
+  },
+  {
+    label: "High Demand Category",
+    value: "Japanese City Pop",
+    detail: "17 recommendation signals, with 2 demo titles available for review.",
+  },
+];
+
 export default function OwnerIntelligenceDashboard({
   latestSession,
 }: {
@@ -195,6 +220,64 @@ export default function OwnerIntelligenceDashboard({
             />
           </div>
         </header>
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+          <section className="rounded border border-vinyl-black/10 bg-paper-white p-5 lg:col-span-3">
+            <div className="flex items-start gap-3">
+              <PackagePlus className="mt-0.5 h-5 w-5 shrink-0 text-curate-red" />
+              <div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-curate-red">
+                  Commercial Roadmap
+                </span>
+                <p className="mt-1 text-sm leading-relaxed text-stone-600">
+                  The prototype demonstrates the customer-to-owner decision loop. Commerce and live operating-system
+                  integrations are intentionally deferred for a production SaaS version.
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
+              {commercialRoadmap.map((item) => (
+                <div key={item.label} className="flex items-center gap-2 rounded border border-vinyl-black/10 bg-bone-cream px-3 py-2">
+                  <span className={`flex h-6 w-14 shrink-0 items-center justify-center rounded-full text-[9px] font-bold uppercase ${
+                    item.status === "ready"
+                      ? "bg-vinyl-black text-bone-cream"
+                      : "bg-sleeve-mustard text-vinyl-black"
+                  }`}>
+                    {item.status === "ready" ? "Built" : "Future"}
+                  </span>
+                  <span className="text-xs font-bold text-vinyl-black">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded border border-vinyl-black/10 bg-vinyl-black p-5 text-bone-cream lg:col-span-2">
+            <div className="flex items-start gap-3">
+              <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-sleeve-mustard" />
+              <div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-sleeve-mustard">
+                  Strategic Owner Signals
+                </span>
+                <p className="mt-1 text-sm leading-relaxed text-stone-300">
+                  Synthetic examples showing how future inventory connections could turn recommendation activity into buying decisions.
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 space-y-3">
+              {syntheticBusinessInsights.map((insight) => (
+                <article key={insight.label} className="rounded border border-sleeve-mustard/30 bg-stone-950 px-4 py-3">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-sleeve-mustard">
+                    {insight.label}
+                  </span>
+                  <strong className="mt-1 block font-display text-lg uppercase text-white">
+                    {insight.value}
+                  </strong>
+                  <p className="mt-1 text-xs leading-relaxed text-stone-300">{insight.detail}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
 
         <nav className="grid grid-cols-1 md:grid-cols-4 gap-3">
           {steps.map((step) => (
