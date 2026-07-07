@@ -5,10 +5,10 @@ https://drive.google.com/drive/folders/10307xAn-ocGKV5ZuchRrzJV6ZMIKQnTG
 
 ## Current Course Position
 
-- Current point in the course: Module 4 backend/governance work has begun from the Week 3 checkpoint.
+- Current point in the course: final business report preparation from the completed weekly prototype evidence.
 - Use `capstone-combined.pdf` as the best all-up reference for assignment requirements across the course.
 - Use Michelle's submitted `.docx` files in each weekly module folder as the best reference for what has already been said, decided, and submitted.
-- For now, prioritize Module 4 backend reality, authentication, database design, governance mapping, and early warning dashboard work.
+- For now, prioritize final-report accuracy: distinguish the validated prototype from future commercial SaaS work, keep the customer-to-owner loop central, and avoid implying live POS, checkout, purchase-history, or inventory integrations exist.
 
 ## Primary Reference Files
 
@@ -69,8 +69,9 @@ Important distinction for the assignment narrative: the browser app now has a re
 
 ## Working Guidance
 
-- Keep the customer and owner experiences aligned with the Week 3 checkpoint while layering Module 4 backend evidence on top.
+- Keep the final prototype narrative aligned with the working GitHub Pages app: customer recommendation flow, signed-in session persistence, de-identified Firestore demand signals, and Owner Intelligence review.
 - Treat synthetic data as acceptable and intentional where it remains, but distinguish it from live Firestore auth/session/demand-signal infrastructure.
 - Avoid implying real POS or purchase-history integration exists. Discogs is available through the manual GitHub seed workflow, with local seeding only as an optional fallback.
+- Treat the Module 6 `/mx` localization work as temporary assignment evidence only. It is archived under `Local Archive/` and should not be presented as part of the final prototype experience unless Michelle explicitly asks to revive it.
 - When writing assignment language, preserve Michelle's natural voice and prior wording wherever possible.
 - When building product features, prefer changes that strengthen the customer-to-owner feedback loop or owner decision workflow.

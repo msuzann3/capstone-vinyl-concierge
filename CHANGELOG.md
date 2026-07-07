@@ -2,6 +2,12 @@
 
 All notable project changes should be recorded here so Michelle can move between Macs without losing context.
 
+## 2026-07-07
+
+- Verified `origin/main` is current at `d85edc4` (`Add final capstone positioning polish`) before final business report drafting.
+- Updated final-report handoff notes to reflect the current course point and to keep the `/mx` Mexico-localization work framed as temporary Module 6 evidence, not part of the final prototype.
+- Softened older customer-side Staff Ledger copy so it no longer implies a current POS database connection; the final prototype story remains demo catalog plus Firestore demand signals now, with POS/live inventory validation deferred to the commercial roadmap.
+
 ## 2026-07-04
 
 - Added final capstone positioning polish from the iteration brief: a customer-facing Prototype Notice, an Owner Intelligence Commercial Roadmap, synthetic strategic owner signals, and clearer demo-catalog language in place of visible Discogs-source wording.

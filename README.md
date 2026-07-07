@@ -6,14 +6,14 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 
 ## Current Status
 
-- Current working Mac for June/July 2026: MacBook Pro.
+- Current working copy is the shared iCloud project folder; the active local resolution depends on which Mac is open.
 - Shared repository root to use across both Macs: `Documents/_AI-Workspace/Codex/Capstone` inside iCloud Drive.
 - MacBook Pro local resolution: `/Users/michelle/Documents/_AI-Workspace/Codex/Capstone`.
 - MacBook Air local resolution: `/Users/dolly/Documents/_AI-Workspace/Codex/Capstone`.
 - Source handoff: imported from Google AI Studio, now maintained with ChatGPT Codex and GitHub.
 - Product brief: `PRD.md`.
 - Developer handoff: `HANDOFF.md`.
-- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf` and Michelle's weekly submitted `.docx` files. Current course point: Module 4 backend/governance work has begun from the Week 3 checkpoint.
+- Class context: `docs/class-context/drive-context.md`; primary Drive references are `capstone-combined.pdf`, the final business report instructions, Michelle's weekly submitted `.docx` files, and the assignment feedback document. Current course point: final business report preparation from the completed weekly prototype evidence.
 - Local app: React, Vite, Tailwind, Motion, Firebase client SDK, and a production Express server.
 - Recommendation engine: Firestore-backed catalog reads in `src/recommender.ts`, with the local in-repo catalog retained as a fallback when the `albums` collection is empty or unavailable. The ranker caps the prototype Firestore catalog read, weights structured genre/style tags, exact catalog artist matches, mood/listening context, and nearby tags inferred from matched catalog artists; weak matches are labeled as staff fallbacks instead of equally personalized recommendations. No Gemini or Google API key required.
 - Image generation: no active OpenAI image model configuration, image endpoint, or `gpt-image-2` reference exists in this repo; the prototype does not generate images.
@@ -37,6 +37,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Ranking correction on 2026-06-25: specific requests such as Classic Rock no longer treat a broad catalog tag such as Rock as a direct match. Multiple selected genres now broaden the candidate pool without stacking every genre score onto crossover records, artist-derived bridge tags are used only when the customer has not supplied genres, and primary shelf-genre matches outrank records connected only through secondary tags. This prevents broadly tagged records such as Big Thief's `Dragon New Warm Mountain I Believe in You` from outranking stronger Country and Classic Rock matches when the customer did not name Big Thief.
 - Second feedback pass on 2026-06-24: the header no longer links directly to the feedback form or displays a location; the AI-assisted label uses white text on red; the first two questions clearly state that either an artist or genre is sufficient; recommendation match labels and sound descriptions use plain language; track-order badges were removed; Phoebe Bridgers was removed from the recommendation catalog and seed list; Shelf Expansion album cards were replaced by a prominent Suggested Exploration Areas panel; and the sidebar now includes a dated new-release board plus the Rolling Stones' `Foreign Tongues` as a July 10 upcoming release.
 - Final capstone positioning polish on 2026-07-04: the customer app now shows a concise Prototype Notice explaining that recommendations use a demo catalog rather than live store inventory, and the Owner Intelligence Dashboard now includes a Commercial Roadmap plus synthetic strategic owner signals to distinguish the validated prototype from a future SaaS product with inventory, POS, ecommerce, checkout, purchase analytics, and forecasting integrations.
+- Module 6 localization note: the `/mx` Mexico-localization work was temporary assignment evidence only and is archived under ignored `Local Archive/`; it is not part of the final prototype unless explicitly restored.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
 - Pages source: static front end published from the `main` branch via GitHub Actions.
@@ -191,8 +192,8 @@ If the secret exists and the form still fails, check the browser console and n8n
 - Continue polishing Assignment 2 screenshots around the customer recommendation flow, Collection Insights, and the Owner Insights dashboard.
 - For strong Assignment 2 screenshots, use test profiles that emphasize indie/alternative songwriting, jazz/fusion listening, and soul/classic-rock dinner-party listening.
 - Decide later whether the final Capstone MVP should use Discogs, a database, or another external data source; the current Assignment 2 dashboard intentionally stays local and synthetic.
-- Continue merging the customer-facing recommendation flow and business-facing owner workflow into one coherent feedback loop. Week 3 intentionally stays synthetic and does not claim live POS, purchase-history, customer-account, Discogs, or inventory integration yet.
-- The customer-to-owner recommendation feedback loop is now connected through Firestore. Next, sign in as the owner account and generate a few fresh signed-in customer sessions plus heart/thumb responses to populate the new album-level live sourcing watchlist with current signal documents.
+- Keep the final report centered on the customer-facing recommendation flow, signed-in session persistence, de-identified Firestore demand signals, and Owner Intelligence review workflow.
+- The customer-to-owner recommendation feedback loop is now connected through Firestore. For final evidence, use a signed-in customer session plus heart/thumb responses to demonstrate the album-level live sourcing watchlist, while stating clearly that purchase validation and live inventory/POS connections remain future work.
 - Firestore rules were republished from the local repo on 2026-06-21 after the prototype hardening pass. Public catalog/config reads, signed-in customer session writes, signed-in validated demand-signal creates, protected customer profile updates, and signed-in private recommendation-action creates are now covered by the live rules.
 - Use `docs/class-context/firebase-evidence/firebase-data-snapshot-2026-06-18.png` as the Module 4 Firebase data screenshot. It was generated from live Firestore data and masks user IDs, emails, names, and profile image URLs.
 - Use the manual GitHub Action `Seed Firestore Catalog` to populate the Firestore `albums` collection from GitHub secrets instead of Michelle's local machine.
@@ -201,6 +202,6 @@ If the secret exists and the form still fails, check the browser console and n8n
 - Sign in once as Michelle, then manually change Michelle's `users/{uid}.role` from `customer` to `owner` in Firebase so the owner dashboard can read aggregate demand.
 - Use `schema_diagram.html` for the Module 4 ER/schema screenshot.
 - Continue replacing remaining inline SVG logo approximations with production logo image assets where it improves clarity and layout; the header already uses the production PNG brandmark.
-- Decide whether owner insights should remain passcode-gated only on the client or move to authenticated server-side access.
+- Decide after the course whether the older customer-side Owner Insights panel should remain visible, be folded into the main Owner Intelligence Dashboard, or move behind authenticated server-side access.
 - Collect at least three real tester responses, synthesize recurring patterns, classify them into incorporate-now / long-term / ignore, and revise the prototype based on the chosen incorporate-now change.
 - Continue reviewing new tester responses for recurring patterns and revise the published feedback improvements only when additional evidence supports a change.

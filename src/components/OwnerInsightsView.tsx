@@ -12,9 +12,9 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
   const [activeTab, setActiveTab] = useState<"insights" | "workflow">("insights");
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncLogs, setSyncLogs] = useState<string[]>([
-    "Curate POS Database connected (Local Mock Mode)",
+    "Prototype catalog and synthetic owner sample loaded",
     `Synthetic recommendation sessions loaded: ${ownerDashboardMetrics.sessions.length}`,
-    "Shelf inventory current status: 1,421 representative vinyl sleeves scanned",
+    "Representative shelf-status sample ready for owner planning",
   ]);
   const maxGenreCount = Math.max(...ownerDashboardMetrics.topGenres.map((genre) => genre.count));
   const maxArtistCount = Math.max(...ownerDashboardMetrics.topArtists.map((artist) => artist.count));
@@ -83,7 +83,7 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
               Staff Only Backroom Portal
             </h4>
             <p className="text-xs text-stone-400 font-editorial italic mt-1 leading-relaxed">
-              This panel contains local custom analytics, inventory shelf predictions, gaps, and modular AI pipeline maps for owner and shop curator planning. Click "Unlock Staff Ledger" above to read.
+              This panel contains synthetic analytics, inventory-planning examples, gaps, and modular AI pipeline maps for owner and shop curator planning. Click "Unlock Staff Ledger" above to read.
             </p>
           </div>
         </div>
@@ -312,8 +312,8 @@ export default function OwnerInsightsView({ insights }: OwnerInsightsViewProps) 
                   {/* Step 2 */}
                   <div className="bg-stone-900 duration-200 p-4 border border-stone-800 rounded flex flex-col items-center text-center">
                     <div className="w-8 h-8 rounded-full bg-curate-red text-white flex items-center justify-center text-xs font-bold mb-2">2</div>
-                    <span className="text-xs font-bold text-stone-100 uppercase font-mono">POS Database Search</span>
-                    <span className="text-[10px] text-stone-500 mt-1">Filters matches against local POS stock quantities</span>
+                    <span className="text-xs font-bold text-stone-100 uppercase font-mono">Future POS Inventory Check</span>
+                    <span className="text-[10px] text-stone-500 mt-1">Would filter matches against live stock quantities in a production version</span>
                   </div>
 
                   {/* Step 3 */}
