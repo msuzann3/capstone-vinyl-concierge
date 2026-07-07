@@ -38,9 +38,10 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Second feedback pass on 2026-06-24: the header no longer links directly to the feedback form or displays a location; the AI-assisted label uses white text on red; the first two questions clearly state that either an artist or genre is sufficient; recommendation match labels and sound descriptions use plain language; track-order badges were removed; Phoebe Bridgers was removed from the recommendation catalog and seed list; Shelf Expansion album cards were replaced by a prominent Suggested Exploration Areas panel; and the sidebar now includes a dated new-release board plus the Rolling Stones' `Foreign Tongues` as a July 10 upcoming release.
 - Final capstone positioning polish on 2026-07-04: the customer app now shows a concise Prototype Notice explaining that recommendations use a demo catalog rather than live store inventory, and the Owner Intelligence Dashboard now includes a Commercial Roadmap plus synthetic strategic owner signals to distinguish the validated prototype from a future SaaS product with inventory, POS, ecommerce, checkout, purchase analytics, and forecasting integrations.
 - Module 6 localization note: the `/mx` Mexico-localization work was temporary assignment evidence only and is archived under ignored `Local Archive/`; it is not part of the final prototype unless explicitly restored.
-- Final business report draft: generated on 2026-07-07 as editable `MLentz_Final_Project_Business_Report_Draft_1.docx` in the Google Drive `Assignments/Final Assignments/` folder, with a local copy under `output/docx/`.
+- Final business report: Michelle's manually revised turn-in DOCX is stored at `/Users/dolly/Desktop/To Turn In/576/MLentz - Capstone Final Business Report.docx`, with a repository handoff copy at `output/docx/MLentz - Capstone Final Business Report.docx`. The assignment accepts DOCX uploads; no PDF is required unless Michelle chooses to export one later.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
+- Friendly capstone redirect: `https://capstone.curatevinyl.com/` permanently forwards to the GitHub Pages prototype.
 - Pages source: static front end published from the `main` branch via GitHub Actions.
 - Original imported zip/archive wrapper: kept locally in `Handoff from Google/` and ignored by git.
 
@@ -206,4 +207,5 @@ If the secret exists and the form still fails, check the browser console and n8n
 - Decide after the course whether the older customer-side Owner Insights panel should remain visible, be folded into the main Owner Intelligence Dashboard, or move behind authenticated server-side access.
 - Collect at least three real tester responses, synthesize recurring patterns, classify them into incorporate-now / long-term / ignore, and revise the prototype based on the chosen incorporate-now change.
 - Continue reviewing new tester responses for recurring patterns and revise the published feedback improvements only when additional evidence supports a change.
-- Review the generated final business report DOCX and upload the final edited `.docx` version to Canvas by the final assignment deadline.
+- Upload the final edited business report DOCX from `/Users/dolly/Desktop/To Turn In/576/`.
+- Start the final recorded-presentation work from the business report narrative and the live prototype URL/redirect.

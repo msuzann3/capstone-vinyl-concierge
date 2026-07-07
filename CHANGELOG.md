@@ -9,6 +9,8 @@ All notable project changes should be recorded here so Michelle can move between
 - Softened older customer-side Staff Ledger copy so it no longer implies a current POS database connection; the final prototype story remains demo catalog plus Firestore demand signals now, with POS/live inventory validation deferred to the commercial roadmap.
 - Generated `MLentz_Final_Project_Business_Report_Draft_1.docx` from the midterm and weekly assignment evidence as an editable DOCX. The final report is 11 rendered pages in the template-style Times New Roman formatting, the executive summary is 352 words, and visual DOCX render QA passed after fixing table/page-break issues.
 - Revised Draft 1 after paper review: removed the footer, replaced repeated de-identification language with anonymized/privacy-protected wording, clarified the Firestore signal path, added the evolution from one-store solution to subscription SaaS concept, removed course/week phrasing from the business narrative, and rewrote deployment judgment so real inventory, ecommerce, POS, and purchase-history integrations are prerequisites before a commercial pilot.
+- Archived Michelle's manually revised final business report DOCX as `output/docx/MLentz - Capstone Final Business Report.docx` and verified it renders successfully as 11 pages. The working turn-in copy is `/Users/dolly/Desktop/To Turn In/576/MLentz - Capstone Final Business Report.docx`; no PDF export is required for the current handoff.
+- Recorded the friendly GoDaddy redirect `https://capstone.curatevinyl.com/`, which permanently forwards to the GitHub Pages prototype for easier presentation/submission access.
 
 ## 2026-07-04
 
