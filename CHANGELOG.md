@@ -7,6 +7,7 @@ All notable project changes should be recorded here so Michelle can move between
 - Verified `origin/main` is current at `d85edc4` (`Add final capstone positioning polish`) before final business report drafting.
 - Updated final-report handoff notes to reflect the current course point and to keep the `/mx` Mexico-localization work framed as temporary Module 6 evidence, not part of the final prototype.
 - Softened older customer-side Staff Ledger copy so it no longer implies a current POS database connection; the final prototype story remains demo catalog plus Firestore demand signals now, with POS/live inventory validation deferred to the commercial roadmap.
+- Generated the final business report draft from the midterm and weekly assignment evidence as both DOCX and PDF. The final report is 12 rendered pages, the executive summary is 352 words, and visual DOCX render QA passed after fixing table/page-break issues.
 
 ## 2026-07-04
 
