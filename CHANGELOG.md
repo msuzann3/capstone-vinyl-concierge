@@ -11,6 +11,8 @@ All notable project changes should be recorded here so Michelle can move between
 - Revised Draft 1 after paper review: removed the footer, replaced repeated de-identification language with anonymized/privacy-protected wording, clarified the Firestore signal path, added the evolution from one-store solution to subscription SaaS concept, removed course/week phrasing from the business narrative, and rewrote deployment judgment so real inventory, ecommerce, POS, and purchase-history integrations are prerequisites before a commercial pilot.
 - Archived Michelle's manually revised final business report DOCX as `output/docx/MLentz - Capstone Final Business Report.docx` and verified it renders successfully as 11 pages. The working turn-in copy is `/Users/dolly/Desktop/To Turn In/576/MLentz - Capstone Final Business Report.docx`; no PDF export is required for the current handoff.
 - Recorded the friendly GoDaddy redirect `https://capstone.curatevinyl.com/`, which permanently forwards to the GitHub Pages prototype for easier presentation/submission access.
+- Created the final recorded-presentation package under `output/presentation/`: an 8-slide Curate-branded pitch deck with speaker notes, a presenter script/timing guide, product screenshots for the customer and Owner Intelligence paths, rendered slide QA images, and a contact sheet. The narrative is framed as a concise product pitch with a live Zoom demo in the middle and a cautious-but-positive deployment ask for an integration-ready pre-pilot.
+- Verified the presentation deck with `slides_test.py` and rendered slide previews; the final pass reported no overflow and the slide 8 headline was adjusted after visual QA to avoid overlap with the next-foundations panel.
 
 ## 2026-07-04
 

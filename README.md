@@ -39,6 +39,7 @@ The Vinyl Concierge is an AI-powered music curator and staff inventory dashboard
 - Final capstone positioning polish on 2026-07-04: the customer app now shows a concise Prototype Notice explaining that recommendations use a demo catalog rather than live store inventory, and the Owner Intelligence Dashboard now includes a Commercial Roadmap plus synthetic strategic owner signals to distinguish the validated prototype from a future SaaS product with inventory, POS, ecommerce, checkout, purchase analytics, and forecasting integrations.
 - Module 6 localization note: the `/mx` Mexico-localization work was temporary assignment evidence only and is archived under ignored `Local Archive/`; it is not part of the final prototype unless explicitly restored.
 - Final business report: Michelle's manually revised turn-in DOCX is stored at `/Users/dolly/Desktop/To Turn In/576/MLentz - Capstone Final Business Report.docx`, with a repository handoff copy at `output/docx/MLentz - Capstone Final Business Report.docx`. The assignment accepts DOCX uploads; no PDF is required unless Michelle chooses to export one later.
+- Final recorded-presentation prep: pitch deck, presenter script, rendered QA slides, product screenshots, and contact sheet are stored in `output/presentation/`. The recording plan is a short slide opening, live Zoom screen-share demo of the professor customer-to-owner path, then closing slides with learnings, risk ownership, deployment judgment, and an integration-ready pre-pilot ask.
 - GitHub repository: `https://github.com/msuzann3/capstone-vinyl-concierge`.
 - GitHub Pages: `https://msuzann3.github.io/capstone-vinyl-concierge/`.
 - Friendly capstone redirect: `https://capstone.curatevinyl.com/` permanently forwards to the GitHub Pages prototype.
@@ -208,4 +209,4 @@ If the secret exists and the form still fails, check the browser console and n8n
 - Collect at least three real tester responses, synthesize recurring patterns, classify them into incorporate-now / long-term / ignore, and revise the prototype based on the chosen incorporate-now change.
 - Continue reviewing new tester responses for recurring patterns and revise the published feedback improvements only when additional evidence supports a change.
 - Upload the final edited business report DOCX from `/Users/dolly/Desktop/To Turn In/576/`.
-- Start the final recorded-presentation work from the business report narrative and the live prototype URL/redirect.
+- Record the final presentation in Zoom using `output/presentation/MLentz_Capstone_Final_Recorded_Presentation.pptx` and `output/presentation/MLentz_Capstone_Final_Presentation_Script.md`, with the live prototype at `https://capstone.curatevinyl.com/`.
